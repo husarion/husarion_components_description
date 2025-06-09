@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright 2025 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="create_components"
+    params="components_config_path namespace:='' use_sim:=False">
+
+    <xacro:unless value="${components_config_path == ''}">
+        <xacro:property
+          name="components_config"
+          value="${xacro.load_yaml(components_config_path)}" />
+      <xacro:load_componenet
+        config="${components_config}"
+        counter="${len(components_config['components'])}"
+        robot_namespace="${namespace}"
+        use_sim="${use_sim}" />
+
+    </xacro:unless>
+  </xacro:macro>
+
+  <xacro:macro name="load_componenet"
+    params="config counter robot_namespace use_sim:=False">
+    <xacro:if value="${counter}">
+      <xacro:property name="index" value="${counter - 1}" scope="parent" />
+      <xacro:property name="component" value="${config['components'][index]}" scope="parent" />
+
+      <xacro:property name="type" value="${component['type']}" scope="parent" />
+      <xacro:property name="ns" value="${robot_namespace}" scope="parent" />
+
+      <xacro:property name="dev_models_dict"
+        value="${dict ([
+        ('DEV01', 'dev01'),
+        ('DEV02', 'dev02'),
+        ('DEV03', 'dev03'),
+        ('DEV04H', 'dev04h'),
+        ('DEV04L', 'dev04l'),
+        ('DEV05', 'dev05'),
+        ('DEV06', 'dev06'),
+        ('DEV07', 'dev07'),
+        ('DEV07T', 'dev07t'),
+        ('DEV09', 'dev09')
+      ])}" />
+
+      <xacro:if value="${type in dev_models_dict}">
+        <xacro:include
+          filename="$(find husarion_components_description)/urdf/dev.urdf.xacro"
+          ns="dev"
+        />
+        <xacro:dev.dev
+          model="${dev_models_dict[type]}"
+        />
+      </xacro:if>
+
+      <xacro:unless value="${type in dev_models_dict}">
+        <xacro:property name="parent_link" value="${component['parent_link']}" scope="parent" />
+        <xacro:property name="xyz" value="${component['xyz'] if 'xyz' in component else '0.0 0.0 0.0'}" scope="parent" />
+        <xacro:property name="rpy" value="${component['rpy'] if 'rpy' in component else '0.0 0.0 0.0'}" scope="parent" />
+        <xacro:property name="device_ns" value="${component['device_namespace'] if 'device_namespace' in component else ''}" scope="parent" />
+
+        <xacro:if value="${type == 'ANT02'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/teltonika_003R-00253.urdf.xacro"
+            ns="teltonika" />
+
+          <xacro:teltonika.teltonika_003R-00253
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'CAM01'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/orbbec_astra.urdf.xacro"
+            ns="camera" />
+
+          <xacro:if value="${device_ns == ''}">
+            <xacro:property name="device_ns" value="camera" scope="parent" />
+          </xacro:if>
+
+          <xacro:camera.orbbec_astra
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'CAM02'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/intel_realsense_d435.urdf.xacro"
+            ns="camera" />
+
+          <xacro:if value="${device_ns == ''}">
+            <xacro:property name="device_ns" value="camera" scope="parent" />
+          </xacro:if>
+
+          <xacro:camera.intel_realsense_d435
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            use_nominal_extrinsics="${use_sim}"
+          />
+        </xacro:if>
+
+        <xacro:property name="zed_models_dict"
+          value="${dict ([
+          ('CAM03', 'zed2'),
+          ('CAM04', 'zed2i'),
+          ('CAM06', 'zedx'),
+          ])}" />
+
+          <xacro:if value="${type in zed_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/stereolabs_zed.urdf.xacro"
+            ns="camera" />
+
+          <xacro:if value="${device_ns == ''}">
+            <xacro:property name="device_ns" value="zed" scope="parent" />
+          </xacro:if>
+
+          <xacro:camera.zed_camera
+
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            model="${zed_models_dict[type]}"
+          />
+        </xacro:if>
+
+        <!-- 'CAM10', 'OAK-1-LITE' is not available in luxonis repo -->
+        <xacro:property name="luxonis_models_dict"
+          value="${dict ([
+          ('CAM11', 'OAK-D-PRO'),
+          ])}" />
+
+        <xacro:if value="${type in luxonis_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/luxonis_depthai.urdf.xacro"
+            ns="camera" />
+
+          <xacro:if value="${device_ns == ''}">
+            <xacro:property name="device_ns" value="oak" scope="parent" />
+          </xacro:if>
+
+          <xacro:camera.luxonis_depthai
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            model="${luxonis_models_dict[type]}"
+          />
+        </xacro:if>
+
+        <xacro:property name="rplidar_models_dict"
+          value="${dict ([
+          ('LDR01', 's1'),
+          ('LDR02', 's2'),
+          ('LDR03', 'a2m12'),
+          ('LDR04', 'a3'),
+          ('LDR06', 's3'),
+        ])}" />
+
+        <xacro:if value="${type in rplidar_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/slamtec_rplidar.urdf.xacro"
+            ns="lidar"
+          />
+
+          <xacro:lidar.slamtec_rplidar
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            model="${rplidar_models_dict[type]}"
+          />
+        </xacro:if>
+
+        <xacro:property name="ouster_models_dict"
+          value="${dict ([
+          ('LDR10', 'os0_32'),
+          ('LDR11', 'os0_64'),
+          ('LDR12', 'os0_128'),
+          ('LDR13', 'os1_32'),
+          ('LDR14', 'os1_64'),
+          ('LDR15', 'os1_128')
+        ])}" />
+
+        <xacro:if value="${type in ouster_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/ouster.urdf.xacro"
+            ns="lidar"
+          />
+          <xacro:lidar.ouster
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            model="${ouster_models_dict[type]}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'LDR20'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/velodyne_puck.urdf.xacro"
+            ns="lidar"
+          />
+
+          <xacro:lidar.velodyne_puck
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'MAN01'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/ur.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.ur
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            device_namespace="${device_ns}"
+            ur_type="ur3e"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'MAN02'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/ur.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.ur
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            device_namespace="${device_ns}"
+            ur_type="ur5e"
+          />
+        </xacro:if>
+
+
+        <xacro:if value="${type == 'MAN04'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.kinova
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            kinova_type="gen3"
+            dof="6"
+            gripper="robotiq_2f_85"
+            vision="false"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'MAN05'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.kinova
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            kinova_type="gen3"
+            dof="6"
+            gripper="robotiq_2f_85"
+            vision="true"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'MAN06'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.kinova
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+            kinova_type="gen3"
+            dof="7"
+            gripper="robotiq_2f_85"
+            vision="false"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'MAN07'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
+            ns="manipulator"
+          />
+
+          <xacro:manipulator.kinova
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            kinova_type="gen3"
+            dof="7"
+            gripper="robotiq_2f_85"
+            vision="true"
+            device_namespace="${device_ns}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'GRP02'}">
+          <xacro:include filename="$(find husarion_components_description)/urdf/robotiq.urdf.xacro"
+            ns="gripper" />
+
+          <xacro:gripper.robotiq
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            device_namespace="${device_ns}"
+            robotiq_type="2f_85"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'WCH01'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/wibotic_receiver.urdf.xacro"
+            ns="wireless_charger" />
+
+          <xacro:wireless_charger.wibotic_receiver
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            namespace="${ns}"
+            device_namespace="${device_ns}"
+          />
+        </xacro:if>
+      </xacro:unless>
+
+      <xacro:if value="${index}">
+        <xacro:load_componenet
+          counter="${index}"
+          config="${config}"
+          robot_namespace="${robot_namespace}"
+          use_sim="${use_sim}"
+        />
+      </xacro:if>
+    </xacro:if>
+  </xacro:macro>
+</robot>

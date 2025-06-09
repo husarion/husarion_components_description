@@ -1,0 +1,24 @@
+---
+  - topic_name: /<robot_namespace>/<device_namespace>/wrist_mounted_camera/camera_info
+    ros_type_name: sensor_msgs/msg/CameraInfo
+    gz_type_name: gz.msgs.CameraInfo
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - topic_name: /<robot_namespace>/<device_namespace>/wrist_mounted_camera/image
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: gz.msgs.Image
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - topic_name: /<robot_namespace>/<device_namespace>/wrist_mounted_camera/depth_image
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: gz.msgs.Image
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - ros_topic_name: /<robot_namespace>/<device_namespace>/wrist_mounted_camera/points
+    ros_type_name: sensor_msgs/msg/PointCloud2
+    gz_type_name: gz.msgs.PointCloudPacked
+    lazy: true
+    direction: GZ_TO_ROS

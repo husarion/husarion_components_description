@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2025 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wibotic_station">
+
+  <xacro:arg name="device_namespace" default="" />
+  <xacro:arg name="apriltag_image_path" default="" />
+  <xacro:arg name="apriltag_size" default="0.07" />
+
+  <xacro:macro name="wibotic_station"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'">
+
+    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+
+    <joint name="${parent_link.rstrip('_link')}_to_${prefix}wibotic_station_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${prefix}wibotic_station_link" />
+    </joint>
+
+    <link name="${prefix}wibotic_station_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/wibotic_station.stl" />
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
+      </visual>
+
+      <!-- Fake collision fit to STL -->
+      <collision>
+        <origin xyz="-0.2 0.0  0.4" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.4 0.5 0.8" />
+        </geometry>
+      </collision>
+
+      <!-- Fake inertia -->
+      <inertial>
+        <origin xyz="-0.2 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="15.0" />
+        <inertia ixx="0.001111" ixy="0.0" ixz="0.0"
+          iyy="0.001111" iyz="0.0"
+          izz="0.001111" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}wibotic_station_to_${prefix}wibotic_transmitter_joint" type="fixed">
+      <!-- This should be when docking is released for panther-docker
+      <origin xyz="0.05 0.0 0.295" rpy="0.0 0.0 ${pi}" /> -->
+      <origin xyz="0.05 0.0 0.5" rpy="0.0 0.0 ${pi}" />
+      <parent link="${prefix}wibotic_station_link" />
+      <child link="${prefix}wibotic_transmitter_link" />
+    </joint>
+
+    <link name="${prefix}wibotic_transmitter_link" />
+
+  </xacro:macro>
+
+  <xacro:macro name="create_apriltag"
+    params="name size:=$(arg apriltag_size) device_namespace:=''">
+
+    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+
+
+    <link name="${prefix}${name}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${size+0.02} ${size+0.02} 0.00005" />
+        </geometry>
+        <material name="White">
+          <color rgba="1.0 1.0 1.0 1.0" />
+        </material>
+      </visual>
+      </link>
+
+    <joint name="${name}_to_${name}_${prefix}image_link_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 -${pi/2.0} ${pi/2.0}" />
+      <parent link="${prefix}${name}_link" />
+      <child link="${prefix}${name}_image_link" />
+    </joint>
+
+    <link name="${prefix}${name}_image_link">
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
+        <geometry>
+          <box size="${size+0.02} ${size+0.02} 0.0001" />
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
+        <geometry>
+          <box size="${size} ${size} 0.0001" />
+        </geometry>
+        <material name="Grey">
+          <color rgba="0.15 0.15 0.15 1.0" />
+        </material>
+      </visual>
+
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+    </link>
+
+    <gazebo reference="${prefix}${name}_image_link">
+      <visual>
+        <material>
+          <diffuse>1.0 1.0 1.0 1</diffuse>
+          <specular>0.6 0.6 0.6 1</specular>
+          <ambient>1.0 1.0 1.0</ambient>
+          <lighting>true</lighting>
+          <emissive>0 0 0 1</emissive>
+          <pbr>
+            <metal>
+              <albedo_map>$(arg apriltag_image_path)</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </gazebo>
+
+    <xacro:property name="apriltag_size_prop" value="$(arg apriltag_size)" />
+    <xacro:wibotic_station
+      device_namespace="$(arg device_namespace)" parent_link="${prefix}${name}_image_link"  xyz="0.0 0.0 0.5"
+      rpy="${pi} 0 0 " />
+
+  </xacro:macro>
+
+  <xacro:create_apriltag name="apriltag" device_namespace="$(arg device_namespace)" size="$(arg apriltag_size)" />
+
+</robot>

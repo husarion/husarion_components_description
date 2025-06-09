@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2025 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="luxonis_depthai"
+    params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       namespace:=''
+                       device_namespace:='oak'
+                       model:='OAK-D-PRO'
+                       use_sim:=False">
+
+    <xacro:include filename="$(find depthai_descriptions)/urdf/include/depthai_macro.urdf.xacro" />
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+
+    <xacro:depthai_camera camera_name="${device_namespace}" parent="${parent_link}"
+      base_frame="${ns}${device_namespace}" camera_model="${model}"
+      cam_pos_x="${xyz.split()[0]}" cam_pos_y="${xyz.split()[1]}" cam_pos_z="${xyz.split()[2]}"
+      cam_roll="${rpy.split()[0]}" cam_pitch="${rpy.split()[1]}" cam_yaw="${rpy.split()[2]}"
+      simulation="${use_sim}" />
+
+    <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro"
+      ns="gz_sensor" />
+
+    <xacro:gz_sensor.camera
+      reference="${ns}${device_namespace}"
+      name="${ns}${device_namespace}_color"
+      topic="${ns}${device_namespace}/rgb/color"
+      frame_id="${ns}${device_namespace}_rgb_camera_frame"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${60.0/180.0*pi}" />
+
+    <xacro:gz_sensor.depth_camera
+      reference="${ns}${device_namespace}"
+      name="${ns}${device_namespace}_depth"
+      topic="${ns}${device_namespace}/stereo/depth"
+      frame_id="${ns}${device_namespace}_rgb_camera_frame"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${60.0/180.0*pi}"
+      min_dist="1.0"
+      max_dist="12.0"
+      stddev_error="0.2" />
+
+  </xacro:macro>
+</robot>

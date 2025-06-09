@@ -1,0 +1,5 @@
+---
+  - topic_name: <robot_namespace><device_namespace>/fix
+    ros_type_name: sensor_msgs/msg/NavSatFix
+    gz_type_name: gz.msgs.NavSat
+    direction: GZ_TO_ROS

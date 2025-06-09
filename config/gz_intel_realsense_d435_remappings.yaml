@@ -1,0 +1,32 @@
+---
+# https://github.com/IntelRealSense/realsense-ros/blob/ros2-master/README.md#published-topics
+  - topic_name: <robot_namespace><device_namespace>/color/camera_info
+    ros_type_name: sensor_msgs/msg/CameraInfo
+    gz_type_name: gz.msgs.CameraInfo
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - topic_name: <robot_namespace><device_namespace>/color/image_raw
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: gz.msgs.Image
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - topic_name: <robot_namespace><device_namespace>/depth/camera_info
+    ros_type_name: sensor_msgs/msg/CameraInfo
+    gz_type_name: gz.msgs.CameraInfo
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - topic_name: <robot_namespace><device_namespace>/depth/image_rect_raw
+    ros_type_name: sensor_msgs/msg/Image
+    gz_type_name: gz.msgs.Image
+    lazy: true
+    direction: GZ_TO_ROS
+
+  - ros_topic_name: <robot_namespace><device_namespace>/depth/color/points
+    gz_topic_name: <robot_namespace><device_namespace>/depth/image_rect_raw/points
+    ros_type_name: sensor_msgs/msg/PointCloud2
+    gz_type_name: gz.msgs.PointCloudPacked
+    lazy: true
+    direction: GZ_TO_ROS
