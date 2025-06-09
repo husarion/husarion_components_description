@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>husarion_components_description</name>
+  <version>0.0.1</version>
+
+  <description>URDF descriptions of components offered with Husarion robots</description>
+  <maintainer email="support@husarion.com">Husarion</maintainer>
+  <license>Apache License 2.0</license>
+
+  <url type="website">https://husarion.com</url>
+  <url type="repository">https://github.com/husarion/husarion_components_description/</url>
+  <url type="bugtracker">https://github.com/husarion/husarion_components_description/issues</url>
+
+  <author email="jakub.delikat@husarion.com">Jakub Delikat</author>
+  <author email="rafal.gorecki@husarion.com">Rafal Gorecki</author>
+  <author email="dawid.kmak@husarion.com">Dawid Kmak</author>
+  <author email="pawel.kowalski@husarion.com">Pawel Kowalski</author>
+  <author email="krzysztof.wojciechowski@husarion.com">Krzysztof Wojciechowski</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>depthai_descriptions</depend>
+  <depend condition="($ROS_DISTRO != jazzy)">kortex_description</depend>
+  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch</depend>
+  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch_ros</depend>
+  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">nav2_common</depend>
+  <depend>robotiq_description</depend>
+  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_bridge</depend>
+  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_sim</depend>
+  <depend>ur_description</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+
+  <test_depend>ament_cmake_pytest</test_depend>
+  <test_depend>ament_index_python</test_depend>
+  <test_depend>python3-yaml</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

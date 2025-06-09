@@ -1,0 +1,42 @@
+---
+name: ROS2 test build
+
+on:
+  - push
+
+jobs:
+  colcon-test-build-jazzy:
+    strategy:
+      matrix:
+        ros-distro: [jazzy]
+    runs-on: ubuntu-24.04
+
+    name: Build ${{ matrix.ros-distro }}
+    steps:
+
+      - uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ matrix.ros-distro }}
+
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: husarion_components_description
+          target-ros2-distro: ${{ matrix.ros-distro }}
+
+  colcon-test-build-humble:
+    strategy:
+      matrix:
+        ros-distro: [humble]
+    runs-on: ubuntu-22.04
+
+    name: Build ${{ matrix.ros-distro }}
+    steps:
+
+      - uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ matrix.ros-distro }}
+
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: husarion_components_description
+          target-ros2-distro: ${{ matrix.ros-distro }}

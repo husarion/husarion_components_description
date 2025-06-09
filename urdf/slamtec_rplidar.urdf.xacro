@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2025 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="slamtec_rplidar"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       namespace:=''
+                       device_namespace:=''
+                       model:=s3">
+
+    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="device_ns" value="${device_namespace + '/' if device_namespace != '' else ''}" />
+
+    <xacro:if value="${model == 's3'}">
+      <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/SLAMTEC_rplidar_datasheet_S3_v1.0_en.pdf -->
+      <xacro:property name="samples" value="3000" />
+      <xacro:property name="dist_min" value="0.05" />
+      <xacro:property name="dist_max" value="40.0" />
+      <xacro:property name="dist_res" value="0.01" />
+      <xacro:property name="std_dev" value="0.015" />
+      <xacro:property name="mesh" value="s3.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.0413/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.0556 0.0556 0.0413" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.0413/2.0 + 0.0018237}" rpy="0.0 0.0 0.0" />
+        <mass value="0.115033" />
+        <inertia ixx="0.00004115765" ixy="0.0"            ixz="0.0"
+                                     iyy="0.00004115765"  iyz="0.0"
+                                                          izz="0.00004956023" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.0305" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 's2'}">
+      <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/SLAMTEC_rplidar_datasheet_S2M1_v1.4_en.pdf -->
+      <xacro:property name="samples" value="3000" />
+      <xacro:property name="dist_min" value="0.05" />
+      <xacro:property name="dist_max" value="30.0" />
+      <xacro:property name="dist_res" value="0.013" />
+      <xacro:property name="std_dev" value="0.015" />
+      <xacro:property name="mesh" value="s2.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.038857/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.077 0.076856 0.038857" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 -0.000021 ${0.038857/2.0 + 0.0017953}" rpy="0.0 0.0 0.0" />
+        <mass value="0.104949" />
+        <inertia ixx="0.00005071491" ixy="0.0"            ixz="0.0"
+                                     iyy="0.00005064080"  iyz="0.0"
+                                                          izz="0.000075682018" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.0285" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 's1'}">
+      <!-- Spec: https://www.slamtec.com/en/Lidar/S1Spec -->
+      <xacro:property name="samples" value="920" />
+      <xacro:property name="dist_min" value="0.04" />
+      <xacro:property name="dist_max" value="40.0" />
+      <xacro:property name="dist_res" value="0.03" />
+      <xacro:property name="std_dev" value="0.025" />
+      <xacro:property name="mesh" value="s1.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="0.022" length="0.05" />
+          <box size="0.0555 0.0555 0.0195" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.0555/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.105" />
+        <inertia ixx="0.000049654" ixy="0.0"         ixz="0.0"
+                                   iyy="0.000049654" iyz="0.0"
+                                                     izz="0.000053884" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.04" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'a3'}">
+      <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/LD310_SLAMTEC_rplidar_datasheet_A3M1_v1.9_en.pdf -->
+      <xacro:property name="samples" value="1600" />
+      <xacro:property name="dist_min" value="0.2" />
+      <xacro:property name="dist_max" value="25.0" />
+      <xacro:property name="dist_res" value="0.03" />
+      <xacro:property name="std_dev" value="0.05" />
+      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${0.076/2.0}" length="0.041" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.190" />
+        <inertia ixx="0.000095206" ixy="0.0"         ixz="0.0"
+                                   iyy="0.000095206" iyz="0.0"
+                                                     izz="0.00013718" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.031" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'a2m12'}">
+      <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/LD310_SLAMTEC_rplidar_datasheet_A2M12_v1.0_en.pdf -->
+      <xacro:property name="samples" value="1600" />
+      <xacro:property name="dist_min" value="0.2" />
+      <xacro:property name="dist_max" value="12.0" />
+      <xacro:property name="dist_res" value="0.03" />
+      <xacro:property name="std_dev" value="0.05" />
+      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${0.076/2.0}" length="0.041" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.190" />
+        <inertia ixx="0.000095206" ixy="0.0"         ixz="0.0"
+                                   iyy="0.000095206" iyz="0.0"
+                                                     izz="0.00013718" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.031" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'a2m8'}">
+      <xacro:property name="samples" value="800" />
+      <xacro:property name="dist_min" value="0.2" />
+      <xacro:property name="dist_max" value="10.0" />
+      <xacro:property name="dist_res" value="0.03" />
+      <xacro:property name="std_dev" value="0.05" />
+      <xacro:property name="mesh" value="a2m8.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${0.076/2.0}" length="0.041" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.190" />
+        <inertia ixx="0.000095206" ixy="0.0"         ixz="0.0"
+                                   iyy="0.000095206" iyz="0.0"
+                                                     izz="0.00013718" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.031" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'a2m7'}">
+      <xacro:property name="samples" value="1600" />
+      <xacro:property name="dist_min" value="0.2" />
+      <xacro:property name="dist_max" value="10.0" />
+      <xacro:property name="dist_res" value="0.03" />
+      <xacro:property name="std_dev" value="0.05" />
+      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${0.076/2.0}" length="0.041" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.190" />
+        <inertia ixx="0.000095206" ixy="0.0"         ixz="0.0"
+                                   iyy="0.000095206" iyz="0.0"
+                                                     izz="0.00013718" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.031" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
+    <joint name="${parent_link.rstrip('_link')}_to_${prefix}slamtec_rplidar_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${prefix}slamtec_rplidar_link" />
+    </joint>
+
+    <link name="${prefix}slamtec_rplidar_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/rplidar/${mesh}" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <xacro:insert_block name="collision" />
+      </collision>
+
+      <inertial>
+        <xacro:insert_block name="inertial" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}slamtec_rplidar_to_${prefix}laser_joint" type="fixed">
+      <xacro:insert_block name="joint" />
+      <parent link="${prefix}slamtec_rplidar_link" />
+      <child link="${prefix}laser" />
+    </joint>
+
+    <link name="${prefix}laser" />
+
+    <gazebo reference="${prefix}laser">
+      <sensor type="gpu_lidar" name="${ns}${prefix}slamtec_rplidar_sensor">
+        <always_on>false</always_on>
+        <update_rate>10</update_rate>
+        <visualize>false</visualize>
+
+        <topic>${ns}${device_ns}scan</topic>
+        <gz_frame_id>${ns}${prefix}laser</gz_frame_id>
+
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>-${pi}</min_angle>
+              <max_angle>${pi}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>${dist_min}</min>
+            <max>${dist_max}</max>
+            <resolution>${dist_res}</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>${std_dev}</stddev>
+          </noise>
+        </ray>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>
