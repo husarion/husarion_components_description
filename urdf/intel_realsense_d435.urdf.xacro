@@ -73,18 +73,31 @@ limitations under the License.
     </joint>
 
     <link name="${device_namespace}_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/intel_realsense_d435.dae" />
         </geometry>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${d435_cam_depth} ${d435_cam_width} ${d435_cam_height}" />
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
       </visual>
+
       <collision>
         <origin xyz="${-d435_collision_offset_x} ${-d435_cam_depth_py} 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="${d435_cam_depth} ${d435_cam_width} ${d435_cam_height}" />
         </geometry>
       </collision>
+
       <inertial>
         <!-- The following are not reliable values, and should not be used for modeling -->
         <mass value="0.072" />

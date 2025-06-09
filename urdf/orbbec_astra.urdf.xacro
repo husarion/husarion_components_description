@@ -41,11 +41,31 @@ limitations under the License.
     </joint>
 
     <link name="${device_namespace}_orbbec_astra_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/orbbec_astra.dae" />
         </geometry>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="${0.0225-0.04/2.0} 0.0 ${0.019+0.03/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.04 0.165 0.03" />
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="${0.0235-0.06/2.0} 0.0 ${0.019/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.06 0.06 0.019" />
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
       </visual>
 
       <!-- camera module collision -->

@@ -92,8 +92,7 @@ limitations under the License.
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0" />
         <geometry>
-          <cylinder radius="0.022" length="0.05" />
-          <box size="0.0555 0.0555 0.0195" />
+          <cylinder radius="0.025" length="0.05" />
         </geometry>
       </xacro:property>
       <xacro:property name="inertial">
@@ -217,11 +216,20 @@ limitations under the License.
     </joint>
 
     <link name="${prefix}slamtec_rplidar_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/rplidar/${mesh}" />
         </geometry>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <xacro:insert_block name="collision" />
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
       </visual>
 
       <collision>

@@ -25,7 +25,8 @@ limitations under the License.
   <xacro:macro name="wibotic_station"
                params="parent_link
                        xyz:='0.0 0.0 0.0'
-                       rpy:='0.0 0.0 0.0'">
+                       rpy:='0.0 0.0 0.0'
+                       device_namespace:='station'">
 
     <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
 
@@ -36,10 +37,18 @@ limitations under the License.
     </joint>
 
     <link name="${prefix}wibotic_station_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/wibotic_station.stl" />
+        </geometry>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="-0.2 0.0  0.4" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.4 0.5 0.8" />
         </geometry>
         <material name="LightGrey">
           <color rgba="0.6 0.6 0.6 1.0" />
@@ -58,9 +67,9 @@ limitations under the License.
       <inertial>
         <origin xyz="-0.2 0.0 0.0" rpy="0.0 0.0 0.0" />
         <mass value="15.0" />
-        <inertia ixx="0.001111" ixy="0.0" ixz="0.0"
-          iyy="0.001111" iyz="0.0"
-          izz="0.001111" />
+        <inertia ixx="0.001111" ixy="0.0"      ixz="0.0"
+                                iyy="0.001111" iyz="0.0"
+                                               izz="0.001111" />
       </inertial>
     </link>
 

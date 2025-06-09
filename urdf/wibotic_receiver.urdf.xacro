@@ -36,7 +36,7 @@ limitations under the License.
     </joint>
 
     <link name="${prefix}wibotic_receiver_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/wibotic_receiver.stl" />
@@ -44,12 +44,39 @@ limitations under the License.
         <material name="Grey">
           <color rgba="0.15 0.15 0.15 1.0" />
         </material>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="-0.008 0.0 0.085" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.015 0.135 0.19" />
+        </geometry>
+        <material name="DarkGrey">
+          <color rgba="0.2 0.2 0.2 1.0" />
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="0.014 0.0 0.115" rpy="0.0 ${pi/2.0} 0.0" />
+        <geometry>
+          <cylinder length="0.03" radius="0.07" />
+        </geometry>
+        <material name="DarkGrey">
+          <color rgba="0.2 0.2 0.2 1.0" />
+        </material>
       </visual>
 
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
+        <origin xyz="-0.008 0.0 0.085" rpy="0.0 0.0 0.0" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/wibotic_receiver.stl" />
+          <box size="0.015 0.135 0.19" />
+        </geometry>
+      </collision>
+
+      <collision>
+        <origin xyz="0.014 0.0 0.115" rpy="0.0 ${pi/2.0} 0.0" />
+        <geometry>
+          <cylinder length="0.03" radius="0.07" />
         </geometry>
       </collision>
     </link>

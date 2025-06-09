@@ -37,6 +37,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.033 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedm'}">
       <xacro:property name="baseline" value="0.06" />
@@ -45,6 +51,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="0.0" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.015} 0.008 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.026 0.124 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zed2'}">
       <xacro:property name="baseline" value="0.12" />
@@ -53,6 +65,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.033 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zed2i'}">
       <xacro:property name="baseline" value="0.12" />
@@ -61,6 +79,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="-0.01" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.015} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.043 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedx'}">
       <xacro:property name="baseline" value="0.12" />
@@ -69,6 +93,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="-0.016" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_z-0.01} 0 0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.037 0.163 0.032" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedxm'}">
       <xacro:property name="baseline" value="0.05" />
@@ -77,6 +107,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="-0.016" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_z-0.01} 0 0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.037 0.094 0.032" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
 
     <!-- Camera mounting point (the threaded screw hole in the bottom) -->
@@ -93,16 +129,14 @@ limitations under the License.
         <!-- 0.02 in x is caused because the visual model is in the frame -->
         <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/stereolabs/${model}.stl" />
+          <mesh filename="package://zed_msgs/meshes/${model}.stl" />
         </geometry>
         <material name="mat">
           <color rgba="0.25 0.25 0.25 0.99" />
         </material>
       </visual>
       <collision>
-        <geometry>
-          <mesh filename="package://husarion_components_description/meshes/stereolabs/${model}.stl" />
-        </geometry>
+        <xacro:insert_block name="collision" />
       </collision>
     </link>
     <joint name="${device_namespace}_camera_center_joint" type="fixed">
