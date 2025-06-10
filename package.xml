@@ -25,6 +25,7 @@
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch_ros</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">nav2_common</depend>
+  <depend>realsense2_description</depend>
   <depend>robotiq_description</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_bridge</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_sim</depend>
