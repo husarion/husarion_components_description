@@ -37,6 +37,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.033 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedm'}">
       <xacro:property name="baseline" value="0.06" />
@@ -45,6 +51,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="0.0" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.015} 0.008 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.026 0.124 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zed2'}">
       <xacro:property name="baseline" value="0.12" />
@@ -53,6 +65,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.033 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zed2i'}">
       <xacro:property name="baseline" value="0.12" />
@@ -61,6 +79,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="-0.01" />
       <xacro:property name="screw_offset_z" value="0.0" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_x-0.015} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.043 0.175 0.03" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedx'}">
       <xacro:property name="baseline" value="0.12" />
@@ -69,6 +93,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="-0.016" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_z-0.01} 0 0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.037 0.163 0.032" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
     <xacro:if value="${model == 'zedxm'}">
       <xacro:property name="baseline" value="0.05" />
@@ -77,6 +107,12 @@ limitations under the License.
       <xacro:property name="screw_offset_x" value="0.0" />
       <xacro:property name="screw_offset_z" value="-0.016" />
       <xacro:property name="optical_offset_x" value="-0.01" />
+      <xacro:property name="collision">
+        <origin xyz="${screw_offset_z-0.01} 0 0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.037 0.094 0.032" />
+        </geometry>
+      </xacro:property>
     </xacro:if>
 
     <!-- Camera mounting point (the threaded screw hole in the bottom) -->
@@ -93,16 +129,14 @@ limitations under the License.
         <!-- 0.02 in x is caused because the visual model is in the frame -->
         <origin xyz="${screw_offset_x-0.02} 0 ${screw_offset_z}" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/stereolabs/${model}.stl" />
+          <mesh filename="package://zed_msgs/meshes/${model}.stl" />
         </geometry>
         <material name="mat">
           <color rgba="0.25 0.25 0.25 0.99" />
         </material>
       </visual>
       <collision>
-        <geometry>
-          <mesh filename="package://husarion_components_description/meshes/stereolabs/${model}.stl" />
-        </geometry>
+        <xacro:insert_block name="collision" />
       </collision>
     </link>
     <joint name="${device_namespace}_camera_center_joint" type="fixed">
@@ -175,62 +209,31 @@ limitations under the License.
       </joint>
     </xacro:if>
 
-    <!-- It is also possible to use single rgbd_camera sensor, but using separate rgb and depth
-    camera
-      should be more accurate different frames and fovs can be set -->
-    <gazebo reference="${device_namespace}_center">
-      <sensor type="camera" name="${ns}${device_namespace}_stereolabs_zed_color">
-        <always_on>true</always_on>
-        <update_rate>30.0</update_rate>
+    <!-- GAZEBO -->
+    <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
-        <topic>${ns}${device_namespace}/zed_node/rgb/image_rect_color</topic>
-        <visualize>false</visualize>
+    <xacro:gz_sensor.camera
+      reference="${device_namespace}_center"
+      name="${ns}${device_namespace}_stereolabs_zed_color"
+      topic="${ns}${device_namespace}/zed_node/rgb/image_rect_color"
+      frame_id="${ns}${device_namespace}_center_optical_frame"
+      frequency="30"
+      width="1920"
+      height="1080"
+      fov="${110.0/180.0*pi}" />
 
-        <gz_frame_id>${ns}${device_namespace}_center_optical_frame</gz_frame_id>
-        <camera>
-          <horizontal_fov>${110.0/180.0*pi}</horizontal_fov>
-          <image>
-            <width>1920</width>
-            <height>1080</height>
-            <format>R8G8B8</format>
-          </image>
-          <clip>
-            <near>0.02</near>
-            <far>300.0</far>
-          </clip>
-        </camera>
-      </sensor>
-    </gazebo>
-
-    <gazebo reference="${device_namespace}_center">
-      <sensor type="depth_camera" name="${ns}${device_namespace}_stereolabs_zed_depth">
-        <always_on>true</always_on>
-        <update_rate>30.0</update_rate>
-
-        <topic>${ns}${device_namespace}/zed_node/depth</topic>
-        <visualize>false</visualize>
-
-        <gz_frame_id>${ns}${device_namespace}_center_optical_frame</gz_frame_id>
-        <camera>
-          <horizontal_fov>${110.0/180.0*pi}</horizontal_fov>
-          <image>
-            <width>1920</width>
-            <height>1080</height>
-
-            <format>R_FLOAT32</format>
-          </image>
-          <clip>
-            <near>0.3</near>
-            <far>20.0</far>
-          </clip>
-          <noise type="gaussian">
-            <mean>0.0</mean>
-            <stddev>0.03</stddev>
-          </noise>
-        </camera>
-
-      </sensor>
-    </gazebo>
+    <xacro:gz_sensor.depth_camera
+      reference="${device_namespace}_center"
+      name="${ns}${device_namespace}_stereolabs_zed_depth"
+      topic="${ns}${device_namespace}/zed_node/depth"
+      frame_id="${ns}${device_namespace}_center_optical_frame"
+      frequency="30"
+      width="1920"
+      height="1080"
+      fov="${110.0/180.0*pi}"
+      min_dist="0.3"
+      max_dist="20.0"
+      stddev_error="0.03" />
 
   </xacro:macro>
 </robot>

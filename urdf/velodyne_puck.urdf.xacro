@@ -35,11 +35,22 @@ limitations under the License.
     </joint>
 
     <link name="${prefix}velodyne_puck_link">
-      <visual>
+      <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/velodyne_puck.dae" />
         </geometry>
+      </visual> -->
+
+      <!-- TODO Remove simple visuals when mesh is ready -->
+      <visual>
+        <origin xyz="0.0 0.0 ${0.072/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${0.103/2.0}" length="0.072" />
+        </geometry>
+        <material name="LightGrey">
+          <color rgba="0.6 0.6 0.6 1.0" />
+        </material>
       </visual>
 
       <collision>
