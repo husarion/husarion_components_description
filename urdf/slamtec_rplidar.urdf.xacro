@@ -225,7 +225,6 @@ limitations under the License.
 
       <!-- TODO Remove simple visuals when mesh is ready -->
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <xacro:insert_block name="collision" />
         <material name="LightGrey">
           <color rgba="0.6 0.6 0.6 1.0" />
