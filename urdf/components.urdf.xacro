@@ -128,6 +128,7 @@ limitations under the License.
           value="${dict ([
           ('CAM03', 'zed2'),
           ('CAM04', 'zed2i'),
+          ('CAM05', 'zedm'),
           ('CAM06', 'zedx'),
           ])}" />
 
