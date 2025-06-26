@@ -20,7 +20,11 @@ from nav2_common.launch import ReplaceString
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import EnvironmentVariable, LaunchConfiguration
+from launch.substitutions import (
+    EnvironmentVariable,
+    LaunchConfiguration,
+    PythonExpression,
+)
 
 
 def generate_launch_description():
@@ -34,6 +38,10 @@ def generate_launch_description():
     robot_namespace = LaunchConfiguration("robot_namespace")
     device_namespace = LaunchConfiguration("device_namespace")
     gz_bridge_name = LaunchConfiguration("gz_bridge_name")
+
+    device_namespace = PythonExpression(
+        ["'", device_namespace, "' if '", device_namespace, "' else 'zed'"]
+    )
 
     namespaced_gz_bridge_config_path = ReplaceString(
         source_file=gz_bridge_config_path,
