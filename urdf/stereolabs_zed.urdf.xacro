@@ -187,12 +187,12 @@ limitations under the License.
           <material name="${model}_mat" />
         </visual>
         <collision>
-          <xacro:insert_block name="collision" />
-          <!-- Use simple collision -->
           <!-- <origin xyz="${screw_offset_x} 0 ${screw_offset_z}" rpy="0 0 0"/>
           <geometry>
             <mesh filename="package://zed_msgs/meshes/${model}.stl" />
           </geometry> -->
+          <!-- Use simple collision instead default stl -->
+          <xacro:insert_block name="collision" />
         </collision>
       </xacro:unless>
     </link>
