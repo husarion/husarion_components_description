@@ -133,7 +133,7 @@ limitations under the License.
       <xacro:property name="collision">
         <origin xyz="${screw_offset_x} 0 0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.05 0.25 0.25" />
+          <box size="0.05 0.03 0.03" />
         </geometry>
       </xacro:property>
     </xacro:if>
@@ -148,7 +148,7 @@ limitations under the License.
       <xacro:property name="collision">
         <origin xyz="${screw_offset_x} 0 0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.05 0.25 0.25" />
+          <box size="0.052 0.03 0.03" />
         </geometry>
       </xacro:property>
     </xacro:if>
