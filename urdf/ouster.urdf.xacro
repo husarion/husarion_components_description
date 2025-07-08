@@ -87,7 +87,7 @@ limitations under the License.
 
       <!-- TODO Remove simple visuals when mesh is ready -->
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 ${0.072/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
           <cylinder radius="${0.085/2.0}" length="0.073" />
         </geometry>
