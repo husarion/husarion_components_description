@@ -12,6 +12,7 @@ URDF models of sensors and other components offered alongside with Husarion robo
 | CAM01 | Orbbec Astra                 |
 | CAM03 | StereoLabs ZED 2             |
 | CAM04 | StereoLabs ZED 2i            |
+| CAM05 | StereoLabs ZED M             |
 | CAM06 | StereoLabs ZED X             |
 | CAM11 | Luxonis OAK-D-PRO            |
 | LDR01 | RPLIDAR S1                   |
