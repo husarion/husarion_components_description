@@ -19,7 +19,6 @@ limitations under the License.
 
 <!-- Reference: https://github.com/stereolabs/zed-ros2-wrapper/blob/master/zed_wrapper/urdf/zed_macro.urdf.xacro -->
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:include filename="$(find husarion_components_description)/urdf/include/stereolabs_zed_materials.urdf.xacro" />
   <xacro:property name="M_PI" value="3.1415926535897931" />
 
   <xacro:macro name="zed_camera"
@@ -86,7 +85,7 @@ limitations under the License.
       <xacro:property name="optical_offset_x" value="-0.01" />
       <xacro:property name="mono" value="false" />
       <xacro:property name="collision">
-        <origin xyz="${screw_offset_x} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
+        <origin xyz="${screw_offset_x+0.005} 0 ${screw_offset_z}" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.043 0.175 0.03" />
         </geometry>
@@ -101,7 +100,7 @@ limitations under the License.
       <xacro:property name="optical_offset_x" value="-0.01" />
       <xacro:property name="mono" value="false" />
       <xacro:property name="collision">
-        <origin xyz="${screw_offset_x} 0 0" rpy="0.0 0.0 0.0" />
+        <origin xyz="${screw_offset_x-0.005} 0 0" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.037 0.163 0.032" />
         </geometry>
@@ -116,7 +115,7 @@ limitations under the License.
       <xacro:property name="optical_offset_x" value="-0.01" />
       <xacro:property name="mono" value="false" />
       <xacro:property name="collision">
-        <origin xyz="${screw_offset_x} 0 0" rpy="0.0 0.0 0.0" />
+        <origin xyz="${screw_offset_x-0.015} 0 0" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.037 0.094 0.032" />
         </geometry>
@@ -184,7 +183,9 @@ limitations under the License.
           <geometry>
           <mesh filename="package://zed_msgs/meshes/${model}.stl" />
           </geometry>
-          <material name="${model}_mat" />
+          <material name="mat">
+            <color rgba="0.25 0.25 0.25 0.99" />
+          </material>
         </visual>
         <collision>
           <!-- <origin xyz="${screw_offset_x} 0 ${screw_offset_z}" rpy="0 0 0"/>
@@ -211,7 +212,9 @@ limitations under the License.
             <geometry>
               <mesh filename="package://zed_msgs/meshes/${model}.stl" />
             </geometry>
-            <material name="${model}_mat" />
+            <material name="mat">
+              <color rgba="0.25 0.25 0.25 0.99" />
+            </material>
           </visual>
           <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -242,7 +245,9 @@ limitations under the License.
             <geometry>
               <mesh filename="package://zed_msgs/meshes/${model}.stl" />
             </geometry>
-            <material name="${model}_mat" />
+            <material name="mat">
+              <color rgba="0.25 0.25 0.25 0.99" />
+            </material>
           </visual>
           <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
