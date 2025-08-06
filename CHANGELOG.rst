@@ -2,8 +2,8 @@
 Changelog for package husarion_components_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2025-08-06)
+------------------
 * Fix stereolabs zed origin (`#7 <https://github.com/husarion/husarion_components_description/issues/7>`_)
 * Zed add CAM05 and update ZED urdf (`#5 <https://github.com/husarion/husarion_components_description/issues/5>`_)
 * fix rplidar visual (`#4 <https://github.com/husarion/husarion_components_description/issues/4>`_)
