@@ -32,13 +32,13 @@ limitations under the License.
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}velodyne_puck_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}velodyne_puck_link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${component_name_underscore}velodyne_puck_link">
+    <link name="${component_name_underscore}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -73,19 +73,19 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${component_name_underscore}velodyne_puck_to_${component_name_underscore}velodyne_joint"
+    <joint name="${component_name_underscore}to_${component_name_underscore}lidar_joint"
       type="fixed">
       <origin xyz="0.0 0.0 0.0378" rpy="0.0 0.0 0.0" />
-      <parent link="${component_name_underscore}velodyne_puck_link" />
-      <child link="${component_name_underscore}velodyne" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}lidar_frame" />
     </joint>
 
-    <link name="${component_name_underscore}velodyne" />
+    <link name="${component_name_underscore}lidar_frame" />
 
-    <gazebo reference="${component_name_underscore}velodyne">
+    <gazebo reference="${component_name_underscore}lidar_frame">
       <!-- gpu_lidar has to be set, CPU lidar doesn't work in ignition -
       https://github.com/gazebosim/gz-sensors/issues/26 -->
-      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}velodyne_puck_sensor">
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
         <visualize>false</visualize>
         <update_rate>10.0</update_rate>
 
@@ -117,7 +117,7 @@ limitations under the License.
         </ray>
 
         <topic>${robot_namespace_slash}${component_name_slash}velodyne_points</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}velodyne</gz_frame_id>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}lidar_frame</gz_frame_id>
         <always_on>true</always_on>
       </sensor>
     </gazebo>

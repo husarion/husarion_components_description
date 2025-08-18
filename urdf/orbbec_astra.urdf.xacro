@@ -40,13 +40,13 @@ limitations under the License.
 
     <link name="${component_name_underscore}link" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}orbbec_astra_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}astra_visual_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}orbbec_astra_link" />
+      <child link="${component_name_underscore}astra_visual_frame" />
     </joint>
 
-    <link name="${component_name_underscore}orbbec_astra_link">
+    <link name="${component_name_underscore}astra_visual_frame">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -99,7 +99,7 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}color_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}color_joint" type="fixed">
       <origin xyz="-0.002 0.0125 0.03325" rpy="-0.003 0.0 -0.003" />
       <parent link="${component_name_underscore}link" />
       <child link="${component_name_underscore}color_frame" />
@@ -107,7 +107,7 @@ limitations under the License.
 
     <link name="${component_name_underscore}depth_frame" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}depth_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}depth_joint" type="fixed">
       <origin xyz="0.0 0.0 0.03325" rpy="0.0 0.0 0.0" />
       <parent link="${component_name_underscore}link" />
       <child link="${component_name_underscore}depth_frame" />

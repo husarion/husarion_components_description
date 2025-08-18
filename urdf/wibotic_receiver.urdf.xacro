@@ -31,14 +31,14 @@ limitations under the License.
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}wibotic_receiver_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}wibotic_receiver_link" />
+      <child link="${component_name_underscore}link" />
 
     </joint>
 
-    <link name="${component_name_underscore}wibotic_receiver_link">
+    <link name="${component_name_underscore}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
         <geometry>

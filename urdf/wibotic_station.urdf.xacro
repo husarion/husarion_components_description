@@ -34,13 +34,13 @@ limitations under the License.
 
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}wibotic_station_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}wibotic_station_link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${component_name_underscore}wibotic_station_link">
+    <link name="${component_name_underscore}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
         <geometry>
@@ -77,15 +77,15 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${component_name_underscore}wibotic_station_to_${component_name_underscore}wibotic_transmitter_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}transmitter_joint" type="fixed">
       <!-- This should be when docking is released for panther-docker
       <origin xyz="0.05 0.0 0.295" rpy="0.0 0.0 ${pi}" /> -->
       <origin xyz="0.05 0.0 0.5" rpy="0.0 0.0 ${pi}" />
-      <parent link="${component_name_underscore}wibotic_station_link" />
-      <child link="${component_name_underscore}wibotic_transmitter_link" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}transmitter_link" />
     </joint>
 
-    <link name="${component_name_underscore}wibotic_transmitter_link" />
+    <link name="${component_name_underscore}transmitter_link" />
 
   </xacro:macro>
 

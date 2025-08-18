@@ -213,13 +213,13 @@ limitations under the License.
       </xacro:property>
     </xacro:if>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}slamtec_rplidar_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}slamtec_rplidar_link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${component_name_underscore}slamtec_rplidar_link">
+    <link name="${component_name_underscore}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -244,22 +244,22 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${component_name_underscore}slamtec_rplidar_to_${component_name_underscore}laser_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}laser_joint" type="fixed">
       <xacro:insert_block name="joint" />
-      <parent link="${component_name_underscore}slamtec_rplidar_link" />
-      <child link="${component_name_underscore}laser" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}laser_frame" />
     </joint>
 
-    <link name="${component_name_underscore}laser" />
+    <link name="${component_name_underscore}laser_frame" />
 
-    <gazebo reference="${component_name_underscore}laser">
-      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}slamtec_rplidar_sensor">
+    <gazebo reference="${component_name_underscore}laser_frame">
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
         <always_on>false</always_on>
         <update_rate>10</update_rate>
         <visualize>false</visualize>
 
         <topic>${robot_namespace_slash}${component_name_slash}scan</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser</gz_frame_id>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser_frame</gz_frame_id>
 
         <ray>
           <scan>
