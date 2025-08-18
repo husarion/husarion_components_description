@@ -69,7 +69,7 @@ limitations under the License.
     <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
 
     <!-- robot name parameter -->
-    <xacro:property name="name" value="kinova_arm" />
+    <xacro:property name="robot_name" value="kinova_arm" />
 
     <!-- Arguments -->
     <xacro:property name="robot_ip" value="192.168.11.11" />
