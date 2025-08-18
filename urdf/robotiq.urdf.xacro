@@ -24,11 +24,15 @@ limitations under the License.
                        robotiq_type:=2f_85
                        component_name:=''">
 
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="robotiq" />
+    </xacro:if>
+
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+
     <xacro:include
       filename="$(find robotiq_description)/urdf/robotiq_${robotiq_type}_macro.urdf.xacro"
       ns="gripper" />
-
-    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
     <xacro:gripper.robotiq_gripper name="${component_name}robotiq_${robotiq_type}"
       prefix="${component_name_underscore}"

@@ -28,6 +28,10 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        component_name:=''">
 
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="wibotic_station" />
+    </xacro:if>
+
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}wibotic_station_joint" type="fixed">

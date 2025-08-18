@@ -56,9 +56,13 @@ limitations under the License.
                        component_name:=''
                        ur_type:=ur3e">
 
-    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro" ns="ur_manipulator" />
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="ur" />
+    </xacro:if>
 
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+
+    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro" ns="ur_manipulator" />
 
     <xacro:property name="joint_limit_params"
       value="$(find ur_description)/config/${ur_type}/joint_limits.yaml" scope="parent" />

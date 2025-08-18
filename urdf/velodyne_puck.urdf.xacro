@@ -24,6 +24,10 @@ limitations under the License.
                        robot_namespace:=''
                        component_name:=''">
 
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="velodyne" />
+    </xacro:if>
+
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
