@@ -25,15 +25,17 @@ limitations under the License.
                        device_namespace:=gps">
 
     <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="device_ns" value="${device_namespace + '/' if device_namespace != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_antenna_joint"
+    <joint name="${parent_link.rstrip('_link')}_to_${prefix}teltonika_mounting_joint"
       type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_mounting_point" />
+      <child link="${prefix}teltonika_mounting_link" />
     </joint>
 
-    <link name="${device_namespace}_mounting_point">
+    <link name="${prefix}teltonika_mounting_link">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -59,22 +61,22 @@ limitations under the License.
     </link>
 
     <joint
-      name="antenna_to_${device_namespace.rstrip('_link')}_joint"
+      name="${prefix}teltonika_mounting_link_to_${prefix}teltonika_joint"
       type="fixed">
       <origin xyz="0.045 0.0 0.0058" rpy="0.0 0.0 0.0" />
-      <parent link="${device_namespace}_mounting_point" />
-      <child link="${device_namespace}" />
+      <parent link="${prefix}teltonika_mounting_link" />
+      <child link="${prefix}teltonika" />
     </joint>
 
-    <link name="${device_namespace}" />
+    <link name="${prefix}teltonika" />
 
-    <gazebo reference="${device_namespace}">
+    <gazebo reference="${prefix}teltonika">
       <sensor name="navsat" type="navsat">
         <plugin filename="ignition-gazebo-navsat-system" name="ignition::gazebo::systems::NavSat" />
         <always_on>1</always_on>
         <update_rate>1</update_rate>
-        <topic>${ns}${device_namespace}/fix</topic>
-        <gz_frame_id>${ns}${device_namespace}</gz_frame_id>
+        <topic>${ns}${device_ns}fix</topic>
+        <gz_frame_id>${ns}${device_ns}teltonika</gz_frame_id>
       </sensor>
     </gazebo>
   </xacro:macro>
