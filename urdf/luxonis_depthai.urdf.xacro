@@ -27,7 +27,10 @@ limitations under the License.
                        use_sim:=False">
 
     <xacro:include filename="$(find depthai_descriptions)/urdf/include/depthai_macro.urdf.xacro" />
+
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:depthai_camera camera_name="${component_name}" parent="${parent_link}"
       base_frame="${robot_namespace_slash}${component_name}" camera_model="${model}"
@@ -40,9 +43,9 @@ limitations under the License.
 
     <xacro:gz_sensor.camera
       reference="${robot_namespace_slash}${component_name}"
-      name="${robot_namespace_slash}${component_name}_color"
-      topic="${robot_namespace_slash}${component_name}/rgb/color"
-      frame_id="${robot_namespace_slash}${component_name}_rgb_camera_frame"
+      name="${robot_namespace_slash}${component_name_underscore}color"
+      topic="${robot_namespace_slash}${component_name_slash}rgb/color"
+      frame_id="${robot_namespace_slash}${component_name_underscore}rgb_camera_frame"
       frequency="30"
       width="1280"
       height="720"
@@ -50,9 +53,9 @@ limitations under the License.
 
     <xacro:gz_sensor.depth_camera
       reference="${robot_namespace_slash}${component_name}"
-      name="${robot_namespace_slash}${component_name}_depth"
-      topic="${robot_namespace_slash}${component_name}/stereo/depth"
-      frame_id="${robot_namespace_slash}${component_name}_rgb_camera_frame"
+      name="${robot_namespace_slash}${component_name_underscore}depth"
+      topic="${robot_namespace_slash}${component_name_slash}stereo/depth"
+      frame_id="${robot_namespace_slash}${component_name_underscore}rgb_camera_frame"
       frequency="30"
       width="1280"
       height="720"

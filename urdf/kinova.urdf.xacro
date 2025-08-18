@@ -67,6 +67,7 @@ limitations under the License.
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <!-- robot name parameter -->
     <xacro:property name="robot_name" value="kinova_arm" />
@@ -149,8 +150,8 @@ limitations under the License.
     </xacro:unless>
 
     <xacro:if value="${vision}">
-      <gazebo reference="${component_name}_camera_color_frame">
-        <sensor name="${robot_namespace_slash}${component_name}_camera_sensor" type="rgbd_camera">
+      <gazebo reference="${component_name_underscore}camera_color_frame">
+        <sensor name="${robot_namespace_slash}${component_name_underscore}camera_sensor" type="rgbd_camera">
           <camera>
             <horizontal_fov>1.047</horizontal_fov>
             <image>
@@ -200,13 +201,13 @@ limitations under the License.
                 <far>5</far>
               </clip>
             </depth_camera>
-            <optical_frame_id>${component_name}_color_optical_frame</optical_frame_id>
+            <optical_frame_id>${component_name_underscore}color_optical_frame</optical_frame_id>
           </camera>
-          <gz_frame_id>${component_name}_camera_color_frame</gz_frame_id>
+          <gz_frame_id>${component_name_underscore}camera_color_frame</gz_frame_id>
           <always_on>1</always_on>
           <update_rate>${camera_fps}</update_rate>
           <visualize>true</visualize>
-          <topic>${robot_namespace_slash}${component_name}/wrist_mounted_camera</topic>
+          <topic>${robot_namespace_slash}${component_name_slash}wrist_mounted_camera</topic>
           <enable_metrics>false</enable_metrics>
         </sensor>
       </gazebo>
