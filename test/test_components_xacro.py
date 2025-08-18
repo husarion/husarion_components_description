@@ -140,7 +140,7 @@ class ComponentsYamlParseUtils:
 
     def test_component(self, component: dict, expected_result: list, components_config_path: str):
         names = components_types_with_names[component["type"]]
-        component_name = names[0]
+        component_model_name = names[0]
         link_name = names[1]
         sensor_link_name = names[2]
         sensor_name = names[3]
@@ -165,12 +165,12 @@ class ComponentsYamlParseUtils:
         if self.does_urdf_parse() != expected_result[0]:
             assert (
                 False
-            ), f"Expected prase result {expected_result[0]} with file {components_config_path} and component {component_name}."
+            ), f"Expected prase result {expected_result[0]} with file {components_config_path} and component {component_model_name}."
 
         if self.does_link_exist(self._urdf, namespaced_link_name) != expected_result[1]:
             assert (
                 False
-            ), f"Link name: {namespaced_link_name}. Expected result {expected_result[1]} with file {components_config_path} and component {component_name} for this urdf {self._urdf.toprettyxml()}."
+            ), f"Link name: {namespaced_link_name}. Expected result {expected_result[1]} with file {components_config_path} and component {component_model_name} for this urdf {self._urdf.toprettyxml()}."
 
         if (
             names[2] != ""
@@ -181,7 +181,7 @@ class ComponentsYamlParseUtils:
         ):
             assert (
                 False
-            ), f"Sensor name: {namespaced_sensor_name}, sensor link name: {namespaced_sensor_link_name}. Expected result {expected_result[2]} with file {components_config_path} and component {component_name} for this urdf ."
+            ), f"Sensor name: {namespaced_sensor_name}, sensor link name: {namespaced_sensor_link_name}. Expected result {expected_result[2]} with file {components_config_path} and component {component_model_name} for this urdf ."
 
 
 def test_all_good_single_components(tmpdir_factory):
