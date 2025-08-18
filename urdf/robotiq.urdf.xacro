@@ -28,10 +28,10 @@ limitations under the License.
       filename="$(find robotiq_description)/urdf/robotiq_${robotiq_type}_macro.urdf.xacro"
       ns="gripper" />
 
-    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
     <xacro:gripper.robotiq_gripper name="${component_name}robotiq_${robotiq_type}"
-      prefix="${prefix}"
+      prefix="${component_name_underscore}"
       parent="${parent_link}"
       use_fake_hardware="false"
       sim_ignition="true"

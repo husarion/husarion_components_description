@@ -28,15 +28,15 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        component_name:=''">
 
-    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${prefix}wibotic_station_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}wibotic_station_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${prefix}wibotic_station_link" />
+      <child link="${component_name_underscore}wibotic_station_link" />
     </joint>
 
-    <link name="${prefix}wibotic_station_link">
+    <link name="${component_name_underscore}wibotic_station_link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
         <geometry>
@@ -73,25 +73,25 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${prefix}wibotic_station_to_${prefix}wibotic_transmitter_joint" type="fixed">
+    <joint name="${component_name_underscore}wibotic_station_to_${component_name_underscore}wibotic_transmitter_joint" type="fixed">
       <!-- This should be when docking is released for panther-docker
       <origin xyz="0.05 0.0 0.295" rpy="0.0 0.0 ${pi}" /> -->
       <origin xyz="0.05 0.0 0.5" rpy="0.0 0.0 ${pi}" />
-      <parent link="${prefix}wibotic_station_link" />
-      <child link="${prefix}wibotic_transmitter_link" />
+      <parent link="${component_name_underscore}wibotic_station_link" />
+      <child link="${component_name_underscore}wibotic_transmitter_link" />
     </joint>
 
-    <link name="${prefix}wibotic_transmitter_link" />
+    <link name="${component_name_underscore}wibotic_transmitter_link" />
 
   </xacro:macro>
 
   <xacro:macro name="create_apriltag"
     params="name size:=$(arg apriltag_size) component_name:=''">
 
-    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
 
 
-    <link name="${prefix}${name}_link">
+    <link name="${component_name_underscore}${name}_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -103,13 +103,13 @@ limitations under the License.
       </visual>
       </link>
 
-    <joint name="${name}_to_${name}_${prefix}image_link_joint" type="fixed">
+    <joint name="${name}_to_${name}_${component_name_underscore}image_link_joint" type="fixed">
       <origin xyz="0 0 0" rpy="0 -${pi/2.0} ${pi/2.0}" />
-      <parent link="${prefix}${name}_link" />
-      <child link="${prefix}${name}_image_link" />
+      <parent link="${component_name_underscore}${name}_link" />
+      <child link="${component_name_underscore}${name}_image_link" />
     </joint>
 
-    <link name="${prefix}${name}_image_link">
+    <link name="${component_name_underscore}${name}_image_link">
       <collision>
         <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
         <geometry>
@@ -134,7 +134,7 @@ limitations under the License.
       </inertial>
     </link>
 
-    <gazebo reference="${prefix}${name}_image_link">
+    <gazebo reference="${component_name_underscore}${name}_image_link">
       <visual>
         <material>
           <diffuse>1.0 1.0 1.0 1</diffuse>
@@ -153,7 +153,7 @@ limitations under the License.
 
     <xacro:property name="apriltag_size_prop" value="$(arg apriltag_size)" />
     <xacro:wibotic_station
-      component_name="$(arg component_name)" parent_link="${prefix}${name}_image_link"  xyz="0.0 0.0 0.5"
+      component_name="$(arg component_name)" parent_link="${component_name_underscore}${name}_image_link"  xyz="0.0 0.0 0.5"
       rpy="${pi} 0 0 " />
 
   </xacro:macro>

@@ -24,7 +24,7 @@ limitations under the License.
                        robot_namespace:=''
                        component_name:=''">
 
-    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${component_name}_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
@@ -131,9 +131,9 @@ limitations under the License.
 
     <xacro:gz_sensor.camera
       reference="${component_name}_link"
-      name="${ns}${component_name}_orbbec_astra_color"
-      topic="${ns}${component_name}/color/image_raw"
-      frame_id="${ns}${component_name}_color_optical_frame"
+      name="${robot_namespace_slash}${component_name}_orbbec_astra_color"
+      topic="${robot_namespace_slash}${component_name}/color/image_raw"
+      frame_id="${robot_namespace_slash}${component_name}_color_optical_frame"
       frequency="30"
       width="640"
       height="480"
@@ -141,9 +141,9 @@ limitations under the License.
 
     <xacro:gz_sensor.depth_camera
       reference="${component_name}_link"
-      name="${ns}${component_name}_orbbec_astra_depth"
-      topic="${ns}${component_name}/depth/image_raw"
-      frame_id="${ns}${component_name}_depth_optical_frame"
+      name="${robot_namespace_slash}${component_name}_orbbec_astra_depth"
+      topic="${robot_namespace_slash}${component_name}/depth/image_raw"
+      frame_id="${robot_namespace_slash}${component_name}_depth_optical_frame"
       frequency="30"
       width="640"
       height="480"

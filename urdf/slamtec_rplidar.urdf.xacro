@@ -25,9 +25,9 @@ limitations under the License.
                        component_name:=''
                        model:=s3">
 
-    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
-    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
-    <xacro:property name="device_ns" value="${component_name + '/' if component_name != '' else ''}" />
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:if value="${model == 's3'}">
       <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/SLAMTEC_rplidar_datasheet_S3_v1.0_en.pdf -->
@@ -209,13 +209,13 @@ limitations under the License.
       </xacro:property>
     </xacro:if>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${prefix}slamtec_rplidar_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}slamtec_rplidar_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${prefix}slamtec_rplidar_link" />
+      <child link="${component_name_underscore}slamtec_rplidar_link" />
     </joint>
 
-    <link name="${prefix}slamtec_rplidar_link">
+    <link name="${component_name_underscore}slamtec_rplidar_link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -240,22 +240,22 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${prefix}slamtec_rplidar_to_${prefix}laser_joint" type="fixed">
+    <joint name="${component_name_underscore}slamtec_rplidar_to_${component_name_underscore}laser_joint" type="fixed">
       <xacro:insert_block name="joint" />
-      <parent link="${prefix}slamtec_rplidar_link" />
-      <child link="${prefix}laser" />
+      <parent link="${component_name_underscore}slamtec_rplidar_link" />
+      <child link="${component_name_underscore}laser" />
     </joint>
 
-    <link name="${prefix}laser" />
+    <link name="${component_name_underscore}laser" />
 
-    <gazebo reference="${prefix}laser">
-      <sensor type="gpu_lidar" name="${ns}${prefix}slamtec_rplidar_sensor">
+    <gazebo reference="${component_name_underscore}laser">
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}slamtec_rplidar_sensor">
         <always_on>false</always_on>
         <update_rate>10</update_rate>
         <visualize>false</visualize>
 
-        <topic>${ns}${device_ns}scan</topic>
-        <gz_frame_id>${ns}${prefix}laser</gz_frame_id>
+        <topic>${robot_namespace_slash}${component_name_slash}scan</topic>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser</gz_frame_id>
 
         <ray>
           <scan>

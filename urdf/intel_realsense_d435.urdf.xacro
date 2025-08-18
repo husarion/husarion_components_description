@@ -26,7 +26,7 @@ limitations under the License.
                        robot_namespace:=''
                        component_name:=''">
 
-    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <!-- The following values are approximate, and the camera node
       publishing TF values with actual calibrated camera extrinsic values -->
@@ -169,9 +169,9 @@ limitations under the License.
     <!-- https://github.com/IntelRealSense/realsense-ros#published-topics -->
     <xacro:gz_sensor.camera
       reference="${component_name}_link"
-      name="${ns}${component_name}_intel_realsense_d435_color"
-      topic="${ns}${component_name}/color/image_raw"
-      frame_id="${ns}${component_name}_color_optical_frame"
+      name="${robot_namespace_slash}${component_name}_intel_realsense_d435_color"
+      topic="${robot_namespace_slash}${component_name}/color/image_raw"
+      frame_id="${robot_namespace_slash}${component_name}_color_optical_frame"
       frequency="30"
       width="1280"
       height="720"
@@ -179,9 +179,9 @@ limitations under the License.
 
     <xacro:gz_sensor.depth_camera
       reference="${component_name}_link"
-      name="${ns}${component_name}_intel_realsense_d435_depth"
-      topic="${ns}${component_name}/depth/image_rect_raw"
-      frame_id="${ns}${component_name}_depth_optical_frame"
+      name="${robot_namespace_slash}${component_name}_intel_realsense_d435_depth"
+      topic="${robot_namespace_slash}${component_name}/depth/image_rect_raw"
+      frame_id="${robot_namespace_slash}${component_name}_depth_optical_frame"
       frequency="30"
       width="1280"
       height="720"
