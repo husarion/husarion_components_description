@@ -71,7 +71,7 @@ limitations under the License.
         <xacro:property name="parent_link" value="${component['parent_link']}" scope="parent" />
         <xacro:property name="xyz" value="${component['xyz'] if 'xyz' in component else '0.0 0.0 0.0'}" scope="parent" />
         <xacro:property name="rpy" value="${component['rpy'] if 'rpy' in component else '0.0 0.0 0.0'}" scope="parent" />
-        <xacro:property name="device_ns" value="${component['device_namespace'] if 'device_namespace' in component else ''}" scope="parent" />
+        <xacro:property name="component_name" value="${component['name'] if 'name' in component else ''}" scope="parent" />
 
         <xacro:if value="${type == 'ANT02'}">
           <xacro:include
@@ -83,7 +83,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -97,7 +97,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -111,7 +111,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             use_nominal_extrinsics="${use_sim}"
           />
         </xacro:if>
@@ -135,7 +135,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             model="${zed_models_dict[type]}"
           />
         </xacro:if>
@@ -156,7 +156,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             model="${luxonis_models_dict[type]}"
           />
         </xacro:if>
@@ -181,7 +181,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             model="${rplidar_models_dict[type]}"
           />
         </xacro:if>
@@ -206,7 +206,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             model="${ouster_models_dict[type]}"
           />
         </xacro:if>
@@ -222,7 +222,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -236,7 +236,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             ur_type="ur3e"
           />
         </xacro:if>
@@ -251,7 +251,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             ur_type="ur5e"
           />
         </xacro:if>
@@ -268,7 +268,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
             gripper="robotiq_2f_85"
@@ -287,7 +287,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
             gripper="robotiq_2f_85"
@@ -306,7 +306,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="7"
             gripper="robotiq_2f_85"
@@ -329,7 +329,7 @@ limitations under the License.
             dof="7"
             gripper="robotiq_2f_85"
             vision="true"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -341,7 +341,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             robotiq_type="2f_85"
           />
         </xacro:if>
@@ -356,7 +356,7 @@ limitations under the License.
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${ns}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
       </xacro:unless>

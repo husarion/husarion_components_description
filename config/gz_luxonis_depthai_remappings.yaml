@@ -1,29 +1,29 @@
 ---
-  - topic_name: <robot_namespace><device_namespace>/camera_info
+  - topic_name: <robot_namespace><component_name>/camera_info
     ros_type_name: sensor_msgs/msg/CameraInfo
     gz_type_name: gz.msgs.CameraInfo
     lazy: true
     direction: GZ_TO_ROS
 
-  - topic_name: <robot_namespace><device_namespace>/rgb/color
+  - topic_name: <robot_namespace><component_name>/rgb/color
     ros_type_name: sensor_msgs/msg/Image
     gz_type_name: gz.msgs.Image
     lazy: true
     direction: GZ_TO_ROS
 
-  - topic_name: <robot_namespace><device_namespace>/stereo/camera_info
+  - topic_name: <robot_namespace><component_name>/stereo/camera_info
     ros_type_name: sensor_msgs/msg/CameraInfo
     gz_type_name: gz.msgs.CameraInfo
     lazy: true
     direction: GZ_TO_ROS
 
-  - topic_name: <robot_namespace><device_namespace>/stereo/depth
+  - topic_name: <robot_namespace><component_name>/stereo/depth
     ros_type_name: sensor_msgs/msg/Image
     gz_type_name: gz.msgs.Image
     lazy: true
     direction: GZ_TO_ROS
 
-  - topic_name: <robot_namespace><device_namespace>/stereo/depth/points
+  - topic_name: <robot_namespace><component_name>/stereo/depth/points
     ros_type_name: sensor_msgs/msg/PointCloud2
     gz_type_name: gz.msgs.PointCloudPacked
     lazy: true

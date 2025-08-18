@@ -25,7 +25,7 @@ from ament_index_python.packages import get_package_share_directory
 husarion_components_description = get_package_share_directory("husarion_components_description")
 xacro_path = os.path.join(husarion_components_description, "test/component.urdf.xacro")
 
-# Type: [device_namespace, link_name, sensor_link_name, sensor_name, default_device_namespace]
+# Type: [component_name, link_name, sensor_link_name, sensor_name, default_device_namespace]
 components_types_with_names = {
     "DEV01": ["", "dev01_link", "", "", ""],
     "DEV02": ["", "dev02_link", "", "", ""],
@@ -91,7 +91,7 @@ class ComponentsYamlParseUtils:
     def create_component(
         self,
         type: str,
-        device_namespace: str,
+        component_name: str,
         parent_link="cover_link",
         xyz="0.0 0.0 0.0",
         rpy="0.0 0.0 0.0",
@@ -103,8 +103,8 @@ class ComponentsYamlParseUtils:
             "rpy": rpy,
         }
 
-        if device_namespace != "":
-            component["device_namespace"] = device_namespace
+        if component_name != "":
+            component["name"] = component_name
 
         return component
 
@@ -150,17 +150,17 @@ class ComponentsYamlParseUtils:
         namespaced_sensor_link_name = sensor_link_name
         namespaced_sensor_name = sensor_name
 
-        device_namespace = ""
-        if "device_namespace" in component:
-            device_namespace = component["device_namespace"]
+        component_name = ""
+        if "name" in component:
+            component_name = component["name"]
 
-        if device_namespace == "":
-            device_namespace = default_device_namespace
+        if component_name == "":
+            component_name = default_device_namespace
 
-        if device_namespace != "":
-            namespaced_link_name = device_namespace + "_" + namespaced_link_name
-            namespaced_sensor_link_name = device_namespace + "_" + namespaced_sensor_link_name
-            namespaced_sensor_name = device_namespace + "_" + namespaced_sensor_name
+        if component_name != "":
+            namespaced_link_name = component_name + "_" + namespaced_link_name
+            namespaced_sensor_link_name = component_name + "_" + namespaced_sensor_link_name
+            namespaced_sensor_name = component_name + "_" + namespaced_sensor_name
 
         if self.does_urdf_parse() != expected_result[0]:
             assert (
@@ -186,8 +186,8 @@ class ComponentsYamlParseUtils:
 
 def test_all_good_single_components(tmpdir_factory):
     for type_name, value in components_types_with_names.items():
-        device_namespace = value[0]
-        folder_name = device_namespace
+        component_name = value[0]
+        folder_name = component_name
 
         if "DEV" in type_name:
             folder_name = type_name
@@ -198,7 +198,7 @@ def test_all_good_single_components(tmpdir_factory):
         utils = ComponentsYamlParseUtils(str(components_config_path))
         components = {
             "components": [
-                utils.create_component(type_name, device_namespace),
+                utils.create_component(type_name, component_name),
                 utils.create_component(type_name, ""),
             ],
         }

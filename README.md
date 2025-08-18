@@ -87,7 +87,7 @@ A list of parameters can be found here:
 - `xyz` [*float list*, default: **0.0 0.0 0.0**] 3 float values defining translation between base of a sensor and parent link. Values in **m**.
 - `rpy` [*float list*, default: **0.0 0.0 0.0**] 3 float values define rotation between parent link and base of a sensor. Values in **rad**.
 - `namespace` [*string*, default: **''**] global namespace common to the entire robot.
-- `device_namespace` [*string*, default: **''**] local namespace allowing to distinguish two identical devices from each other.
+- `name` [*string*, default: **''**] local namespace allowing to distinguish two identical devices from each other.
 
 - `model` [*string*, default: **''**] model argument that appears when you want to load the appropriate model from a given manufacturer.
 

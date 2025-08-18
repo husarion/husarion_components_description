@@ -53,12 +53,12 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       device_namespace:=''
+                       component_name:=''
                        ur_type:=ur3e">
 
     <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro" ns="ur_manipulator" />
 
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
 
     <xacro:property name="joint_limit_params"
       value="$(find ur_description)/config/${ur_type}/joint_limits.yaml" scope="parent" />

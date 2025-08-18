@@ -28,7 +28,7 @@ from launch.substitutions import (
 
 def generate_launch_description():
     robot_namespace = LaunchConfiguration("robot_namespace")
-    device_namespace = LaunchConfiguration("device_namespace")
+    component_name = LaunchConfiguration("component_name")
 
     initial_joint_controllers = PathJoinSubstitution(
         [
@@ -51,12 +51,12 @@ def generate_launch_description():
         source_file=gz_bridge_config_path,
         replacements={
             "<robot_namespace>": robot_namespace,
-            "<device_namespace>": device_namespace,
+            "<component_name>": component_name,
         },
     )
 
     # https://github.com/ros-controls/ros2_control/issues/1506
-    # After this fix the device_namespace and --namespace should be used.
+    # After this fix the component_name and --namespace should be used.
     robot_namespace_ext = PythonExpression(
         ["''", " if '", robot_namespace, "' == '' ", "else ", "'", robot_namespace, "_'"]
     )
@@ -64,25 +64,25 @@ def generate_launch_description():
     namespaced_initial_joint_controllers_path = ReplaceString(
         source_file=initial_joint_controllers,
         replacements={
-            "- joint": ["- ", device_namespace, "_joint"],
+            "- joint": ["- ", component_name, "_joint"],
             "  joint_trajectory_controller:": [
                 "  ",
                 robot_namespace_ext,
-                device_namespace,
+                component_name,
                 "_joint_trajectory_controller:",
             ],
             "  robotiq_gripper_controller:": [
                 "  ",
                 robot_namespace_ext,
-                device_namespace,
+                component_name,
                 "_robotiq_gripper_controller:",
             ],
-            "robotiq_85_left_knuckle_joint": [device_namespace, "_robotiq_85_left_knuckle_joint"],
+            "robotiq_85_left_knuckle_joint": [component_name, "_robotiq_85_left_knuckle_joint"],
         },
     )
 
     declare_device_namespace = DeclareLaunchArgument(
-        "device_namespace",
+        "component_name",
         default_value="",
         description="Sensor namespace that will appear before all non absolute topics and TF frames, used for distinguishing multiple cameras on the same robot.",
     )
@@ -100,8 +100,8 @@ def generate_launch_description():
         arguments=[
             # Using robot_namespace as prefix for controller name is caused by
             # https://github.com/ros-controls/ros2_control/issues/1506
-            # After this fix the device_namespace and --namespace should be used.
-            [robot_namespace_ext, device_namespace, "_joint_trajectory_controller"],
+            # After this fix the component_name and --namespace should be used.
+            [robot_namespace_ext, component_name, "_joint_trajectory_controller"],
             "-t",
             "joint_trajectory_controller/JointTrajectoryController",
             "-c",
@@ -120,7 +120,7 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=[
-            [robot_namespace_ext, device_namespace, "_robotiq_gripper_controller"],
+            [robot_namespace_ext, component_name, "_robotiq_gripper_controller"],
             "-t",
             "position_controllers/GripperActionController",
             "-c",

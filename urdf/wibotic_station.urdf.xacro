@@ -18,7 +18,7 @@ limitations under the License.
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wibotic_station">
 
-  <xacro:arg name="device_namespace" default="" />
+  <xacro:arg name="component_name" default="" />
   <xacro:arg name="apriltag_image_path" default="" />
   <xacro:arg name="apriltag_size" default="0.07" />
 
@@ -26,9 +26,9 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       device_namespace:='station'">
+                       component_name:='station'">
 
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${prefix}wibotic_station_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
@@ -86,9 +86,9 @@ limitations under the License.
   </xacro:macro>
 
   <xacro:macro name="create_apriltag"
-    params="name size:=$(arg apriltag_size) device_namespace:=''">
+    params="name size:=$(arg apriltag_size) component_name:=''">
 
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
 
 
     <link name="${prefix}${name}_link">
@@ -153,11 +153,11 @@ limitations under the License.
 
     <xacro:property name="apriltag_size_prop" value="$(arg apriltag_size)" />
     <xacro:wibotic_station
-      device_namespace="$(arg device_namespace)" parent_link="${prefix}${name}_image_link"  xyz="0.0 0.0 0.5"
+      component_name="$(arg component_name)" parent_link="${prefix}${name}_image_link"  xyz="0.0 0.0 0.5"
       rpy="${pi} 0 0 " />
 
   </xacro:macro>
 
-  <xacro:create_apriltag name="apriltag" device_namespace="$(arg device_namespace)" size="$(arg apriltag_size)" />
+  <xacro:create_apriltag name="apriltag" component_name="$(arg component_name)" size="$(arg apriltag_size)" />
 
 </robot>

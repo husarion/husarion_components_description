@@ -37,17 +37,17 @@ def get_value(node: yaml.Node, key: str):
 
 
 def get_launch_description(name: str, package: str, namespace: str, component: yaml.Node):
-    device_namespace = get_value(component, "device_namespace")
+    component_name = get_value(component, "name")
     robot_namespace = namespace
 
     if "ur" not in name and "kinova" not in name and "robotiq" not in name:
         if len(robot_namespace) and robot_namespace[0] != "/":
             robot_namespace = "/" + robot_namespace
-        if len(device_namespace) and device_namespace[0] != "/":
-            device_namespace = "/" + device_namespace
+        if len(component_name) and component_name[0] != "/":
+            component_name = "/" + component_name
 
     gz_bridge_name_prefix = component["type"] + "_gz_bridge"
-    device_namespace_prefix = get_value(component, "device_namespace")
+    device_namespace_prefix = get_value(component, "name")
 
     if device_namespace_prefix != "":
         gz_bridge_name_prefix = device_namespace_prefix + "_" + gz_bridge_name_prefix
@@ -56,7 +56,7 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
         PythonLaunchDescriptionSource([package, "/launch/gz_", name, ".launch.py"]),
         launch_arguments={
             "robot_namespace": robot_namespace,
-            "device_namespace": device_namespace,
+            "component_name": component_name,
             "gz_bridge_name": gz_bridge_name_prefix,
         }.items(),
     )

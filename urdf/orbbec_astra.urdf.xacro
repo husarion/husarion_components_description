@@ -22,25 +22,25 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        robot_namespace:=''
-                       device_namespace:=camera">
+                       component_name:=camera">
 
     <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name}_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_link" />
+      <child link="${component_name}_link" />
     </joint>
 
-    <link name="${device_namespace}_link" />
+    <link name="${component_name}_link" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_orbbec_astra_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name}_orbbec_astra_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_orbbec_astra_link" />
+      <child link="${component_name}_orbbec_astra_link" />
     </joint>
 
-    <link name="${device_namespace}_orbbec_astra_link">
+    <link name="${component_name}_orbbec_astra_link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -93,57 +93,57 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_color_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name}_color_joint" type="fixed">
       <origin xyz="-0.002 0.0125 0.03325" rpy="-0.003 0.0 -0.003" />
-      <parent link="${device_namespace}_link" />
-      <child link="${device_namespace}_color_frame" />
+      <parent link="${component_name}_link" />
+      <child link="${component_name}_color_frame" />
     </joint>
 
-    <link name="${device_namespace}_depth_frame" />
+    <link name="${component_name}_depth_frame" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_depth_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name}_depth_joint" type="fixed">
       <origin xyz="0.0 0.0 0.03325" rpy="0.0 0.0 0.0" />
-      <parent link="${device_namespace}_link" />
-      <child link="${device_namespace}_depth_frame" />
+      <parent link="${component_name}_link" />
+      <child link="${component_name}_depth_frame" />
     </joint>
 
-    <link name="${device_namespace}_color_frame" />
+    <link name="${component_name}_color_frame" />
 
-    <joint name="${device_namespace}_color_to_${device_namespace}_color_optical_joint" type="fixed">
+    <joint name="${component_name}_color_to_${component_name}_color_optical_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
-      <parent link="${device_namespace}_color_frame" />
-      <child link="${device_namespace}_color_optical_frame" />
+      <parent link="${component_name}_color_frame" />
+      <child link="${component_name}_color_optical_frame" />
     </joint>
 
-    <link name="${device_namespace}_depth_optical_frame" />
+    <link name="${component_name}_depth_optical_frame" />
 
-    <joint name="${device_namespace}_depth_to_${device_namespace}_depth_optical_joint" type="fixed">
+    <joint name="${component_name}_depth_to_${component_name}_depth_optical_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
-      <parent link="${device_namespace}_depth_frame" />
-      <child link="${device_namespace}_depth_optical_frame" />
+      <parent link="${component_name}_depth_frame" />
+      <child link="${component_name}_depth_optical_frame" />
     </joint>
 
-    <link name="${device_namespace}_color_optical_frame" />
+    <link name="${component_name}_color_optical_frame" />
 
     <!-- GAZEBO -->
     <!-- https://github.com/orbbec/OrbbecSDK_ROS2#all-available-topics -->
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
     <xacro:gz_sensor.camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_orbbec_astra_color"
-      topic="${ns}${device_namespace}/color/image_raw"
-      frame_id="${ns}${device_namespace}_color_optical_frame"
+      reference="${component_name}_link"
+      name="${ns}${component_name}_orbbec_astra_color"
+      topic="${ns}${component_name}/color/image_raw"
+      frame_id="${ns}${component_name}_color_optical_frame"
       frequency="30"
       width="640"
       height="480"
       fov="${60.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_orbbec_astra_depth"
-      topic="${ns}${device_namespace}/depth/image_raw"
-      frame_id="${ns}${device_namespace}_depth_optical_frame"
+      reference="${component_name}_link"
+      name="${ns}${component_name}_orbbec_astra_depth"
+      topic="${ns}${component_name}/depth/image_raw"
+      frame_id="${ns}${component_name}_depth_optical_frame"
       frequency="30"
       width="640"
       height="480"

@@ -1,5 +1,5 @@
 ---
-  - topic_name: <robot_namespace><device_namespace>/scan
+  - topic_name: <robot_namespace><component_name>/scan
     ros_type_name: sensor_msgs/msg/LaserScan
     gz_type_name: gz.msgs.LaserScan
     lazy: true
