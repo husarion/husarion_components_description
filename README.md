@@ -6,8 +6,8 @@ URDF models of sensors and other components offered alongside with Husarion robo
 
 <div align="center">
 
-| Code  | Device Name                  |
-| ----- | ---------------------------- |
+| Code   | Device Name                  |
+| ------ | ---------------------------- |
 | DEV01  | Cover with Access Panel      |
 | DEV02  | Carrying Handles             |
 | DEV03  | Wooden Mounting Plate        |
@@ -18,30 +18,30 @@ URDF models of sensors and other components offered alongside with Husarion robo
 | DEV07  | 475 mm Small Gate            |
 | DEV07T | 350 mm Rotated Small Gate    |
 | DEV09  | Large Gate                   |
-| ANT02 | Teltonika 003R-00253         |
-| CAM01 | Orbbec Astra                 |
-| CAM03 | StereoLabs ZED 2             |
-| CAM04 | StereoLabs ZED 2i            |
-| CAM05 | StereoLabs ZED M             |
-| CAM06 | StereoLabs ZED X             |
-| CAM11 | Luxonis OAK-D-PRO            |
-| LDR01 | RPLIDAR S1                   |
-| LDR06 | RPLIDAR S3                   |
-| LDR10 | Ouster OS0-32                |
-| LDR11 | Ouster OS0-64                |
-| LDR12 | Ouster OS0-128               |
-| LDR13 | Ouster OS1-32                |
-| LDR14 | Ouster OS1-64                |
-| LDR15 | Ouster OS1-128               |
-| LDR20 | Velodyne Puck                |
-| MAN01 | Universal Robots UR3e        |
-| MAN02 | Universal Robots UR5e        |
-| MAN04 | 6DoF Kinova Gen3             |
-| MAN05 | 6DoF Kinova Gen3 + 3D vision |
-| MAN06 | 7DoF Kinova Gen3             |
-| MAN07 | 7DoF Kinova Gen3 + 3D vision |
-| GRP02 | Robotiq 2F-85                |
-| WCH01 | Wibotic receiver             |
+| ANT02  | Teltonika 003R-00253         |
+| CAM01  | Orbbec Astra                 |
+| CAM03  | StereoLabs ZED 2             |
+| CAM04  | StereoLabs ZED 2i            |
+| CAM05  | StereoLabs ZED M             |
+| CAM06  | StereoLabs ZED X             |
+| CAM11  | Luxonis OAK-D-PRO            |
+| LDR01  | RPLIDAR S1                   |
+| LDR06  | RPLIDAR S3                   |
+| LDR10  | Ouster OS0-32                |
+| LDR11  | Ouster OS0-64                |
+| LDR12  | Ouster OS0-128               |
+| LDR13  | Ouster OS1-32                |
+| LDR14  | Ouster OS1-64                |
+| LDR15  | Ouster OS1-128               |
+| LDR20  | Velodyne Puck                |
+| MAN01  | Universal Robots UR3e        |
+| MAN02  | Universal Robots UR5e        |
+| MAN04  | 6DoF Kinova Gen3             |
+| MAN05  | 6DoF Kinova Gen3 + 3D vision |
+| MAN06  | 7DoF Kinova Gen3             |
+| MAN07  | 7DoF Kinova Gen3 + 3D vision |
+| GRP02  | Robotiq 2F-85                |
+| WCH01  | Wibotic receiver             |
 
 </div>
 
