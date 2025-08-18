@@ -92,10 +92,6 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/orbbec_astra.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="camera" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.orbbec_astra
             parent_link="${parent_link}"
             xyz="${xyz}"
@@ -109,10 +105,6 @@ limitations under the License.
           <xacro:include
             filename="$(find husarion_components_description)/urdf/intel_realsense_d435.urdf.xacro"
             ns="camera" />
-
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="camera" scope="parent" />
-          </xacro:if>
 
           <xacro:camera.intel_realsense_d435
             parent_link="${parent_link}"
@@ -137,10 +129,6 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/stereolabs_zed.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="zed" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.zed_camera
 
             parent_link="${parent_link}"
@@ -162,10 +150,6 @@ limitations under the License.
           <xacro:include
             filename="$(find husarion_components_description)/urdf/luxonis_depthai.urdf.xacro"
             ns="camera" />
-
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="oak" scope="parent" />
-          </xacro:if>
 
           <xacro:camera.luxonis_depthai
             parent_link="${parent_link}"
