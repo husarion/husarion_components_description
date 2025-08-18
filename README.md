@@ -8,6 +8,16 @@ URDF models of sensors and other components offered alongside with Husarion robo
 
 | Code  | Device Name                  |
 | ----- | ---------------------------- |
+| DEV01  | Cover with Access Panel      |
+| DEV02  | Carrying Handles             |
+| DEV03  | Wooden Mounting Plate        |
+| DEV04H | 370 mm High Frame            |
+| DEV04L | 170 mm High Frame            |
+| DEV05  | 350 mm Pillar                |
+| DEV06  | Basket on Railings           |
+| DEV07  | 475 mm Small Gate            |
+| DEV07T | 350 mm Rotated Small Gate    |
+| DEV09  | Large Gate                   |
 | ANT02 | Teltonika 003R-00253         |
 | CAM01 | Orbbec Astra                 |
 | CAM03 | StereoLabs ZED 2             |
