@@ -26,7 +26,7 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       component_name:='station'">
+                       component_name:=''">
 
     <xacro:property name="prefix" value="${component_name + '_' if component_name != '' else ''}" />
 

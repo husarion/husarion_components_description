@@ -22,7 +22,7 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        robot_namespace:=''
-                       component_name:=camera">
+                       component_name:=''">
 
     <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 

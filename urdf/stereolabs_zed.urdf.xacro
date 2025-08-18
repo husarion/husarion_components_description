@@ -27,7 +27,7 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        model:=zed
                        robot_namespace:=''
-                       component_name:=zed">
+                       component_name:=''">
 
     <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
