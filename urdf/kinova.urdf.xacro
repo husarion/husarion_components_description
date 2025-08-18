@@ -203,7 +203,7 @@ limitations under the License.
             </depth_camera>
             <optical_frame_id>${component_name_underscore}color_optical_frame</optical_frame_id>
           </camera>
-          <gz_frame_id>${component_name_underscore}camera_color_frame</gz_frame_id>
+          <gz_frame_id>${robot_namespace_slash}${component_name_underscore}camera_color_frame</gz_frame_id>
           <always_on>1</always_on>
           <update_rate>${camera_fps}</update_rate>
           <visualize>true</visualize>
