@@ -23,10 +23,10 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        use_nominal_extrinsics:=false
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=camera">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <!-- The following values are approximate, and the camera node
       publishing TF values with actual calibrated camera extrinsic values -->

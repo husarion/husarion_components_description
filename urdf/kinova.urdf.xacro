@@ -57,7 +57,7 @@ limitations under the License.
                        dof:=6
                        gripper:=''
                        vision:=false
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=''">
 
     <xacro:include
@@ -65,7 +65,7 @@ limitations under the License.
       ns="kinova_manipulator"
     />
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
 
     <!-- robot name parameter -->

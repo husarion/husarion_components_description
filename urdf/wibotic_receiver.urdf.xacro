@@ -21,11 +21,11 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=''">
 
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${prefix}wibotic_receiver_joint" type="fixed">

@@ -21,10 +21,10 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=camera">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />

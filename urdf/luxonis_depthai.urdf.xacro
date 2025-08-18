@@ -21,13 +21,13 @@ limitations under the License.
     params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:='oak'
                        model:='OAK-D-PRO'
                        use_sim:=False">
 
     <xacro:include filename="$(find depthai_descriptions)/urdf/include/depthai_macro.urdf.xacro" />
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <xacro:depthai_camera camera_name="${device_namespace}" parent="${parent_link}"
       base_frame="${ns}${device_namespace}" camera_model="${model}"

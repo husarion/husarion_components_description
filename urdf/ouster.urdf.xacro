@@ -22,7 +22,7 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        model:=os1_32
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=''">
 
     <xacro:if value="${model == 'os0_32'}">
@@ -67,7 +67,7 @@ limitations under the License.
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
     </xacro:if>
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
     <xacro:property name="device_ns" value="${device_namespace + '/' if device_namespace != '' else ''}" />
 

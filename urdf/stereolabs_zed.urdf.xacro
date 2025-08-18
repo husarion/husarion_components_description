@@ -26,10 +26,10 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        model:=zed
-                       namespace:=''
+                       robot_namespace:=''
                        device_namespace:=zed">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:property name="ns" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
 
     <xacro:if value="${model == 'zed'}">
       <xacro:property name="baseline" value="0.12" />
