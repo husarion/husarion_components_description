@@ -35,6 +35,11 @@ URDF models of sensors and other components offered alongside with Husarion robo
 
 </div>
 
+> [!NOTE]
+> The manipulators (code `MAN<X>`) must only be used within the simulation environment.
+> Support for manipulators on a physical robot is implemented as separate software components.
+> Please refer to [the official documentation](https://husarion.com/manuals/panther/manipulators).
+
 ## Including sensor
 
 First build the package by running:
