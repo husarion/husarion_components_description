@@ -25,7 +25,7 @@ from ament_index_python.packages import get_package_share_directory
 husarion_components_description = get_package_share_directory("husarion_components_description")
 xacro_path = os.path.join(husarion_components_description, "test/component.urdf.xacro")
 
-# Type: [component_name, link_name, sensor_link_name, sensor_name, default_device_namespace]
+# Type: [component_name, link_name, sensor_link_name, sensor_name, default_component_name]
 components_types_with_names = {
     "DEV01": ["", "dev01_link", "", "", ""],
     "DEV02": ["", "dev02_link", "", "", ""],
@@ -144,7 +144,7 @@ class ComponentsYamlParseUtils:
         link_name = names[1]
         sensor_link_name = names[2]
         sensor_name = names[3]
-        default_device_namespace = names[4]
+        default_component_name = names[4]
 
         namespaced_link_name = link_name
         namespaced_sensor_link_name = sensor_link_name
@@ -155,7 +155,7 @@ class ComponentsYamlParseUtils:
             component_name = component["name"]
 
         if component_name == "":
-            component_name = default_device_namespace
+            component_name = default_component_name
 
         if component_name != "":
             namespaced_link_name = component_name + "_" + namespaced_link_name
