@@ -27,7 +27,7 @@ limitations under the License.
                        component_name:=''">
 
     <xacro:if value="${component_name == ''}">
-      <xacro:property name="component_name" value="d435" />
+      <xacro:property name="component_name" value="camera" />
     </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
