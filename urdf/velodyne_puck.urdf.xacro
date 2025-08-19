@@ -73,16 +73,16 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${component_name_underscore}to_${component_name_underscore}lidar_joint"
+    <joint name="${component_name_underscore}to_${component_name_underscore}velodyne_joint"
       type="fixed">
       <origin xyz="0.0 0.0 0.0378" rpy="0.0 0.0 0.0" />
       <parent link="${component_name_underscore}link" />
-      <child link="${component_name_underscore}lidar_frame" />
+      <child link="${component_name_underscore}velodyne" />
     </joint>
 
-    <link name="${component_name_underscore}lidar_frame" />
+    <link name="${component_name_underscore}velodyne" />
 
-    <gazebo reference="${component_name_underscore}lidar_frame">
+    <gazebo reference="${component_name_underscore}velodyne">
       <!-- gpu_lidar has to be set, CPU lidar doesn't work in ignition -
       https://github.com/gazebosim/gz-sensors/issues/26 -->
       <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
@@ -117,7 +117,7 @@ limitations under the License.
         </ray>
 
         <topic>${robot_namespace_slash}${component_name_slash}velodyne_points</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}lidar_frame</gz_frame_id>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}velodyne</gz_frame_id>
         <always_on>true</always_on>
       </sensor>
     </gazebo>

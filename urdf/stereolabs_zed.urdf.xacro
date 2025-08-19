@@ -182,7 +182,7 @@ limitations under the License.
     </joint>
 
     <!-- Camera Center -->
-    <link name="${component_name_underscore}camera_center_frame">
+    <link name="${component_name_underscore}camera_center">
       <xacro:unless value="${model == 'virtual'}">
         <visual>
           <origin xyz="${screw_offset_x} 0 ${screw_offset_z}" rpy="0 0 0"/>
@@ -205,7 +205,7 @@ limitations under the License.
     </link>
     <joint name="${component_name_underscore}to_${component_name_underscore}camera_center_joint" type="fixed">
       <parent link="${component_name_underscore}link"/>
-      <child link="${component_name_underscore}camera_center_frame"/>
+      <child link="${component_name_underscore}camera_center"/>
       <origin xyz="0 0 ${height/2}" rpy="0 ${bottom_slope} 0" />
     </joint>
 
@@ -231,7 +231,7 @@ limitations under the License.
         </xacro:if>
       </link>
       <joint name="${component_name_underscore}left_camera_joint" type="fixed">
-        <parent link="${component_name_underscore}camera_center_frame"/>
+        <parent link="${component_name_underscore}camera_center"/>
         <child link="${component_name_underscore}left_camera_frame"/>
         <origin xyz="${optical_offset_x} ${baseline/2} 0" rpy="0 0 0" />
       </joint>
@@ -264,7 +264,7 @@ limitations under the License.
         </xacro:if>
       </link>
       <joint name="${component_name_underscore}right_camera_joint" type="fixed">
-        <parent link="${component_name_underscore}camera_center_frame"/>
+        <parent link="${component_name_underscore}camera_center"/>
         <child link="${component_name_underscore}right_camera_frame"/>
         <origin xyz="${optical_offset_x} -${baseline/2} 0" rpy="0 0 0" />
       </joint>
@@ -280,14 +280,14 @@ limitations under the License.
       <xacro:if value="${model == 'zed2'}">
         <link name="${component_name_underscore}mag_link" />
         <joint name="${component_name_underscore}mag_joint" type="fixed">
-          <parent link="${component_name_underscore}camera_center_frame"/>
+          <parent link="${component_name_underscore}camera_center"/>
           <child link="${component_name_underscore}mag_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
 
         <link name="${component_name_underscore}baro_link" />
         <joint name="${component_name_underscore}baro_joint" type="fixed">
-          <parent link="${component_name_underscore}camera_center_frame"/>
+          <parent link="${component_name_underscore}camera_center"/>
           <child link="${component_name_underscore}baro_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
@@ -312,7 +312,7 @@ limitations under the License.
       <!-- Camera -->
       <link name="${component_name_underscore}camera_frame" />
       <joint name="${component_name_underscore}camera_joint" type="fixed">
-        <parent link="${component_name_underscore}camera_center_frame"/>
+        <parent link="${component_name_underscore}camera_center"/>
         <child link="${component_name_underscore}camera_frame"/>
         <origin xyz="${optical_offset_x} 0 0" rpy="0 0 0" />
       </joint>
@@ -329,20 +329,20 @@ limitations under the License.
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
     <xacro:gz_sensor.camera
-      reference="${component_name_underscore}camera_center_frame"
+      reference="${component_name_underscore}camera_center"
       name="${robot_namespace_slash}${component_name_underscore}stereolabs_zed_color"
       topic="${robot_namespace_slash}${component_name_slash}zed_node/rgb/image_rect_color"
-      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center_frame"
+      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"
       width="1280"
       height="720"
       fov="${110.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${component_name_underscore}camera_center_frame"
+      reference="${component_name_underscore}camera_center"
       name="${robot_namespace_slash}${component_name_underscore}stereolabs_zed_depth"
       topic="${robot_namespace_slash}${component_name_slash}zed_node/depth"
-      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center_frame"
+      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"
       width="1280"
       height="720"

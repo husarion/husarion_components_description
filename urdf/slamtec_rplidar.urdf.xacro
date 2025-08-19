@@ -247,19 +247,19 @@ limitations under the License.
     <joint name="${component_name_underscore}to_${component_name_underscore}laser_joint" type="fixed">
       <xacro:insert_block name="joint" />
       <parent link="${component_name_underscore}link" />
-      <child link="${component_name_underscore}laser_frame" />
+      <child link="${component_name_underscore}laser" />
     </joint>
 
-    <link name="${component_name_underscore}laser_frame" />
+    <link name="${component_name_underscore}laser" />
 
-    <gazebo reference="${component_name_underscore}laser_frame">
+    <gazebo reference="${component_name_underscore}laser">
       <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
         <always_on>false</always_on>
         <update_rate>10</update_rate>
         <visualize>false</visualize>
 
         <topic>${robot_namespace_slash}${component_name_slash}scan</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser_frame</gz_frame_id>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser</gz_frame_id>
 
         <ray>
           <scan>
