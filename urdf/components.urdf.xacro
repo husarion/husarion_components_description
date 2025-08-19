@@ -41,7 +41,6 @@ limitations under the License.
       <xacro:property name="component" value="${config['components'][index]}" scope="parent" />
 
       <xacro:property name="type" value="${component['type']}" scope="parent" />
-      <xacro:property name="robot_namespace_value" value="${robot_namespace}" scope="parent" />
 
       <xacro:property name="dev_models_dict"
         value="${dict ([
@@ -82,7 +81,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
           />
         </xacro:if>
@@ -96,7 +95,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
           />
         </xacro:if>
@@ -110,7 +109,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             use_nominal_extrinsics="${use_sim}"
           />
@@ -134,7 +133,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${zed_models_dict[type]}"
           />
@@ -155,7 +154,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${luxonis_models_dict[type]}"
           />
@@ -180,7 +179,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${rplidar_models_dict[type]}"
           />
@@ -205,7 +204,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${ouster_models_dict[type]}"
           />
@@ -221,7 +220,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
           />
         </xacro:if>
@@ -267,7 +266,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
@@ -286,7 +285,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
@@ -305,7 +304,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             kinova_type="gen3"
             dof="7"
@@ -324,7 +323,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             kinova_type="gen3"
             dof="7"
             gripper="robotiq_2f_85"
@@ -355,7 +354,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            robot_namespace="${robot_namespace_value}"
+            robot_namespace="${robot_namespace}"
             component_name="${component_name}"
           />
         </xacro:if>
