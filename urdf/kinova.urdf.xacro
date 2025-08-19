@@ -73,9 +73,6 @@ limitations under the License.
       ns="kinova_manipulator"
     />
 
-    <!-- robot name parameter -->
-    <xacro:property name="robot_name" value="kinova_arm" />
-
     <!-- Arguments -->
     <xacro:property name="robot_ip" value="192.168.11.11" />
     <xacro:property name="username" value="admin" />
