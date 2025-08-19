@@ -33,13 +33,6 @@ def generate_launch_description():
         [FindPackageShare("husarion_components_description"), "config", "ur_controllers.yaml"]
     )
 
-    # Using robot_namespace as prefix for controller name is caused by
-    # https://github.com/ros-controls/ros2_control/issues/1506
-    # After this fix the component_name and --namespace should be used.
-    robot_namespace_ext = PythonExpression(
-        ["''", " if '", robot_namespace, "' == '' ", "else ", "'", robot_namespace, "_'"]
-    )
-
     namespaced_initial_joint_controllers_path = ReplaceString(
         source_file=initial_joint_controllers,
         replacements={
@@ -52,7 +45,6 @@ def generate_launch_description():
             "tool0": [component_name, "_tool0"],
             "  joint_trajectory_controller:": [
                 "  ",
-                robot_namespace_ext,
                 component_name,
                 "_joint_trajectory_controller:",
             ],
@@ -76,18 +68,15 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=[
-            # Using robot_namespace as prefix for controller name is caused by
-            # https://github.com/ros-controls/ros2_control/issues/1506
-            # After this fix the component_name and --namespace should be used.
-            [robot_namespace_ext, component_name, "_joint_trajectory_controller"],
+            [component_name, "_joint_trajectory_controller"],
             "-t",
             "joint_trajectory_controller/JointTrajectoryController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
             "10",
-            # "--namespace",
-            # robot_namespace,
+            "--namespace",
+            robot_namespace,
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
