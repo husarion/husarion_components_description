@@ -47,10 +47,10 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
             component_name = "/" + component_name
 
     gz_bridge_name_prefix = component["type"] + "_gz_bridge"
-    device_namespace_prefix = get_value(component, "name")
+    component_name_gz_prefix = get_value(component, "name")
 
-    if device_namespace_prefix != "":
-        gz_bridge_name_prefix = device_namespace_prefix + "_" + gz_bridge_name_prefix
+    if component_name_gz_prefix != "":
+        gz_bridge_name_prefix = component_name_gz_prefix + "_" + gz_bridge_name_prefix
 
     return IncludeLaunchDescription(
         PythonLaunchDescriptionSource([package, "/launch/gz_", name, ".launch.py"]),
