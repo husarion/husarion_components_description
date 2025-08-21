@@ -65,22 +65,22 @@ limitations under the License.
     </link>
 
     <joint
-      name="${component_name_underscore}to_${component_name_underscore}origin_joint"
+      name="${component_name_underscore}to_${component_name_underscore}antenna_joint"
       type="fixed">
       <origin xyz="0.045 0.0 0.0058" rpy="0.0 0.0 0.0" />
       <parent link="${component_name_underscore}link" />
-      <child link="${component_name_underscore}origin_frame" />
+      <child link="${component_name_underscore}antenna" />
     </joint>
 
-    <link name="${component_name_underscore}origin_frame" />
+    <link name="${component_name_underscore}antenna" />
 
-    <gazebo reference="${component_name_underscore}origin_frame">
+    <gazebo reference="${component_name_underscore}antenna">
       <sensor name="${robot_namespace_slash}${component_name_underscore}navsat" type="navsat">
         <plugin filename="ignition-gazebo-navsat-system" name="ignition::gazebo::systems::NavSat" />
         <always_on>1</always_on>
         <update_rate>1</update_rate>
         <topic>${robot_namespace_slash}${component_name_slash}fix</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_slash}origin_frame</gz_frame_id>
+        <gz_frame_id>${robot_namespace_slash}${component_name_slash}antenna</gz_frame_id>
       </sensor>
     </gazebo>
   </xacro:macro>
