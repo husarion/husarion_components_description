@@ -330,7 +330,7 @@ limitations under the License.
 
     <xacro:gz_sensor.camera
       reference="${component_name_underscore}camera_center"
-      name="${robot_namespace_slash}${component_name_underscore}stereolabs_zed_color"
+      name="${robot_namespace_slash}${component_name_underscore}camera_color"
       topic="${robot_namespace_slash}${component_name_slash}zed_node/rgb/image_rect_color"
       frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"
@@ -340,7 +340,7 @@ limitations under the License.
 
     <xacro:gz_sensor.depth_camera
       reference="${component_name_underscore}camera_center"
-      name="${robot_namespace_slash}${component_name_underscore}stereolabs_zed_depth"
+      name="${robot_namespace_slash}${component_name_underscore}camera_depth"
       topic="${robot_namespace_slash}${component_name_slash}zed_node/depth"
       frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"

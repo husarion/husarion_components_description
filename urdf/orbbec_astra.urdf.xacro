@@ -137,7 +137,7 @@ limitations under the License.
 
     <xacro:gz_sensor.camera
       reference="${component_name_underscore}link"
-      name="${robot_namespace_slash}${component_name_underscore}orbbec_astra_color"
+      name="${robot_namespace_slash}${component_name_underscore}camera_color"
       topic="${robot_namespace_slash}${component_name_slash}color/image_raw"
       frame_id="${robot_namespace_slash}${component_name_underscore}color_optical_frame"
       frequency="30"
@@ -147,7 +147,7 @@ limitations under the License.
 
     <xacro:gz_sensor.depth_camera
       reference="${component_name_underscore}link"
-      name="${robot_namespace_slash}${component_name_underscore}orbbec_astra_depth"
+      name="${robot_namespace_slash}${component_name_underscore}camera_depth"
       topic="${robot_namespace_slash}${component_name_slash}depth/image_raw"
       frame_id="${robot_namespace_slash}${component_name_underscore}depth_optical_frame"
       frequency="30"
