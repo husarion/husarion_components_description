@@ -40,7 +40,7 @@ def generate_launch_description():
     gz_bridge_name = LaunchConfiguration("gz_bridge_name")
 
     device_namespace = PythonExpression(
-        ["'", device_namespace, "' if '", device_namespace, "' else 'camera'"]
+        ["'", device_namespace, "' if '", device_namespace, "' else '/camera'"]
     )
 
     namespaced_gz_bridge_config_path = ReplaceString(
