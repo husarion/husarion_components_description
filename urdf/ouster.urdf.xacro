@@ -22,8 +22,16 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        model:=os1_32
-                       namespace:=''
-                       device_namespace:=''">
+                       robot_namespace:=''
+                       component_name:=''">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="ouster" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
@@ -67,17 +75,13 @@ limitations under the License.
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
     </xacro:if>
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
-    <xacro:property name="device_ns" value="${device_namespace + '/' if device_namespace != '' else ''}" />
-
-    <joint name="${parent_link.rstrip('_link')}_to_${prefix}ouster_${model}_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${prefix}ouster_${model}_link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${prefix}ouster_${model}_link">
+    <link name="${component_name_underscore}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -112,18 +116,18 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${prefix}ouster_${model}_to_${prefix}os_lidar_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}os_lidar_joint" type="fixed">
       <origin xyz="0.0 0.0 0.03618" rpy="0.0 0.0 0.0" />
-      <parent link="${prefix}ouster_${model}_link" />
-      <child link="${prefix}os_lidar" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}os_lidar" />
     </joint>
 
-    <link name="${prefix}os_lidar" />
+    <link name="${component_name_underscore}os_lidar" />
 
-    <gazebo reference="${prefix}os_lidar">
+    <gazebo reference="${component_name_underscore}os_lidar">
       <!-- gpu_lidar has to be set, CPU lidar doesn't work in ignition -
       https://github.com/gazebosim/gz-sensors/issues/26 -->
-      <sensor type="gpu_lidar" name="${ns}${prefix}ouster_${model}_sensor">
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
         <visualize>false</visualize>
         <ray>
           <scan>
@@ -155,8 +159,8 @@ limitations under the License.
 
         <update_rate>20.0</update_rate>
 
-        <topic>${ns}${device_ns}ouster/points</topic>
-        <gz_frame_id>${ns}${prefix}os_lidar</gz_frame_id>
+        <topic>${robot_namespace_slash}${component_name_slash}ouster/points</topic>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}os_lidar</gz_frame_id>
         <always_on>true</always_on>
       </sensor>
     </gazebo>

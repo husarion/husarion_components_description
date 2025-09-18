@@ -23,10 +23,16 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        use_nominal_extrinsics:=false
-                       namespace:=''
-                       device_namespace:=camera">
+                       robot_namespace:=''
+                       component_name:=''">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="camera" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <!-- The following values are approximate, and the camera node
       publishing TF values with actual calibrated camera extrinsic values -->
@@ -50,22 +56,22 @@ limitations under the License.
     <xacro:property name="d435_cam_depth_pz" value="${d435_cam_height/2}" />
 
     <!-- camera body, with origin at bottom screw mount -->
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_bottom_screw_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}bottom_screw_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_bottom_screw_frame" />
+      <child link="${component_name_underscore}bottom_screw_frame" />
     </joint>
 
-    <link name="${device_namespace}_bottom_screw_frame" />
+    <link name="${component_name_underscore}bottom_screw_frame" />
 
-    <joint name="${device_namespace}_bottom_screw_to_${device_namespace}_joint" type="fixed">
+    <joint name="${component_name_underscore}bottom_screw_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="0.0 ${d435_cam_depth_py} ${d435_cam_depth_pz}"
         rpy="0.0 0.0 0.0" />
-      <parent link="${device_namespace}_bottom_screw_frame" />
-      <child link="${device_namespace}_link" />
+      <parent link="${component_name_underscore}bottom_screw_frame" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${device_namespace}_link">
+    <link name="${component_name_underscore}link">
       <visual>
         <origin xyz="${d435_cam_mount_from_center_offset} ${-d435_cam_depth_py} 0.0" rpy="${pi/2.0} 0.0 ${pi/2.0}" />
         <geometry>
@@ -94,72 +100,72 @@ limitations under the License.
       published. e.g. running the device in simulation  -->
     <xacro:if value="${use_nominal_extrinsics}">
       <!-- camera depth joints and links -->
-      <joint name="${device_namespace}_to_${device_namespace}_depth_joint" type="fixed">
+      <joint name="${component_name_underscore}to_${component_name_underscore}depth_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-        <parent link="${device_namespace}_link" />
-        <child link="${device_namespace}_depth_frame" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}depth_frame" />
       </joint>
 
-      <link name="${device_namespace}_depth_frame" />
+      <link name="${component_name_underscore}depth_frame" />
 
-      <joint name="${device_namespace}_depth_to_${device_namespace}_depth_optical_joint" type="fixed">
+      <joint name="${component_name_underscore}depth_to_${component_name_underscore}depth_optical_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
-        <parent link="${device_namespace}_depth_frame" />
-        <child link="${device_namespace}_depth_optical_frame" />
+        <parent link="${component_name_underscore}depth_frame" />
+        <child link="${component_name_underscore}depth_optical_frame" />
       </joint>
 
-      <link name="${device_namespace}_depth_optical_frame" />
+      <link name="${component_name_underscore}depth_optical_frame" />
 
       <!-- camera left IR joints and links -->
-      <joint name="${device_namespace}_to_${device_namespace}_infra1_joint" type="fixed">
+      <joint name="${component_name_underscore}to_${component_name_underscore}infra1_joint" type="fixed">
         <origin xyz="0.0 ${d435_cam_depth_to_infra1_offset} 0.0" rpy="0.0 0.0 0.0" />
-        <parent link="${device_namespace}_link" />
-        <child link="${device_namespace}_infra1_frame" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}infra1_frame" />
       </joint>
 
-      <link name="${device_namespace}_infra1_frame" />
+      <link name="${component_name_underscore}infra1_frame" />
 
-      <joint name="${device_namespace}_infra1_to_${device_namespace}_infra1_optical_joint" type="fixed">
+      <joint name="${component_name_underscore}infra1_to_${component_name_underscore}infra1_optical_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
-        <parent link="${device_namespace}_infra1_frame" />
-        <child link="${device_namespace}_infra1_optical_frame" />
+        <parent link="${component_name_underscore}infra1_frame" />
+        <child link="${component_name_underscore}infra1_optical_frame" />
       </joint>
 
-      <link name="${device_namespace}_infra1_optical_frame" />
+      <link name="${component_name_underscore}infra1_optical_frame" />
 
       <!-- camera right IR joints and links -->
-      <joint name="${device_namespace}_to_${device_namespace}_infra2_joint" type="fixed">
+      <joint name="${component_name_underscore}to_${component_name_underscore}infra2_joint" type="fixed">
         <origin xyz="0.0 ${d435_cam_depth_to_infra2_offset} 0.0" rpy="0.0 0.0 0.0" />
-        <parent link="${device_namespace}_link" />
-        <child link="${device_namespace}_infra2_frame" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}infra2_frame" />
       </joint>
 
-      <link name="${device_namespace}_infra2_frame" />
+      <link name="${component_name_underscore}infra2_frame" />
 
-      <joint name="${device_namespace}_infra2_to_${device_namespace}_infra2_optical_joint" type="fixed">
+      <joint name="${component_name_underscore}infra2_to_${component_name_underscore}infra2_optical_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
-        <parent link="${device_namespace}_infra2_frame" />
-        <child link="${device_namespace}_infra2_optical_frame" />
+        <parent link="${component_name_underscore}infra2_frame" />
+        <child link="${component_name_underscore}infra2_optical_frame" />
       </joint>
 
-      <link name="${device_namespace}_infra2_optical_frame" />
+      <link name="${component_name_underscore}infra2_optical_frame" />
 
       <!-- camera color joints and links -->
-      <joint name="${device_namespace}_to_${device_namespace}_color_joint" type="fixed">
+      <joint name="${component_name_underscore}to_${component_name_underscore}color_joint" type="fixed">
         <origin xyz="0.0 ${d435_cam_depth_to_color_offset} 0.0" rpy="0.0 0.0 0.0" />
-        <parent link="${device_namespace}_link" />
-        <child link="${device_namespace}_color_frame" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}color_frame" />
       </joint>
 
-      <link name="${device_namespace}_color_frame" />
+      <link name="${component_name_underscore}color_frame" />
 
-      <joint name="${device_namespace}_color_to_${device_namespace}_color_optical_joint" type="fixed">
+      <joint name="${component_name_underscore}color_to_${component_name_underscore}color_optical_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
-        <parent link="${device_namespace}_color_frame" />
-        <child link="${device_namespace}_color_optical_frame" />
+        <parent link="${component_name_underscore}color_frame" />
+        <child link="${component_name_underscore}color_optical_frame" />
       </joint>
 
-      <link name="${device_namespace}_color_optical_frame" />
+      <link name="${component_name_underscore}color_optical_frame" />
     </xacro:if>
 
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
@@ -168,20 +174,20 @@ limitations under the License.
       should be more accurate for D435 - different frames and fovs can be set -->
     <!-- https://github.com/IntelRealSense/realsense-ros#published-topics -->
     <xacro:gz_sensor.camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_intel_realsense_d435_color"
-      topic="${ns}${device_namespace}/color/image_raw"
-      frame_id="${ns}${device_namespace}_color_optical_frame"
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d435_color"
+      topic="${robot_namespace_slash}${component_name_slash}color/image_raw"
+      frame_id="${robot_namespace_slash}${component_name_underscore}color_optical_frame"
       frequency="30"
       width="1280"
       height="720"
       fov="${69.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_intel_realsense_d435_depth"
-      topic="${ns}${device_namespace}/depth/image_rect_raw"
-      frame_id="${ns}${device_namespace}_depth_optical_frame"
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d435_depth"
+      topic="${robot_namespace_slash}${component_name_slash}depth/image_rect_raw"
+      frame_id="${robot_namespace_slash}${component_name_underscore}depth_optical_frame"
       frequency="30"
       width="1280"
       height="720"

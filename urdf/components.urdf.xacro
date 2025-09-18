@@ -41,7 +41,6 @@ limitations under the License.
       <xacro:property name="component" value="${config['components'][index]}" scope="parent" />
 
       <xacro:property name="type" value="${component['type']}" scope="parent" />
-      <xacro:property name="ns" value="${robot_namespace}" scope="parent" />
 
       <xacro:property name="dev_models_dict"
         value="${dict ([
@@ -71,7 +70,7 @@ limitations under the License.
         <xacro:property name="parent_link" value="${component['parent_link']}" scope="parent" />
         <xacro:property name="xyz" value="${component['xyz'] if 'xyz' in component else '0.0 0.0 0.0'}" scope="parent" />
         <xacro:property name="rpy" value="${component['rpy'] if 'rpy' in component else '0.0 0.0 0.0'}" scope="parent" />
-        <xacro:property name="device_ns" value="${component['device_namespace'] if 'device_namespace' in component else ''}" scope="parent" />
+        <xacro:property name="component_name" value="${component['name'] if 'name' in component else ''}" scope="parent" />
 
         <xacro:if value="${type == 'ANT02'}">
           <xacro:include
@@ -82,8 +81,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -92,16 +91,12 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/orbbec_astra.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="camera" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.orbbec_astra
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -110,16 +105,12 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/intel_realsense_d435.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="camera" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.intel_realsense_d435
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             use_nominal_extrinsics="${use_sim}"
           />
         </xacro:if>
@@ -137,17 +128,13 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/stereolabs_zed.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="zed" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.zed_camera
 
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             model="${zed_models_dict[type]}"
           />
         </xacro:if>
@@ -163,16 +150,12 @@ limitations under the License.
             filename="$(find husarion_components_description)/urdf/luxonis_depthai.urdf.xacro"
             ns="camera" />
 
-          <xacro:if value="${device_ns == ''}">
-            <xacro:property name="device_ns" value="oak" scope="parent" />
-          </xacro:if>
-
           <xacro:camera.luxonis_depthai
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             model="${luxonis_models_dict[type]}"
           />
         </xacro:if>
@@ -196,8 +179,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             model="${rplidar_models_dict[type]}"
           />
         </xacro:if>
@@ -221,8 +204,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             model="${ouster_models_dict[type]}"
           />
         </xacro:if>
@@ -237,8 +220,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -252,7 +235,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             ur_type="ur3e"
           />
         </xacro:if>
@@ -267,7 +250,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             ur_type="ur5e"
           />
         </xacro:if>
@@ -283,8 +266,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
             gripper="robotiq_2f_85"
@@ -302,8 +285,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="6"
             gripper="robotiq_2f_85"
@@ -321,8 +304,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
             kinova_type="gen3"
             dof="7"
             gripper="robotiq_2f_85"
@@ -340,12 +323,12 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
+            robot_namespace="${robot_namespace}"
             kinova_type="gen3"
             dof="7"
             gripper="robotiq_2f_85"
             vision="true"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
           />
         </xacro:if>
 
@@ -357,7 +340,7 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            device_namespace="${device_ns}"
+            component_name="${component_name}"
             robotiq_type="2f_85"
           />
         </xacro:if>
@@ -371,8 +354,8 @@ limitations under the License.
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
-            namespace="${ns}"
-            device_namespace="${device_ns}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
           />
         </xacro:if>
       </xacro:unless>

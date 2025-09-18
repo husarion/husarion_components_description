@@ -22,45 +22,36 @@ from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
     PathJoinSubstitution,
-    PythonExpression,
 )
 
 
 def generate_launch_description():
     robot_namespace = LaunchConfiguration("robot_namespace")
-    device_namespace = LaunchConfiguration("device_namespace")
+    component_name = LaunchConfiguration("component_name")
     initial_joint_controllers = PathJoinSubstitution(
         [FindPackageShare("husarion_components_description"), "config", "ur_controllers.yaml"]
-    )
-
-    # Using robot_namespace as prefix for controller name is caused by
-    # https://github.com/ros-controls/ros2_control/issues/1506
-    # After this fix the device_namespace and --namespace should be used.
-    robot_namespace_ext = PythonExpression(
-        ["''", " if '", robot_namespace, "' == '' ", "else ", "'", robot_namespace, "_'"]
     )
 
     namespaced_initial_joint_controllers_path = ReplaceString(
         source_file=initial_joint_controllers,
         replacements={
-            "shoulder_pan_joint": [device_namespace, "_shoulder_pan_joint"],
-            "shoulder_lift_joint": [device_namespace, "_shoulder_lift_joint"],
-            "elbow_joint": [device_namespace, "_elbow_joint"],
-            "wrist_1_joint": [device_namespace, "_wrist_1_joint"],
-            "wrist_2_joint": [device_namespace, "_wrist_2_joint"],
-            "wrist_3_joint": [device_namespace, "_wrist_3_joint"],
-            "tool0": [device_namespace, "_tool0"],
+            "shoulder_pan_joint": [component_name, "_shoulder_pan_joint"],
+            "shoulder_lift_joint": [component_name, "_shoulder_lift_joint"],
+            "elbow_joint": [component_name, "_elbow_joint"],
+            "wrist_1_joint": [component_name, "_wrist_1_joint"],
+            "wrist_2_joint": [component_name, "_wrist_2_joint"],
+            "wrist_3_joint": [component_name, "_wrist_3_joint"],
+            "tool0": [component_name, "_tool0"],
             "  joint_trajectory_controller:": [
                 "  ",
-                robot_namespace_ext,
-                device_namespace,
+                component_name,
                 "_joint_trajectory_controller:",
             ],
         },
     )
 
-    declare_device_namespace = DeclareLaunchArgument(
-        "device_namespace",
+    declare_component_name = DeclareLaunchArgument(
+        "component_name",
         default_value="",
         description="Sensor namespace that will appear before all non absolute topics and TF frames, used for distinguishing multiple cameras on the same robot.",
     )
@@ -76,18 +67,15 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=[
-            # Using robot_namespace as prefix for controller name is caused by
-            # https://github.com/ros-controls/ros2_control/issues/1506
-            # After this fix the device_namespace and --namespace should be used.
-            [robot_namespace_ext, device_namespace, "_joint_trajectory_controller"],
+            [component_name, "_joint_trajectory_controller"],
             "-t",
             "joint_trajectory_controller/JointTrajectoryController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
             "10",
-            # "--namespace",
-            # robot_namespace,
+            "--namespace",
+            robot_namespace,
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
@@ -96,7 +84,7 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            declare_device_namespace,
+            declare_component_name,
             declare_robot_namespace,
             initial_joint_controller_spawner_started,
         ]

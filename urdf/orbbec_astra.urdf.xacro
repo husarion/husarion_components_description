@@ -21,26 +21,32 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       namespace:=''
-                       device_namespace:=camera">
+                       robot_namespace:=''
+                       component_name:=''">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="camera" />
+    </xacro:if>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_joint" type="fixed">
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${device_namespace}_link" />
+    <link name="${component_name_underscore}link" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_orbbec_astra_joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}astra_visual_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_orbbec_astra_link" />
+      <child link="${component_name_underscore}astra_visual_frame" />
     </joint>
 
-    <link name="${device_namespace}_orbbec_astra_link">
+    <link name="${component_name_underscore}astra_visual_frame">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -93,57 +99,57 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_color_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}color_joint" type="fixed">
       <origin xyz="-0.002 0.0125 0.03325" rpy="-0.003 0.0 -0.003" />
-      <parent link="${device_namespace}_link" />
-      <child link="${device_namespace}_color_frame" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}color_frame" />
     </joint>
 
-    <link name="${device_namespace}_depth_frame" />
+    <link name="${component_name_underscore}depth_frame" />
 
-    <joint name="${parent_link.rstrip('_link')}_to_${device_namespace}_depth_joint" type="fixed">
+    <joint name="${component_name_underscore}to_${component_name_underscore}depth_joint" type="fixed">
       <origin xyz="0.0 0.0 0.03325" rpy="0.0 0.0 0.0" />
-      <parent link="${device_namespace}_link" />
-      <child link="${device_namespace}_depth_frame" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}depth_frame" />
     </joint>
 
-    <link name="${device_namespace}_color_frame" />
+    <link name="${component_name_underscore}color_frame" />
 
-    <joint name="${device_namespace}_color_to_${device_namespace}_color_optical_joint" type="fixed">
+    <joint name="${component_name_underscore}color_to_${component_name_underscore}color_optical_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
-      <parent link="${device_namespace}_color_frame" />
-      <child link="${device_namespace}_color_optical_frame" />
+      <parent link="${component_name_underscore}color_frame" />
+      <child link="${component_name_underscore}color_optical_frame" />
     </joint>
 
-    <link name="${device_namespace}_depth_optical_frame" />
+    <link name="${component_name_underscore}depth_optical_frame" />
 
-    <joint name="${device_namespace}_depth_to_${device_namespace}_depth_optical_joint" type="fixed">
+    <joint name="${component_name_underscore}depth_to_${component_name_underscore}depth_optical_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
-      <parent link="${device_namespace}_depth_frame" />
-      <child link="${device_namespace}_depth_optical_frame" />
+      <parent link="${component_name_underscore}depth_frame" />
+      <child link="${component_name_underscore}depth_optical_frame" />
     </joint>
 
-    <link name="${device_namespace}_color_optical_frame" />
+    <link name="${component_name_underscore}color_optical_frame" />
 
     <!-- GAZEBO -->
     <!-- https://github.com/orbbec/OrbbecSDK_ROS2#all-available-topics -->
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
     <xacro:gz_sensor.camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_orbbec_astra_color"
-      topic="${ns}${device_namespace}/color/image_raw"
-      frame_id="${ns}${device_namespace}_color_optical_frame"
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}camera_color"
+      topic="${robot_namespace_slash}${component_name_slash}color/image_raw"
+      frame_id="${robot_namespace_slash}${component_name_underscore}color_optical_frame"
       frequency="30"
       width="640"
       height="480"
       fov="${60.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${device_namespace}_link"
-      name="${ns}${device_namespace}_orbbec_astra_depth"
-      topic="${ns}${device_namespace}/depth/image_raw"
-      frame_id="${ns}${device_namespace}_depth_optical_frame"
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}camera_depth"
+      topic="${robot_namespace_slash}${component_name_slash}depth/image_raw"
+      frame_id="${robot_namespace_slash}${component_name_underscore}depth_optical_frame"
       frequency="30"
       width="640"
       height="480"

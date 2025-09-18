@@ -57,19 +57,21 @@ limitations under the License.
                        dof:=6
                        gripper:=''
                        vision:=false
-                       namespace:=''
-                       device_namespace:=''">
+                       robot_namespace:=''
+                       component_name:=''">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="kinova" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:include
       filename="$(find kortex_description)/robots/kortex_robot.xacro"
       ns="kinova_manipulator"
     />
-
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
-
-    <!-- robot name parameter -->
-    <xacro:property name="name" value="kinova_arm" />
 
     <!-- Arguments -->
     <xacro:property name="robot_ip" value="192.168.11.11" />
@@ -114,7 +116,7 @@ limitations under the License.
       session_inactivity_timeout_ms="${session_inactivity_timeout_ms}"
       connection_inactivity_timeout_ms="${connection_inactivity_timeout_ms}"
       use_internal_bus_gripper_comm="${use_internal_bus_gripper_comm}"
-      prefix="${prefix}"
+      prefix="${component_name_underscore}"
       sim_ignition="true"
       use_fake_hardware="${use_fake_hardware}"
       fake_sensor_commands="${fake_sensor_commands}"
@@ -139,8 +141,8 @@ limitations under the License.
       <xacro:arg name="sim_isaac" default="false" />
 
       <xacro:kinova_manipulator.load_gripper
-        parent="${prefix}${last_arm_link}"
-        prefix="${prefix}"
+        parent="${component_name_underscore}${last_arm_link}"
+        prefix="${component_name_underscore}"
         use_fake_hardware="${use_fake_hardware}"
         fake_sensor_commands="${fake_sensor_commands}"
         sim_ignition="true"
@@ -149,8 +151,8 @@ limitations under the License.
     </xacro:unless>
 
     <xacro:if value="${vision}">
-      <gazebo reference="${device_namespace}_camera_color_frame">
-        <sensor name="${ns}${device_namespace}_camera_sensor" type="rgbd_camera">
+      <gazebo reference="${component_name_underscore}camera_color_frame">
+        <sensor name="${robot_namespace_slash}${component_name_underscore}camera_sensor" type="rgbd_camera">
           <camera>
             <horizontal_fov>1.047</horizontal_fov>
             <image>
@@ -200,13 +202,13 @@ limitations under the License.
                 <far>5</far>
               </clip>
             </depth_camera>
-            <optical_frame_id>${device_namespace}_color_optical_frame</optical_frame_id>
+            <optical_frame_id>${component_name_underscore}color_optical_frame</optical_frame_id>
           </camera>
-          <gz_frame_id>${device_namespace}_camera_color_frame</gz_frame_id>
+          <gz_frame_id>${robot_namespace_slash}${component_name_underscore}camera_color_frame</gz_frame_id>
           <always_on>1</always_on>
           <update_rate>${camera_fps}</update_rate>
           <visualize>true</visualize>
-          <topic>${ns}${device_namespace}/wrist_mounted_camera</topic>
+          <topic>${robot_namespace_slash}${component_name_slash}wrist_mounted_camera</topic>
           <enable_metrics>false</enable_metrics>
         </sensor>
       </gazebo>

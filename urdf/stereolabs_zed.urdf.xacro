@@ -26,10 +26,16 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        model:=zed
-                       namespace:=''
-                       device_namespace:=zed">
+                       robot_namespace:=''
+                       component_name:=''">
 
-    <xacro:property name="ns" value="${namespace + '/' if namespace != '' else ''}" />
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="zed" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:if value="${model == 'zed'}">
       <xacro:property name="baseline" value="0.12" />
@@ -168,15 +174,15 @@ limitations under the License.
     </xacro:if>
 
     <!-- Camera mounting point (the threaded screw hole in the bottom) -->
-    <link name="${device_namespace}_camera_link" />
-    <joint name="${device_namespace}_base_joint" type="fixed">
+    <link name="${component_name_underscore}link" />
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
       <parent link="${parent_link}" />
-      <child link="${device_namespace}_camera_link" />
+      <child link="${component_name_underscore}link" />
       <origin xyz="${xyz}" rpy="${rpy}" />
     </joint>
 
     <!-- Camera Center -->
-    <link name="${device_namespace}_camera_center">
+    <link name="${component_name_underscore}camera_center">
       <xacro:unless value="${model == 'virtual'}">
         <visual>
           <origin xyz="${screw_offset_x} 0 ${screw_offset_z}" rpy="0 0 0"/>
@@ -197,15 +203,15 @@ limitations under the License.
         </collision>
       </xacro:unless>
     </link>
-    <joint name="${device_namespace}_camera_center_joint" type="fixed">
-      <parent link="${device_namespace}_camera_link"/>
-      <child link="${device_namespace}_camera_center"/>
+    <joint name="${component_name_underscore}to_${component_name_underscore}camera_center_joint" type="fixed">
+      <parent link="${component_name_underscore}link"/>
+      <child link="${component_name_underscore}camera_center"/>
       <origin xyz="0 0 ${height/2}" rpy="0 ${bottom_slope} 0" />
     </joint>
 
     <xacro:unless value="${mono}">
       <!-- Left Camera -->
-      <link name="${device_namespace}_left_camera_frame">
+      <link name="${component_name_underscore}left_camera_frame">
         <xacro:if value="${model == 'virtual'}">
           <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -224,21 +230,21 @@ limitations under the License.
           </collision>
         </xacro:if>
       </link>
-      <joint name="${device_namespace}_left_camera_joint" type="fixed">
-        <parent link="${device_namespace}_camera_center"/>
-        <child link="${device_namespace}_left_camera_frame"/>
+      <joint name="${component_name_underscore}left_camera_joint" type="fixed">
+        <parent link="${component_name_underscore}camera_center"/>
+        <child link="${component_name_underscore}left_camera_frame"/>
         <origin xyz="${optical_offset_x} ${baseline/2} 0" rpy="0 0 0" />
       </joint>
 
-      <link name="${device_namespace}_left_camera_optical_frame"/>
-      <joint name="${device_namespace}_left_camera_optical_joint" type="fixed">
+      <link name="${component_name_underscore}left_camera_optical_frame"/>
+      <joint name="${component_name_underscore}left_camera_optical_joint" type="fixed">
         <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
-        <parent link="${device_namespace}_left_camera_frame"/>
-        <child link="${device_namespace}_left_camera_optical_frame"/>
+        <parent link="${component_name_underscore}left_camera_frame"/>
+        <child link="${component_name_underscore}left_camera_optical_frame"/>
       </joint>
 
       <!-- Right Camera -->
-      <link name="${device_namespace}_right_camera_frame">
+      <link name="${component_name_underscore}right_camera_frame">
         <xacro:if value="${model == 'virtual'}">
           <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -257,46 +263,46 @@ limitations under the License.
           </collision>
         </xacro:if>
       </link>
-      <joint name="${device_namespace}_right_camera_joint" type="fixed">
-        <parent link="${device_namespace}_camera_center"/>
-        <child link="${device_namespace}_right_camera_frame"/>
+      <joint name="${component_name_underscore}right_camera_joint" type="fixed">
+        <parent link="${component_name_underscore}camera_center"/>
+        <child link="${component_name_underscore}right_camera_frame"/>
         <origin xyz="${optical_offset_x} -${baseline/2} 0" rpy="0 0 0" />
       </joint>
 
-      <link name="${device_namespace}_right_camera_optical_frame"/>
-      <joint name="${device_namespace}_right_camera_optical_joint" type="fixed">
+      <link name="${component_name_underscore}right_camera_optical_frame"/>
+      <joint name="${component_name_underscore}right_camera_optical_joint" type="fixed">
         <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
-        <parent link="${device_namespace}_right_camera_frame"/>
-        <child link="${device_namespace}_right_camera_optical_frame"/>
+        <parent link="${component_name_underscore}right_camera_frame"/>
+        <child link="${component_name_underscore}right_camera_optical_frame"/>
       </joint>
 
       <!-- ZED2 Sensors -->
       <xacro:if value="${model == 'zed2'}">
-        <link name="${device_namespace}_mag_link" />
-        <joint name="${device_namespace}_mag_joint" type="fixed">
-          <parent link="${device_namespace}_camera_center"/>
-          <child link="${device_namespace}_mag_link"/>
+        <link name="${component_name_underscore}mag_link" />
+        <joint name="${component_name_underscore}mag_joint" type="fixed">
+          <parent link="${component_name_underscore}camera_center"/>
+          <child link="${component_name_underscore}mag_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
 
-        <link name="${device_namespace}_baro_link" />
-        <joint name="${device_namespace}_baro_joint" type="fixed">
-          <parent link="${device_namespace}_camera_center"/>
-          <child link="${device_namespace}_baro_link"/>
+        <link name="${component_name_underscore}baro_link" />
+        <joint name="${component_name_underscore}baro_joint" type="fixed">
+          <parent link="${component_name_underscore}camera_center"/>
+          <child link="${component_name_underscore}baro_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
 
-        <link name="${device_namespace}_temp_left_link" />
-        <joint name="${device_namespace}_temp_left_joint" type="fixed">
-          <parent link="${device_namespace}_left_camera_frame"/>
-          <child link="${device_namespace}_temp_left_link"/>
+        <link name="${component_name_underscore}temp_left_link" />
+        <joint name="${component_name_underscore}temp_left_joint" type="fixed">
+          <parent link="${component_name_underscore}left_camera_frame"/>
+          <child link="${component_name_underscore}temp_left_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
 
-        <link name="${device_namespace}_temp_right_link" />
-        <joint name="${device_namespace}_temp_right_joint" type="fixed">
-          <parent link="${device_namespace}_right_camera_frame"/>
-          <child link="${device_namespace}_temp_right_link"/>
+        <link name="${component_name_underscore}temp_right_link" />
+        <joint name="${component_name_underscore}temp_right_joint" type="fixed">
+          <parent link="${component_name_underscore}right_camera_frame"/>
+          <child link="${component_name_underscore}temp_right_link"/>
           <origin xyz="0 0 0" rpy="0 0 0" />
         </joint>
       </xacro:if>
@@ -304,18 +310,18 @@ limitations under the License.
 
     <xacro:if value="${mono}">
       <!-- Camera -->
-      <link name="${device_namespace}_camera_frame" />
-      <joint name="${device_namespace}_camera_joint" type="fixed">
-        <parent link="${device_namespace}_camera_center"/>
-        <child link="${device_namespace}_camera_frame"/>
+      <link name="${component_name_underscore}camera_frame" />
+      <joint name="${component_name_underscore}camera_joint" type="fixed">
+        <parent link="${component_name_underscore}camera_center"/>
+        <child link="${component_name_underscore}camera_frame"/>
         <origin xyz="${optical_offset_x} 0 0" rpy="0 0 0" />
       </joint>
 
-      <link name="${device_namespace}_camera_optical_frame"/>
-      <joint name="${device_namespace}_camera_optical_joint" type="fixed">
+      <link name="${component_name_underscore}camera_optical_frame"/>
+      <joint name="${component_name_underscore}camera_optical_joint" type="fixed">
         <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}"/>
-        <parent link="${device_namespace}_camera_frame"/>
-        <child link="${device_namespace}_camera_optical_frame"/>
+        <parent link="${component_name_underscore}camera_frame"/>
+        <child link="${component_name_underscore}camera_optical_frame"/>
       </joint>
     </xacro:if>
 
@@ -323,20 +329,20 @@ limitations under the License.
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
     <xacro:gz_sensor.camera
-      reference="${device_namespace}_camera_center"
-      name="${ns}${device_namespace}_stereolabs_zed_color"
-      topic="${ns}${device_namespace}/zed_node/rgb/image_rect_color"
-      frame_id="${ns}${device_namespace}_camera_center"
+      reference="${component_name_underscore}camera_center"
+      name="${robot_namespace_slash}${component_name_underscore}camera_color"
+      topic="${robot_namespace_slash}${component_name_slash}zed_node/rgb/image_rect_color"
+      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"
       width="1280"
       height="720"
       fov="${110.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${device_namespace}_camera_center"
-      name="${ns}${device_namespace}_stereolabs_zed_depth"
-      topic="${ns}${device_namespace}/zed_node/depth"
-      frame_id="${ns}${device_namespace}_camera_center"
+      reference="${component_name_underscore}camera_center"
+      name="${robot_namespace_slash}${component_name_underscore}camera_depth"
+      topic="${robot_namespace_slash}${component_name_slash}zed_node/depth"
+      frame_id="${robot_namespace_slash}${component_name_underscore}camera_center"
       frequency="30"
       width="1280"
       height="720"

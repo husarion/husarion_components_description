@@ -53,12 +53,16 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       device_namespace:=''
+                       component_name:=''
                        ur_type:=ur3e">
 
-    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro" ns="ur_manipulator" />
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="ur" />
+    </xacro:if>
 
-    <xacro:property name="prefix" value="${device_namespace + '_' if device_namespace != '' else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+
+    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro" ns="ur_manipulator" />
 
     <xacro:property name="joint_limit_params"
       value="$(find ur_description)/config/${ur_type}/joint_limits.yaml" scope="parent" />
@@ -77,7 +81,7 @@ limitations under the License.
 
     <xacro:ur_manipulator.ur_robot
       name="${ur_type}"
-      tf_prefix="${prefix}"
+      tf_prefix="${component_name_underscore}"
       parent="${parent_link}"
       joint_limits_parameters_file="${joint_limit_params}"
       kinematics_parameters_file="${kinematics_params}"
@@ -88,11 +92,11 @@ limitations under the License.
     </xacro:ur_manipulator.ur_robot>
 
 
-    <ros2_control name="${prefix + ur_type}" type="system">
+    <ros2_control name="${component_name_underscore}${ur_type}" type="system">
       <hardware>
         <plugin>gz_ros2_control/GazeboSimSystem</plugin>
       </hardware>
-      <joint name="${prefix}shoulder_pan_joint">
+      <joint name="${component_name_underscore}shoulder_pan_joint">
         <command_interface name="position">
           <param name="min">{-2*pi}</param>
           <param name="max">{2*pi}</param>
@@ -108,7 +112,7 @@ limitations under the License.
         <state_interface name="velocity" />
         <state_interface name="effort" />
       </joint>
-      <joint name="${prefix}shoulder_lift_joint">
+      <joint name="${component_name_underscore}shoulder_lift_joint">
         <command_interface name="position">
           <param name="min">{-2*pi}</param>
           <param name="max">{2*pi}</param>
@@ -124,7 +128,7 @@ limitations under the License.
         <state_interface name="velocity" />
         <state_interface name="effort" />
       </joint>
-      <joint name="${prefix}elbow_joint">
+      <joint name="${component_name_underscore}elbow_joint">
         <command_interface name="position">
           <param name="min">{-pi}</param>
           <param name="max">{pi}</param>
@@ -140,7 +144,7 @@ limitations under the License.
         <state_interface name="velocity" />
         <state_interface name="effort" />
       </joint>
-      <joint name="${prefix}wrist_1_joint">
+      <joint name="${component_name_underscore}wrist_1_joint">
         <command_interface name="position">
           <param name="min">{-2*pi}</param>
           <param name="max">{2*pi}</param>
@@ -156,7 +160,7 @@ limitations under the License.
         <state_interface name="velocity" />
         <state_interface name="effort" />
       </joint>
-      <joint name="${prefix}wrist_2_joint">
+      <joint name="${component_name_underscore}wrist_2_joint">
         <command_interface name="position">
           <param name="min">{-2*pi}</param>
           <param name="max">{2*pi}</param>
@@ -172,7 +176,7 @@ limitations under the License.
         <state_interface name="velocity" />
         <state_interface name="effort" />
       </joint>
-      <joint name="${prefix}wrist_3_joint">
+      <joint name="${component_name_underscore}wrist_3_joint">
         <command_interface name="position">
           <param name="min">{-2*pi}</param>
           <param name="max">{2*pi}</param>
