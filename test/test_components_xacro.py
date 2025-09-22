@@ -45,7 +45,7 @@ components_types_with_names = {
     "LDR13": ["ouster_os1_32", "os_lidar", "os_lidar", "lidar", ""],
     "LDR14": ["ouster_os1_64", "os_lidar", "os_lidar", "lidar", ""],
     "LDR15": ["ouster_os1_128", "os_lidar", "os_lidar", "lidar", ""],
-    "LDR20": ["velodyne_puck", "velodyne", "velodyne", "lidar", "velodyne"],
+    "LDR20": ["velodyne_puck", "velodyne", "velodyne", "lidar", ""],
     "CAM01": ["orbbec_astra", "link", "link", "camera_color", "camera"],
     "CAM03": ["zed2", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM04": ["zed2i", "camera_center", "camera_center", "camera_color", "zed"],

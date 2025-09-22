@@ -57,7 +57,8 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
         "stereolabs_zed": "zed",
         "teltonika": "gps",
         "ur": "ur",
-        "velodyne": "velodyne",
+        # "velodyne": "velodyne",
+        # ^ removed for compatibility with hw driver
         "wibotic_station": "wibotic_station",
     }
     if component_name == "" and name in default_component_names:
