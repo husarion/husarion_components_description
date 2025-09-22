@@ -40,17 +40,38 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
     component_name = get_value(component, "name")
     robot_namespace = namespace
 
+    # choose a default name
+    # these are also defined in husarion_components_description/urdf/*.xacro files
+    default_component_names = {
+        "intel_realsense_d435": "camera",
+        "kinova_6dof": "kinova",
+        "kinova_7dof": "kinova",
+        "luxonis_depthai": "oak",
+        "orbbec_astra": "camera",
+        # "ouster_os": "ouster",
+        # ^ removed for compatibility with hw driver
+        "robotiq": "robotiq",
+        # "slamtec_rplidar": "rplidar",
+        # ^ removed for compatibility with hw driver
+        "stereolabs_zed": "zed",
+        "teltonika": "gps",
+        "ur": "ur",
+        "velodyne": "velodyne",
+        "wibotic_station": "wibotic_station",
+    }
+    if component_name == "" and name in default_component_names:
+        component_name = default_component_names[name]
+
+    gz_bridge_name_prefix = component["type"] + "_gz_bridge"
+    component_name_gz_prefix = component_name
+    if component_name_gz_prefix != "":
+        gz_bridge_name_prefix = component_name_gz_prefix + "_" + gz_bridge_name_prefix
+
     if "ur" not in name and "kinova" not in name and "robotiq" not in name:
         if len(robot_namespace) and robot_namespace[0] != "/":
             robot_namespace = "/" + robot_namespace
         if len(component_name) and component_name[0] != "/":
             component_name = "/" + component_name
-
-    gz_bridge_name_prefix = component["type"] + "_gz_bridge"
-    component_name_gz_prefix = get_value(component, "name")
-
-    if component_name_gz_prefix != "":
-        gz_bridge_name_prefix = component_name_gz_prefix + "_" + gz_bridge_name_prefix
 
     return IncludeLaunchDescription(
         PythonLaunchDescriptionSource([package, "/launch/gz_", name, ".launch.py"]),
