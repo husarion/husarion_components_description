@@ -39,10 +39,6 @@ def generate_launch_description():
     component_name = LaunchConfiguration("component_name")
     gz_bridge_name = LaunchConfiguration("gz_bridge_name")
 
-    component_name = PythonExpression(
-        ["'", component_name, "' if '", component_name, "' else 'oak'"]
-    )
-
     namespaced_gz_bridge_config_path = ReplaceString(
         source_file=gz_bridge_config_path,
         replacements={
