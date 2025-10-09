@@ -46,8 +46,7 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
         "intel_realsense_d435": "camera",
         "kinova_6dof": "kinova",
         "kinova_7dof": "kinova",
-        # "luxonis_depthai": "oak",
-        # ^ removed for compatibility with hw driver
+        "luxonis_depthai": "oak",
         "orbbec_astra": "camera",
         # "ouster_os": "ouster",
         # ^ removed for compatibility with hw driver

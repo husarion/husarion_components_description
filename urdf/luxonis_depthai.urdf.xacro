@@ -26,10 +26,9 @@ limitations under the License.
                        model:='OAK-D-PRO'
                        use_sim:=False">
 
-    <!-- <xacro:if value="${component_name == ''}">
+    <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="oak" />
-    </xacro:if> -->
-    <!-- ^ removed for compatibility with hw driver -->
+    </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
