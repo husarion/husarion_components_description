@@ -34,6 +34,7 @@ limitations under the License.
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'gps_'}" />
+    <xacro:property name="component_name_slash_nonempty" value="${component_name_slash if component_name_slash != '' else 'gps/'}" />
     <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
 
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint"
@@ -83,8 +84,8 @@ limitations under the License.
         <plugin filename="ignition-gazebo-navsat-system" name="ignition::gazebo::systems::NavSat" />
         <always_on>1</always_on>
         <update_rate>1</update_rate>
-        <topic>${robot_namespace_slash}${component_name_slash}fix</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_slash}antenna</gz_frame_id>
+        <topic>${robot_namespace_slash}${component_name_slash_nonempty}fix</topic>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}gps</gz_frame_id>
       </sensor>
     </gazebo>
   </xacro:macro>
