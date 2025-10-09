@@ -23,7 +23,6 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
-    PythonExpression,
 )
 
 
