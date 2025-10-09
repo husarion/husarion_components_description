@@ -54,7 +54,8 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
         # "slamtec_rplidar": "rplidar",
         # ^ removed for compatibility with hw driver
         "stereolabs_zed": "zed",
-        "teltonika": "gps",
+        # "teltonika": "gps",
+        # ^ removed for compatibility with hw driver
         "ur": "ur",
         # "velodyne": "velodyne",
         # ^ removed for compatibility with hw driver
