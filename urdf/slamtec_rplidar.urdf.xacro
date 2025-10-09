@@ -25,13 +25,17 @@ limitations under the License.
                        component_name:=''
                        model:=s3">
 
-    <xacro:if value="${component_name == ''}">
+    <!-- <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="rplidar" />
-    </xacro:if>
+    </xacro:if> -->
+    <!-- ^ removed for compatibility with hw driver -->
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'rplidar_'}" />
+    <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
 
     <xacro:if value="${model == 's3'}">
       <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/SLAMTEC_rplidar_datasheet_S3_v1.0_en.pdf -->
@@ -213,13 +217,13 @@ limitations under the License.
       </xacro:property>
     </xacro:if>
 
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint" type="fixed">
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore}link" />
+      <child link="${component_name_underscore_nonempty}link" />
     </joint>
 
-    <link name="${component_name_underscore}link">
+    <link name="${component_name_underscore_nonempty}link">
       <!-- <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -244,9 +248,9 @@ limitations under the License.
       </inertial>
     </link>
 
-    <joint name="${component_name_underscore}to_${component_name_underscore}laser_joint" type="fixed">
+    <joint name="${component_name_underscore_nonempty}to_${component_name_underscore}laser_joint" type="fixed">
       <xacro:insert_block name="joint" />
-      <parent link="${component_name_underscore}link" />
+      <parent link="${component_name_underscore_nonempty}link" />
       <child link="${component_name_underscore}laser" />
     </joint>
 
