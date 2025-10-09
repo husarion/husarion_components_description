@@ -24,27 +24,22 @@ limitations under the License.
                        robot_namespace:=''
                        component_name:=''">
 
-    <!-- <xacro:if value="${component_name == ''}">
+    <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="gps" />
-    </xacro:if> -->
-    <!-- ^ removed for compatibility with hw driver -->
+    </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
-    <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'gps_'}" />
-    <xacro:property name="component_name_slash_nonempty" value="${component_name_slash if component_name_slash != '' else 'gps/'}" />
-    <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
-
-    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint"
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}joint"
       type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
-      <child link="${component_name_underscore_nonempty}link" />
+      <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${component_name_underscore_nonempty}link">
+    <link name="${component_name_underscore}link">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -70,22 +65,22 @@ limitations under the License.
     </link>
 
     <joint
-      name="${component_name_underscore_nonempty}to_${component_name_underscore}gps_joint"
+      name="${component_name_underscore}to_${component_name_underscore}_joint"
       type="fixed">
       <origin xyz="0.045 0.0 0.0058" rpy="0.0 0.0 0.0" />
-      <parent link="${component_name_underscore_nonempty}link" />
-      <child link="${component_name_underscore}gps" />
+      <parent link="${component_name_underscore}link" />
+      <child link="${component_name_underscore}" />
     </joint>
 
-    <link name="${component_name_underscore}gps" />
+    <link name="${component_name_underscore}" />
 
-    <gazebo reference="${component_name_underscore}gps">
-      <sensor name="${robot_namespace_slash}${component_name_underscore_nonempty}navsat" type="navsat">
+    <gazebo reference="${component_name_underscore}">
+      <sensor name="${robot_namespace_slash}${component_name_underscore}navsat" type="navsat">
         <plugin filename="ignition-gazebo-navsat-system" name="ignition::gazebo::systems::NavSat" />
         <always_on>1</always_on>
         <update_rate>1</update_rate>
-        <topic>${robot_namespace_slash}${component_name_slash_nonempty}fix</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}gps</gz_frame_id>
+        <topic>${robot_namespace_slash}${component_name_slash}fix</topic>
+        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}</gz_frame_id>
       </sensor>
     </gazebo>
   </xacro:macro>
