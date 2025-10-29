@@ -68,6 +68,8 @@ def get_launch_description(name: str, package: str, namespace: str, component: y
     if component_name_gz_prefix != "":
         gz_bridge_name_prefix = component_name_gz_prefix + "_" + gz_bridge_name_prefix
 
+    gz_bridge_name_prefix = gz_bridge_name_prefix.replace("/", "_")
+
     if "ur" not in name and "kinova" not in name and "robotiq" not in name:
         if len(robot_namespace) and robot_namespace[0] != "/":
             robot_namespace = "/" + robot_namespace
