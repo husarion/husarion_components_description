@@ -26,7 +26,8 @@ limitations under the License.
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
-                       component_name:=''">
+                       component_name:=''
+                       transmitter_height:=0.3">
 
     <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="wibotic_station" />
@@ -40,26 +41,15 @@ limitations under the License.
       <child link="${component_name_underscore}link" />
     </joint>
 
-    <link name="${component_name_underscore}link">
-      <!-- <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${pi/2.0}" />
-        <geometry>
-          <mesh filename="package://husarion_components_description/meshes/wibotic_station.stl" />
-        </geometry>
-      </visual> -->
-
-      <!-- TODO Remove simple visuals when mesh is ready -->
+  <link name="${component_name_underscore}link">
       <visual>
-        <origin xyz="-0.2 0.0  0.4" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.4 0.5 0.8" />
+          <mesh filename="package://husarion_components_description/meshes/wibotic_frame.dae" />
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.6 0.6 0.6 1.0" />
-        </material>
       </visual>
 
-      <!-- Fake collision fit to STL -->
+      <!-- Fake collision fit to dae -->
       <collision>
         <origin xyz="-0.2 0.0  0.4" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -69,7 +59,7 @@ limitations under the License.
 
       <!-- Fake inertia -->
       <inertial>
-        <origin xyz="-0.2 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="-0.15 0.0 0.3" rpy="0.0 0.0 0.0" />
         <mass value="15.0" />
         <inertia ixx="0.001111" ixy="0.0"      ixz="0.0"
                                 iyy="0.001111" iyz="0.0"
@@ -78,14 +68,19 @@ limitations under the License.
     </link>
 
     <joint name="${component_name_underscore}to_${component_name_underscore}wibotic_transmitter_joint" type="fixed">
-      <!-- This should be when docking is released for panther-docker
-      <origin xyz="0.05 0.0 0.295" rpy="0.0 0.0 ${pi}" /> -->
-      <origin xyz="0.05 0.0 0.5" rpy="0.0 0.0 ${pi}" />
+      <origin xyz="0.0 0.0 ${transmitter_height}" rpy="0.0 0.0 0.0" />
       <parent link="${component_name_underscore}link" />
       <child link="${component_name_underscore}wibotic_transmitter_link" />
     </joint>
 
-    <link name="${component_name_underscore}wibotic_transmitter_link" />
+    <link name="${component_name_underscore}wibotic_transmitter_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/wibotic_transmitter.dae" />
+        </geometry>
+      </visual>
+    </link>
 
   </xacro:macro>
 
@@ -114,13 +109,6 @@ limitations under the License.
     </joint>
 
     <link name="${component_name_underscore}${name}_image_link">
-      <collision>
-        <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
-        <geometry>
-          <box size="${size+0.02} ${size+0.02} 0.0001" />
-        </geometry>
-      </collision>
-
       <visual>
         <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
         <geometry>
@@ -131,11 +119,12 @@ limitations under the License.
         </material>
       </visual>
 
-      <inertial>
-        <mass value="1e-5" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
-      </inertial>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${pi/2.0} 0" />
+        <geometry>
+          <box size="${size+0.02} ${size+0.02} 0.0001" />
+        </geometry>
+      </collision>
     </link>
 
     <gazebo reference="${component_name_underscore}${name}_image_link">
@@ -158,7 +147,7 @@ limitations under the License.
     <xacro:property name="apriltag_size_prop" value="$(arg apriltag_size)" />
     <xacro:wibotic_station
       component_name="$(arg component_name)" parent_link="${component_name_underscore}${name}_image_link"  xyz="0.0 0.0 0.5"
-      rpy="${pi} 0 0 " />
+      rpy="${pi} 0 0" transmitter_height="$(arg transmitter_height)" />
 
   </xacro:macro>
 
