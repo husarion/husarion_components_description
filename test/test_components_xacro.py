@@ -73,7 +73,7 @@ components_types_with_names = {
     # "GRP01": [], not implemented in robotiq_description
     "GRP02": ["robotiq", "robotiq_85_base_link", "", "", "robotiq"],
     # "GRP03": ["robotiq", "robotiq_140_base_link", "", "", ""], not implemented in robotiq_description,
-    "WCH01": ["wibotic_receiver", "link", "", "", "wibotic_receiver"],
+    "WCH01": ["wibotic_receiver", "mount_link", "", "", "wibotic_receiver"],
 }
 
 
