@@ -27,7 +27,7 @@ limitations under the License.
 
   <!-- The AprilTag serves as the root element of the Wibotic Station.
        This design ensures that docking functionality can detect stations via AprilTags,
-       and maintains a single root in the TF tree for proper frame hierarchy. 
+       and maintains a single root in the TF tree for proper frame hierarchy.
        You can change the root manipulating root_link, parent_link, xyz and rpy parameters -->
     <xacro:macro name="wibotic_station"
                params="parent_link
