@@ -18,7 +18,7 @@ limitations under the License.
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wibotic_station">
 
-  <xacro:arg name="apriltag_height" default="0.5" />
+  <xacro:arg name="apriltag_mount_height" default="0.5" />
   <xacro:arg name="apriltag_image" default="" />
   <xacro:arg name="apriltag_size" default="0.08" />
   <xacro:arg name="component_name" default="" />
@@ -160,10 +160,10 @@ limitations under the License.
 
   <!-- AprilTag as root -->
   <xacro:apriltag parent_link="$(arg root_link)" xyz="0 0 0" rpy="0 -${pi/2.0} ${pi/2.0}" component_name="${apriltag_name}" size="$(arg apriltag_size)" />
-  <xacro:wibotic_station parent_link="$(arg root_link)" xyz="0 -$(arg apriltag_height) 0" rpy="${pi} -${pi/2.0} ${pi/2.0}" component_name="$(arg component_name)" transmitter_height="$(arg transmitter_height)" />
+  <xacro:wibotic_station parent_link="$(arg root_link)" xyz="0 -$(arg apriltag_mount_height) 0" rpy="${pi} -${pi/2.0} ${pi/2.0}" component_name="$(arg component_name)" transmitter_height="$(arg transmitter_height)" />
 
   <!-- Station as root -->
   <!-- <xacro:wibotic_station parent_link="$(arg root_link)" component_name="$(arg component_name)" transmitter_height="$(arg transmitter_height)" />
-  <xacro:apriltag parent_link="$(arg root_link)" xyz="0 0 $(arg apriltag_height)" rpy="${pi} 0 0" component_name="${apriltag_name}" size="$(arg apriltag_size)" /> -->
+  <xacro:apriltag parent_link="$(arg root_link)" xyz="0 0 $(arg apriltag_mount_height)" rpy="${pi} 0 0" component_name="${apriltag_name}" size="$(arg apriltag_size)" /> -->
 
 </robot>
