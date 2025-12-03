@@ -23,7 +23,8 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        model:=os1_32
                        robot_namespace:=''
-                       component_name:=''">
+                       component_name:=''
+                       use_tf_prefix:=True">
 
     <!-- <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="ouster" />
@@ -31,6 +32,7 @@ limitations under the License.
     <!-- ^ removed for compatibility with hw driver -->
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -153,7 +155,7 @@ limitations under the License.
         <update_rate>20.0</update_rate>
 
         <topic>${robot_namespace_slash}${component_name_slash}ouster/points</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}os_lidar</gz_frame_id>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}os_lidar</gz_frame_id>
         <always_on>true</always_on>
       </sensor>
     </gazebo>

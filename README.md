@@ -81,7 +81,7 @@ To include the sensor, use the following code:
   rpy="0.0 0.0 0.0" />
 ```
 
-A list of parameters can be found here:
+List of parameters:
 
 - `component_name` [*string*, default: **''**] local namespace allowing to distinguish two identical devices from each other. Called `name` in `components.yaml`.
 - `parent_link` [*string*, default: **None**] parent link to which sensor should be attached.
@@ -89,5 +89,6 @@ A list of parameters can be found here:
 - `rpy` [*float list*, default: **0.0 0.0 0.0**] 3 float values define rotation between parent link and base of a sensor. Values in **rad**.
 - `robot_namespace` [*string*, default: **''**] global namespace common to the entire robot. Not present in  `components.yaml`.
 - `model` [*string*, default: **''**] model argument that appears when you want to load the appropriate model from a given manufacturer. Not present in `components.yaml`.
+- `use_tf_prefix` [*bool*, default: **True**] if set to True, the `robot_namespace` will be used as a prefix for all frame_ids defined in the sensor URDF. This is useful when evry robot has its own tf tree. Not present in `components.yaml`.
 
 Some sensors can define their specific parameters. Refer to their definition for more info.

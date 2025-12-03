@@ -19,23 +19,24 @@ limitations under the License.
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
   <xacro:macro name="create_components"
-    params="components_config_path namespace:='' use_sim:=False">
+              params="components_config_path
+                      namespace:=''
+                      use_sim:=False
+                      use_tf_prefix:=True">
 
     <xacro:unless value="${components_config_path == ''}">
-        <xacro:property
-          name="components_config"
-          value="${xacro.load_yaml(components_config_path)}" />
+      <xacro:property name="components_config" value="${xacro.load_yaml(components_config_path)}" />
       <xacro:load_componenet
         config="${components_config}"
         counter="${len(components_config['components'])}"
         robot_namespace="${namespace}"
-        use_sim="${use_sim}" />
-
+        use_sim="${use_sim}"
+        use_tf_prefix="${use_tf_prefix}" />
     </xacro:unless>
   </xacro:macro>
 
   <xacro:macro name="load_componenet"
-    params="config counter robot_namespace use_sim:=False">
+    params="config counter robot_namespace use_sim:=False use_tf_prefix:=True">
     <xacro:if value="${counter}">
       <xacro:property name="index" value="${counter - 1}" scope="parent" />
       <xacro:property name="component" value="${config['components'][index]}" scope="parent" />
@@ -83,6 +84,7 @@ limitations under the License.
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -97,6 +99,7 @@ limitations under the License.
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -112,6 +115,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             use_nominal_extrinsics="${use_sim}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -129,13 +133,13 @@ limitations under the License.
             ns="camera" />
 
           <xacro:camera.zed_camera
-
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${zed_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -157,6 +161,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${luxonis_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -182,6 +187,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${rplidar_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -207,6 +213,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${ouster_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -222,6 +229,7 @@ limitations under the License.
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -237,6 +245,7 @@ limitations under the License.
             rpy="${rpy}"
             component_name="${component_name}"
             ur_type="ur3e"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -252,6 +261,7 @@ limitations under the License.
             rpy="${rpy}"
             component_name="${component_name}"
             ur_type="ur5e"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -272,6 +282,7 @@ limitations under the License.
             dof="6"
             gripper="robotiq_2f_85"
             vision="false"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -291,6 +302,7 @@ limitations under the License.
             dof="6"
             gripper="robotiq_2f_85"
             vision="true"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -310,6 +322,7 @@ limitations under the License.
             dof="7"
             gripper="robotiq_2f_85"
             vision="false"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -329,6 +342,7 @@ limitations under the License.
             gripper="robotiq_2f_85"
             vision="true"
             component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -342,6 +356,7 @@ limitations under the License.
             rpy="${rpy}"
             component_name="${component_name}"
             robotiq_type="2f_85"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
 
@@ -356,6 +371,7 @@ limitations under the License.
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
       </xacro:unless>
@@ -366,6 +382,7 @@ limitations under the License.
           config="${config}"
           robot_namespace="${robot_namespace}"
           use_sim="${use_sim}"
+          use_tf_prefix="${use_tf_prefix}"
         />
       </xacro:if>
     </xacro:if>
