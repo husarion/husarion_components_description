@@ -22,13 +22,15 @@ limitations under the License.
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
                        robot_namespace:=''
-                       component_name:=''">
+                       component_name:=''
+                       use_tf_prefix:=True">
 
     <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="gps" />
     </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -80,7 +82,7 @@ limitations under the License.
         <always_on>1</always_on>
         <update_rate>1</update_rate>
         <topic>${robot_namespace_slash}${component_name_slash}fix</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}antenna</gz_frame_id>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}antenna</gz_frame_id>
       </sensor>
     </gazebo>
   </xacro:macro>
