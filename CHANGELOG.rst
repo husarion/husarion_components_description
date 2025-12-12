@@ -2,8 +2,8 @@
 Changelog for package husarion_components_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2025-12-12)
+------------------
 * Add tf_prefix arg and fix depthai reference frame for camera (`#14 <https://github.com/husarion/husarion_components_description/issues/14>`_)
 * Add meshes (`#13 <https://github.com/husarion/husarion_components_description/issues/13>`_)
   * Add Ouster mesh
