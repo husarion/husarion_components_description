@@ -22,13 +22,13 @@
 
   <depend>depthai_descriptions</depend>
   <depend condition="($ROS_DISTRO != jazzy)">kortex_description</depend>
-  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch</depend>
-  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch_ros</depend>
-  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">nav2_common</depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
+  <depend>nav2_common</depend>
   <depend>realsense2_description</depend>
   <depend>robotiq_description</depend>
-  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_bridge</depend>
-  <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_sim</depend>
   <depend>ur_description</depend>
   <depend>urdf</depend>
   <depend>xacro</depend>
