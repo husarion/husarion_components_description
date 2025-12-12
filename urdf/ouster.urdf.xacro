@@ -41,44 +41,56 @@ limitations under the License.
 
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent"/>
+      <xacro:property name="range_min" value="50" scope="parent"/>  
+      <xacro:property name="range_max" value="50" scope="parent"/>
       <xacro:property name="layers" value="32" scope="parent"/>
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os0_64'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent" />
+      <xacro:property name="range_min" value="0.4" scope="parent" /> 
+      <xacro:property name="range_max" value="35" scope="parent" />
       <xacro:property name="layers" value="64" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os0_128'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent" />
+      <xacro:property name="range_min" value="0.4" scope="parent" /> 
+      <xacro:property name="range_max" value="35" scope="parent" />
       <xacro:property name="layers" value="128" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_32'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="32" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_64'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="64" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_128'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="128" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
@@ -140,15 +152,15 @@ limitations under the License.
             </vertical>
           </scan>
           <range>
-            <min>0.8</min>
-            <max>${lidar_range}</max>
-            <resolution>0.003</resolution>
+            <min>${range_min}</min>
+            <max>${range_max}</max>
+            <resolution>0.001</resolution>
           </range>
 
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.0008</stddev>
+            <stddev>${precision}</stddev>
           </noise>
         </ray>
 
