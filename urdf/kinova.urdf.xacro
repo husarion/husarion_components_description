@@ -58,13 +58,15 @@ limitations under the License.
                        gripper:=''
                        vision:=false
                        robot_namespace:=''
-                       component_name:=''">
+                       component_name:=''
+                       use_tf_prefix:=True">
 
     <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="kinova" />
     </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -204,7 +206,7 @@ limitations under the License.
             </depth_camera>
             <optical_frame_id>${component_name_underscore}color_optical_frame</optical_frame_id>
           </camera>
-          <gz_frame_id>${robot_namespace_slash}${component_name_underscore}camera_color_frame</gz_frame_id>
+          <gz_frame_id>${tf_prefix}${component_name_underscore}camera_color_frame</gz_frame_id>
           <always_on>1</always_on>
           <update_rate>${camera_fps}</update_rate>
           <visualize>true</visualize>

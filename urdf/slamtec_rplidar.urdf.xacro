@@ -23,7 +23,8 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        robot_namespace:=''
                        component_name:=''
-                       model:=s3">
+                       model:=s3
+                       use_tf_prefix:=True">
 
     <!-- <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="rplidar" />
@@ -31,6 +32,7 @@ limitations under the License.
     <!-- ^ removed for compatibility with hw driver -->
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -263,7 +265,7 @@ limitations under the License.
         <visualize>false</visualize>
 
         <topic>${robot_namespace_slash}${component_name_slash}scan</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}laser</gz_frame_id>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}laser</gz_frame_id>
 
         <ray>
           <scan>

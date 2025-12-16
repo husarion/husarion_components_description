@@ -24,13 +24,15 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        use_nominal_extrinsics:=false
                        robot_namespace:=''
-                       component_name:=''">
+                       component_name:=''
+                       use_tf_prefix:=True">
 
     <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="camera" />
     </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -177,7 +179,7 @@ limitations under the License.
       reference="${component_name_underscore}link"
       name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d435_color"
       topic="${robot_namespace_slash}${component_name_slash}color/image_raw"
-      frame_id="${robot_namespace_slash}${component_name_underscore}color_optical_frame"
+      frame_id="${tf_prefix}${component_name_underscore}color_optical_frame"
       frequency="30"
       width="1280"
       height="720"
@@ -187,7 +189,7 @@ limitations under the License.
       reference="${component_name_underscore}link"
       name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d435_depth"
       topic="${robot_namespace_slash}${component_name_slash}depth/image_rect_raw"
-      frame_id="${robot_namespace_slash}${component_name_underscore}depth_optical_frame"
+      frame_id="${tf_prefix}${component_name_underscore}depth_optical_frame"
       frequency="30"
       width="1280"
       height="720"

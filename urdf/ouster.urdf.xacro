@@ -23,7 +23,8 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        model:=os1_32
                        robot_namespace:=''
-                       component_name:=''">
+                       component_name:=''
+                       use_tf_prefix:=True">
 
     <!-- <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="ouster" />
@@ -31,6 +32,7 @@ limitations under the License.
     <!-- ^ removed for compatibility with hw driver -->
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
     <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
     <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
@@ -39,44 +41,56 @@ limitations under the License.
 
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent"/>
+      <xacro:property name="range_min" value="50" scope="parent"/>  
+      <xacro:property name="range_max" value="50" scope="parent"/>
       <xacro:property name="layers" value="32" scope="parent"/>
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os0_64'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent" />
+      <xacro:property name="range_min" value="0.4" scope="parent" /> 
+      <xacro:property name="range_max" value="35" scope="parent" />
       <xacro:property name="layers" value="64" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os0_128'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="50" scope="parent" />
+      <xacro:property name="range_min" value="0.4" scope="parent" /> 
+      <xacro:property name="range_max" value="35" scope="parent" />
       <xacro:property name="layers" value="128" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.008" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_32'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="32" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_64'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="64" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <xacro:if value="${model == 'os1_128'}">
-      <xacro:property name="vfov" value="${radians(45.0)}" scope="parent" />
-      <xacro:property name="lidar_range" value="120" scope="parent" />
+      <xacro:property name="vfov" value="${radians(42.4)}" scope="parent" />
+      <xacro:property name="range_min" value="0.5" scope="parent" />  
+      <xacro:property name="range_max" value="90" scope="parent" />
       <xacro:property name="layers" value="128" scope="parent" />
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
+      <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
@@ -138,22 +152,22 @@ limitations under the License.
             </vertical>
           </scan>
           <range>
-            <min>0.8</min>
-            <max>${lidar_range}</max>
-            <resolution>0.003</resolution>
+            <min>${range_min}</min>
+            <max>${range_max}</max>
+            <resolution>0.001</resolution>
           </range>
 
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.0008</stddev>
+            <stddev>${precision}</stddev>
           </noise>
         </ray>
 
         <update_rate>20.0</update_rate>
 
         <topic>${robot_namespace_slash}${component_name_slash}ouster/points</topic>
-        <gz_frame_id>${robot_namespace_slash}${component_name_underscore}os_lidar</gz_frame_id>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}os_lidar</gz_frame_id>
         <always_on>true</always_on>
       </sensor>
     </gazebo>
