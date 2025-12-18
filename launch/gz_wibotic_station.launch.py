@@ -67,7 +67,6 @@ def launch_setup(context, *args, **kwargs):
                     component_rpy[2],
                 ],
                 namespace=robot_namespace,
-                emulate_tty=True,
             )
 
             actions.append(spawn_station)
