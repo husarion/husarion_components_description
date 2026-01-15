@@ -41,8 +41,8 @@ limitations under the License.
 
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
-      <xacro:property name="range_min" value="50" scope="parent"/>
-      <xacro:property name="range_max" value="50" scope="parent"/>
+      <xacro:property name="range_min" value="0.4" scope="parent"/>
+      <xacro:property name="range_max" value="35" scope="parent"/>
       <xacro:property name="layers" value="32" scope="parent"/>
       <xacro:property name="mesh" value="ouster_os01" scope="parent"/>
       <xacro:property name="precision" value="0.008" scope="parent"/>
