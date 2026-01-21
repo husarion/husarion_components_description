@@ -26,7 +26,7 @@ limitations under the License.
 
     <xacro:unless value="${components_config_path == ''}">
       <xacro:property name="components_config" value="${xacro.load_yaml(components_config_path)}" />
-      <xacro:load_componenet
+      <xacro:load_component
         config="${components_config}"
         counter="${len(components_config['components'])}"
         robot_namespace="${namespace}"
@@ -35,7 +35,7 @@ limitations under the License.
     </xacro:unless>
   </xacro:macro>
 
-  <xacro:macro name="load_componenet"
+  <xacro:macro name="load_component"
     params="config counter robot_namespace use_sim:=False use_tf_prefix:=True">
     <xacro:if value="${counter}">
       <xacro:property name="index" value="${counter - 1}" scope="parent" />
@@ -97,11 +97,11 @@ limitations under the License.
 
           <xacro:relings.reling
             parent_link="${parent_link}"
-            length="${length}"
             xyz="${xyz}"
             rpy="${rpy}"
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
+            elements="${component['elements']}"
           />
         </xacro:if>
 
@@ -390,7 +390,7 @@ limitations under the License.
       </xacro:unless>
 
       <xacro:if value="${index}">
-        <xacro:load_componenet
+        <xacro:load_component
           counter="${index}"
           config="${config}"
           robot_namespace="${robot_namespace}"
