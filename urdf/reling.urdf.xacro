@@ -59,7 +59,7 @@ limitations under the License.
       <collision>
          <origin xyz="${component['xyz']}" rpy="${component['rpy']}" />
         <geometry>
-          <box size="0.0202 0.0202 ${component['length']}" />
+          <box size="${component['length']} 0.0202 0.0202" />
         </geometry>
       </collision>
 
