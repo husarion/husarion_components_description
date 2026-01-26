@@ -16,6 +16,7 @@ jobs:
     name: Build ${{ matrix.ros-distro }}
     steps:
       - run: apt-get update && apt-get install -y ros-dev-tools
+      - run: rosdep init
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
@@ -33,6 +34,7 @@ jobs:
     name: Build ${{ matrix.ros-distro }}
     steps:
       - run: apt-get update && apt-get install -y ros-dev-tools
+      - run: rosdep init
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
