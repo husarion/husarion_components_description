@@ -17,7 +17,7 @@ limitations under the License.
 -->
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="reling"
+  <xacro:macro name="rack"
                params="parent_link
                        xyz:='0.0 0.0 0.0'
                        rpy:='0.0 0.0 0.0'
@@ -26,7 +26,7 @@ limitations under the License.
                        elements">
 
     <xacro:if value="${component_name == ''}">
-      <xacro:property name="component_name" value="reling" />
+      <xacro:property name="component_name" value="rack" />
     </xacro:if>
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
@@ -52,7 +52,7 @@ limitations under the License.
       <visual>
         <origin xyz="${component['xyz']}" rpy="${component['rpy']}" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/reling.dae" scale="${component['length']} 1.0 1.0"/>
+          <mesh filename="package://husarion_components_description/meshes/v_slot_profile.dae" scale="${component['length']} 1.0 1.0"/>
         </geometry>
       </visual>
 

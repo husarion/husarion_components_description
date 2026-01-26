@@ -88,14 +88,14 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'REL'}">
+        <xacro:if value="${type == 'RCK'}">
           <xacro:include
-            filename="$(find husarion_components_description)/urdf/reling.urdf.xacro"
-            ns="relings" />
+            filename="$(find husarion_components_description)/urdf/rack.urdf.xacro"
+            ns="rack" />
 
          <xacro:property name="length" value="${component['length'] if 'length' in component else '1.0'}" scope="parent" />
 
-          <xacro:relings.reling
+          <xacro:rack.rack
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"
