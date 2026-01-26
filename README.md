@@ -42,6 +42,7 @@ URDF models of sensors and other components offered alongside with Husarion robo
 | MAN07  | 7DoF Kinova Gen3 + 3D vision |
 | GRP02  | Robotiq 2F-85                |
 | WCH01  | Wibotic receiver             |
+| RCK    | Custom rack made of profiles |
 
 </div>
 
