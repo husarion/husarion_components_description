@@ -11,14 +11,11 @@ jobs:
         ros-distro: [jazzy]
     runs-on: ubuntu-24.04
     container:
-      image: osrf/ros:jazzy-desktop-full
+      image: ros:${{ matrix.ros-distro }}-ros-core
 
     name: Build ${{ matrix.ros-distro }}
     steps:
-
-      # - uses: ros-tooling/setup-ros@v0.7
-      #   with:
-      #     required-ros-distributions: ${{ matrix.ros-distro }}
+      - run: apt-get update && apt-get install -y ros-dev-tools
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
@@ -30,13 +27,12 @@ jobs:
       matrix:
         ros-distro: [humble]
     runs-on: ubuntu-22.04
+    container:
+      image: ros:${{ matrix.ros-distro }}-ros-core
 
     name: Build ${{ matrix.ros-distro }}
     steps:
-
-      - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: ${{ matrix.ros-distro }}
+      - run: apt-get update && apt-get install -y ros-dev-tools
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
