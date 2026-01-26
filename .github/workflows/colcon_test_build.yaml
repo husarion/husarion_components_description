@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         ros-distro: [jazzy]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-x64-16GB-RAM-150GB-SSD
 
     name: Build ${{ matrix.ros-distro }}
     steps:
