@@ -15,9 +15,14 @@ jobs:
 
     name: Build ${{ matrix.ros-distro }}
     steps:
-      # Setup ROS test environment
-      - run: apt-get update && apt-get install -y ros-dev-tools python3-colcon-coveragepy-result
-      - run: rosdep init
+      - name: Install ROS test dependencies
+        run: |
+          apt-get update && apt-get install -y \
+            ros-dev-tools \
+            python3-colcon-coveragepy-result
+
+      - name: Initialize rosdep
+        run: rosdep init
 
       - uses: ros-tooling/action-ros-ci@v0.3
         with:
