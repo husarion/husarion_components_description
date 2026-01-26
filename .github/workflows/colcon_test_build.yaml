@@ -8,32 +8,15 @@ jobs:
   colcon-test-build-jazzy:
     strategy:
       matrix:
-        ros-distro: [jazzy]
+        ros-distro: [jazzy, humble]
     runs-on: ubuntu-24.04
     container:
       image: ros:${{ matrix.ros-distro }}-ros-core
 
     name: Build ${{ matrix.ros-distro }}
     steps:
-      - run: apt-get update && apt-get install -y ros-dev-tools
-      - run: rosdep init
-
-      - uses: ros-tooling/action-ros-ci@v0.3
-        with:
-          package-name: husarion_components_description
-          target-ros2-distro: ${{ matrix.ros-distro }}
-
-  colcon-test-build-humble:
-    strategy:
-      matrix:
-        ros-distro: [humble]
-    runs-on: ubuntu-22.04
-    container:
-      image: ros:${{ matrix.ros-distro }}-ros-core
-
-    name: Build ${{ matrix.ros-distro }}
-    steps:
-      - run: apt-get update && apt-get install -y ros-dev-tools
+      # Setup ROS test environment
+      - run: apt-get update && apt-get install -y ros-dev-tools python3-colcon-coveragepy-result
       - run: rosdep init
 
       - uses: ros-tooling/action-ros-ci@v0.3
