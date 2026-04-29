@@ -72,6 +72,13 @@ limitations under the License.
 
     </link>
 
+    <link name="dev11_mount_link"/>
+
+    <joint name="dev11_mount_joint" type="fixed">
+      <origin xyz="${0.0725 + 0.295} 0.0 ${0.14 + 0.0315 + 0.06 + 0.42 + 0.08}" rpy="0 0 0" />
+      <parent link="dev11_link" />
+      <child link="dev11_mount_link" />
+    </joint>
 
   </xacro:macro>
 </robot>
