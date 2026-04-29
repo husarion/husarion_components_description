@@ -54,17 +54,28 @@ limitations under the License.
         ('DEV06', 'dev06'),
         ('DEV07', 'dev07'),
         ('DEV07T', 'dev07t'),
-        ('DEV09', 'dev09')
+        ('DEV09', 'dev09'),
+        ('DEV11', 'dev11'),
       ])}" />
 
       <xacro:if value="${type in dev_models_dict}">
-        <xacro:include
-          filename="$(find husarion_components_description)/urdf/dev.urdf.xacro"
-          ns="dev"
-        />
-        <xacro:dev.dev
-          model="${dev_models_dict[type]}"
-        />
+        <xacro:if value="${type == 'DEV11'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/dev11.urdf.xacro"
+            ns="dev11"
+          />
+          <xacro:dev11.dev11/>
+        </xacro:if>
+
+        <xacro:unless value="${type == 'DEV11'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/dev.urdf.xacro"
+            ns="dev"
+          />
+          <xacro:dev.dev
+            model="${dev_models_dict[type]}"
+          />
+        </xacro:unless>
       </xacro:if>
 
       <xacro:unless value="${type in dev_models_dict}">
