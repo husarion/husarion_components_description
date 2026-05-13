@@ -17,111 +17,149 @@ limitations under the License.
 -->
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    Frame convention for devNN_link
+    --------------------------------
+    Every devNN_link's origin sits at the *mount surface* of the structure
+    (top of the cover, top profile of a gate, top of the pillar). Sensors
+    mounted on that frame with xyz=(0,0,0) therefore land on the surface a
+    user would intuitively bolt them to.
+
+    To keep the visual mesh in the same world location, the joint origin is
+    lifted by the cover's mount_z and the link's visual <origin> is offset
+    by -mount_z. Collision-box xyz is shifted the same way.
+
+    Migration note: prior to this commit devNN_link was at the *base* of the
+    structure (e.g. mount_link for gates, body_link for top covers). Any
+    pre-existing components.yaml that referenced these frames with non-zero
+    z values needs to subtract the corresponding mount_z below.
+
+      dev01 mount_z: 0.164
+      dev02 mount_z: 0.011
+      dev03 mount_z: 0.193
+      dev04l mount_z: 0.342
+      dev04h mount_z: 0.542
+      dev05 mount_z: 0.350
+      dev06 mount_z: 0.342
+      dev07 mount_z: 0.143
+      dev07t mount_z: 0.143
+      dev09 mount_z: 0.250
+  -->
   <xacro:macro name="dev"
                params="model:=dev01">
 
     <xacro:if value="${model == 'dev01'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <!-- 0.0001 in z is to cover the base. -->
-      <xacro:property name="xyz" value="0 0 0.0001"  scope="parent" />
+      <!-- 0.0001 atop mount_z is the original anti-z-fight safety lift. -->
+      <xacro:property name="xyz" value="0 0 0.1641"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.164" scope="parent" />
 
       <!-- zeros provide Gazebo errors. -->
       <xacro:property name="collision_box_size" value="0.001 0.001 0.001"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 0"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.164"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev02'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.011"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.011" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.795 0.47 0.022"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 -0.004"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.015"      scope="parent" />
     </xacro:if>
 
 
     <xacro:if value="${model == 'dev03'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.193"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.193" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.39 0.52 0.02"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.185"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.008"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev04l'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.342"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.342" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.4 0.525 0.18"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.255"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.087"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev04h'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.542"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.542" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.4 0.525 0.37"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.355"/>
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.187"/>
 
     </xacro:if>
 
     <xacro:if value="${model == 'dev05'}">
       <xacro:property name="parent_link" value="mount_link" scope="parent" />
-      <xacro:property name="xyz" value="-0.185 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="-0.185 0 0.350"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.350" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.028 0.04 0.35"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.175"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.175"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev06'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.342"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.342" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.4 0.525 0.18"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.255"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.087"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev07'}">
       <xacro:property name="parent_link" value="mount_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.143"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.143" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.175 0.525 0.143"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.07"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.073"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev07t'}">
       <xacro:property name="parent_link" value="mount_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.143"  scope="parent" />
       <xacro:property name="rpy" value="0 0 0" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.143" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.175 0.4 0.143"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.07"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.073"      scope="parent" />
     </xacro:if>
 
     <xacro:if value="${model == 'dev09'}">
       <xacro:property name="parent_link" value="mount_link" scope="parent" />
-      <xacro:property name="xyz" value="0 0 0"  scope="parent" />
+      <xacro:property name="xyz" value="0 0 0.250"  scope="parent" />
       <xacro:property name="rpy" value="0 0 ${-pi/2.0}" scope="parent" />
+      <xacro:property name="visual_xyz" value="0 0 -0.250" scope="parent" />
 
       <xacro:property name="collision_box_size" value="0.235 0.525 0.25"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
-      <xacro:property name="collision_box_xyz"  value="0 0 0.125"      scope="parent" />
+      <xacro:property name="collision_box_xyz"  value="0 0 -0.125"      scope="parent" />
     </xacro:if>
 
     <joint name="${model}_joint" type="fixed">
@@ -132,7 +170,7 @@ limitations under the License.
 
     <link name="${model}_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="${visual_xyz}" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/devs/${model}.dae"/>
         </geometry>
