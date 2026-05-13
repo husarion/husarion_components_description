@@ -46,7 +46,7 @@ limitations under the License.
       dev09 mount_z: 0.250
   -->
   <xacro:macro name="dev"
-               params="model:=dev01">
+               params="model:=dev01 xyz_override:=''">
 
     <xacro:if value="${model == 'dev01'}">
       <xacro:property name="parent_link" value="body_link" scope="parent" />
@@ -160,6 +160,12 @@ limitations under the License.
       <xacro:property name="collision_box_size" value="0.235 0.525 0.25"      scope="parent" />
       <xacro:property name="collision_box_rpy"  value="0 0 ${-pi/2.0}"      scope="parent" />
       <xacro:property name="collision_box_xyz"  value="0 0 -0.125"      scope="parent" />
+    </xacro:if>
+
+    <!-- xyz_override (optional) replaces the model's default mount xyz.
+         Lets components.yaml slide DEV05/07/09 along the mount plate. -->
+    <xacro:if value="${xyz_override != ''}">
+      <xacro:property name="xyz" value="${xyz_override}" scope="parent" />
     </xacro:if>
 
     <joint name="${model}_joint" type="fixed">

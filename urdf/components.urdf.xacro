@@ -123,8 +123,12 @@ limitations under the License.
           filename="$(find husarion_components_description)/urdf/dev.urdf.xacro"
           ns="dev"
         />
+        <!-- Optional xyz override: lets components.yaml slide DEV05/07/09
+             along the mount plate. Empty string means "use macro default". -->
+        <xacro:property name="dev_xyz" value="${component['xyz'] if 'xyz' in component else ''}" scope="parent" />
         <xacro:dev.dev
           model="${dev_models_dict[type]}"
+          xyz_override="${dev_xyz}"
         />
       </xacro:if>
 
