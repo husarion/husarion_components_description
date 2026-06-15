@@ -36,37 +36,37 @@ limitations under the License.
 
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
-    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
-    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
 
     <xacro:include filename="$(find zed_description)/urdf/zed_macro.urdf.xacro" />
 
-    <joint name="${parent_link}_to_${component_name_underscore}joint" type="fixed">
+    <joint name="${parent_link}_to_${component_name}_joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}"/>
       <child link="${component_name}_camera_link" />
     </joint>
 
-    <xacro:zed_camera name="${component_name}" model="${model}" enable_gnss="false" />
+    <xacro:zed_camera name="${component_name}" model="${model}" enable_gnss="false" >
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:zed_camera>
 
     <!-- GAZEBO -->
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
     <xacro:gz_sensor.camera
-      reference="${component_name_underscore}camera_center"
-      name="${robot_namespace_slash}${component_name_underscore}camera_color"
-      topic="${robot_namespace_slash}${component_name_slash}zed_node/rgb/image_rect_color"
-      frame_id="${tf_prefix}${component_name_underscore}camera_center"
+      reference="${component_name}_camera_center"
+      name="${robot_namespace_slash}${component_name}_camera_color"
+      topic="${robot_namespace_slash}${component_name}/zed_node/rgb/image_rect_color"
+      frame_id="${tf_prefix}${component_name}_camera_center"
       frequency="30"
       width="1280"
       height="720"
       fov="${110.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
-      reference="${component_name_underscore}camera_center"
-      name="${robot_namespace_slash}${component_name_underscore}camera_depth"
-      topic="${robot_namespace_slash}${component_name_slash}zed_node/depth"
-      frame_id="${tf_prefix}${component_name_underscore}camera_center"
+      reference="${component_name}_camera_center"
+      name="${robot_namespace_slash}${component_name}_camera_depth"
+      topic="${robot_namespace_slash}${component_name}/zed_node/depth"
+      frame_id="${tf_prefix}${component_name}_camera_center"
       frequency="30"
       width="1280"
       height="720"
