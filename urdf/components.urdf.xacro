@@ -387,6 +387,32 @@ limitations under the License.
             component_name="${component_name}"
           />
         </xacro:if>
+
+        <!-- User-supplied URDF/xacro. `file` is resolved against `package` when -->
+        <!-- present ($(find package)/file), otherwise taken as an absolute path. -->
+        <!-- The included file must define a macro with the standard component -->
+        <!-- signature; its name defaults to `custom_component` and is overridable -->
+        <!-- via `macro_name`. -->
+        <xacro:if value="${type == 'custom'}">
+          <xacro:property name="macro_name"
+            value="${component['macro_name'] if 'macro_name' in component else 'custom_component'}" scope="parent" />
+
+          <xacro:if value="${'package' in component}">
+            <xacro:include filename="$(find ${component['package']})/${component['file']}" ns="custom" />
+          </xacro:if>
+          <xacro:unless value="${'package' in component}">
+            <xacro:include filename="${component['file']}" ns="custom" />
+          </xacro:unless>
+
+          <xacro:call macro="custom.${macro_name}"
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
       </xacro:unless>
 
       <xacro:if value="${index}">

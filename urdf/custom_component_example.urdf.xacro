@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2025 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
+  Runnable example of a `type: custom` component. Copy this file into your own
+  package and reshape the macro body for your hardware - keep the parameter
+  signature (the components dispatcher calls it with all of them). The macro name
+  defaults to `custom_component`; rename it and point at it via `macro_name` in the config.
+
+  Reference it from a components config:
+
+    - type: custom
+      package: husarion_components_description   # omit for an absolute `file` path
+      file: urdf/custom_component_example.urdf.xacro
+      name: my_sensor
+      parent_link: cover_link
+      xyz: 0.0 0.0 0.1
+      rpy: 0.0 0.0 0.0
+-->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="custom_component"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       component_name:=''
+                       robot_namespace:=''
+                       use_tf_prefix:=True">
+
+    <link name="${component_name}_link">
+      <visual>
+        <geometry>
+          <!-- Mesh resolved via package:// (portable). Swap for your own asset,
+               e.g. package://my_robot_description/meshes/my_sensor.dae, or an
+               absolute file:///... path when the component has no package. -->
+          <mesh filename="package://husarion_components_description/meshes/teltonika_003R-00253.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.04 0.04 0.1" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${parent_link}_to_${component_name}_joint" type="fixed">
+      <parent link="${parent_link}" />
+      <child link="${component_name}_link" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:macro>
+</robot>
