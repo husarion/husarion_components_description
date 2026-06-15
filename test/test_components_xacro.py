@@ -207,3 +207,76 @@ def test_all_good_single_components(tmpdir_factory):
 
         for component in components["components"]:
             utils.test_component(component, [True, True, True], str(components_config_path))
+
+
+EXAMPLE_XACRO = os.path.join(
+    husarion_components_description, "urdf/custom_component_example.urdf.xacro"
+)
+
+
+def _render_custom(tmpdir_factory, folder, entry):
+    config_path = tmpdir_factory.mktemp(folder).join("config.yaml")
+    with open(str(config_path), mode="w", encoding="utf-8") as file:
+        yaml.dump({"components": [entry]}, file)
+    utils = ComponentsYamlParseUtils(str(config_path))
+    assert utils.does_urdf_parse(), f"custom component failed to parse: {entry}"
+    return utils
+
+
+def test_custom_component_with_package(tmpdir_factory):
+    utils = _render_custom(
+        tmpdir_factory,
+        "custom_pkg",
+        {
+            "type": "custom",
+            "name": "my_sensor",
+            "package": "husarion_components_description",
+            "file": "urdf/custom_component_example.urdf.xacro",
+            "parent_link": "cover_link",
+            "xyz": "0.0 0.0 0.1",
+            "rpy": "0.0 0.0 0.0",
+        },
+    )
+    assert utils.does_link_exist(utils._urdf, "my_sensor_link")
+
+
+def test_custom_component_with_absolute_path(tmpdir_factory):
+    utils = _render_custom(
+        tmpdir_factory,
+        "custom_abs",
+        {
+            "type": "custom",
+            "name": "my_sensor",
+            "file": EXAMPLE_XACRO,
+            "parent_link": "cover_link",
+        },
+    )
+    assert utils.does_link_exist(utils._urdf, "my_sensor_link")
+
+
+def test_custom_component_with_macro_name_override(tmpdir_factory):
+    fixture = tmpdir_factory.mktemp("custom_macro").join("renamed.urdf.xacro")
+    with open(str(fixture), mode="w", encoding="utf-8") as file:
+        file.write(
+            '<robot xmlns:xacro="http://wiki.ros.org/xacro">'
+            '<xacro:macro name="my_macro" '
+            "params=\"parent_link xyz:='0 0 0' rpy:='0 0 0' "
+            "component_name:='' robot_namespace:='' use_tf_prefix:=True\">"
+            '<link name="${component_name}_link"/>'
+            '<joint name="${parent_link}_to_${component_name}_joint" type="fixed">'
+            '<parent link="${parent_link}"/><child link="${component_name}_link"/>'
+            '<origin xyz="${xyz}" rpy="${rpy}"/></joint>'
+            "</xacro:macro></robot>"
+        )
+    utils = _render_custom(
+        tmpdir_factory,
+        "custom_macro_cfg",
+        {
+            "type": "custom",
+            "name": "renamed",
+            "file": str(fixture),
+            "macro_name": "my_macro",
+            "parent_link": "cover_link",
+        },
+    )
+    assert utils.does_link_exist(utils._urdf, "renamed_link")
