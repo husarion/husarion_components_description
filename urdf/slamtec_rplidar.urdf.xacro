@@ -46,7 +46,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="40.0" />
       <xacro:property name="dist_res" value="0.01" />
       <xacro:property name="std_dev" value="0.015" />
-      <xacro:property name="mesh" value="s3.dae" />
+      <xacro:property name="mesh" value="s3.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.0413/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -72,7 +72,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="30.0" />
       <xacro:property name="dist_res" value="0.013" />
       <xacro:property name="std_dev" value="0.015" />
-      <xacro:property name="mesh" value="s2.dae" />
+      <xacro:property name="mesh" value="s2.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.038857/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -98,7 +98,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="40.0" />
       <xacro:property name="dist_res" value="0.03" />
       <xacro:property name="std_dev" value="0.025" />
-      <xacro:property name="mesh" value="s1.dae" />
+      <xacro:property name="mesh" value="s1.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -117,6 +117,33 @@ limitations under the License.
       </xacro:property>
     </xacro:if>
 
+    <xacro:if value="${model == 'c1'}">
+      <!-- Spec: https://www.slamtec.com/en/C1 — DTOF, 0.05-12 m, 10 Hz, 0.72deg -> 500 samples -->
+      <xacro:property name="samples" value="500" />
+      <xacro:property name="dist_min" value="0.05" />
+      <xacro:property name="dist_max" value="12.0" />
+      <xacro:property name="dist_res" value="0.015" />
+      <xacro:property name="std_dev" value="0.02" />
+      <xacro:property name="mesh" value="c1.glb" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 ${0.0413/2.0}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.0556 0.0556 0.0413" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <!-- box approximation (55.6 x 55.6 x 41.3 mm, ~0.11 kg); refine if HW measured -->
+        <origin xyz="0.0 0.0 ${0.0413/2.0}" rpy="0.0 0.0 0.0" />
+        <mass value="0.11" />
+        <inertia ixx="0.0000440" ixy="0.0"           ixz="0.0"
+                                 iyy="0.0000440"      iyz="0.0"
+                                                      izz="0.0000567" />
+      </xacro:property>
+      <xacro:property name="joint">
+        <origin xyz="0.0 0.0 0.032" rpy="0.0 0.0 ${pi}" />
+      </xacro:property>
+    </xacro:if>
+
     <xacro:if value="${model == 'a3'}">
       <!-- Spec: https://www.slamtec.ai/wp-content/uploads/2023/11/LD310_SLAMTEC_rplidar_datasheet_A3M1_v1.9_en.pdf -->
       <xacro:property name="samples" value="1600" />
@@ -124,7 +151,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="25.0" />
       <xacro:property name="dist_res" value="0.03" />
       <xacro:property name="std_dev" value="0.05" />
-      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="mesh" value="a3.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -150,7 +177,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="12.0" />
       <xacro:property name="dist_res" value="0.03" />
       <xacro:property name="std_dev" value="0.05" />
-      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="mesh" value="a2.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -175,7 +202,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="10.0" />
       <xacro:property name="dist_res" value="0.03" />
       <xacro:property name="std_dev" value="0.05" />
-      <xacro:property name="mesh" value="a2m8.dae" />
+      <xacro:property name="mesh" value="a2.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -200,7 +227,7 @@ limitations under the License.
       <xacro:property name="dist_max" value="10.0" />
       <xacro:property name="dist_res" value="0.03" />
       <xacro:property name="std_dev" value="0.05" />
-      <xacro:property name="mesh" value="ax.dae" />
+      <xacro:property name="mesh" value="a2.glb" />
       <xacro:property name="collision">
         <origin xyz="0.0 0.0 ${0.041/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
@@ -226,19 +253,11 @@ limitations under the License.
     </joint>
 
     <link name="${component_name_underscore_nonempty}link">
-      <!-- <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
         <geometry>
           <mesh filename="package://husarion_components_description/meshes/rplidar/${mesh}" />
         </geometry>
-      </visual> -->
-
-      <!-- TODO Remove simple visuals when mesh is ready -->
-      <visual>
-        <xacro:insert_block name="collision" />
-        <material name="LightGrey">
-          <color rgba="0.6 0.6 0.6 1.0" />
-        </material>
       </visual>
 
       <collision>
