@@ -43,6 +43,22 @@ components:
     parent_link: camera_mount_link
     xyz: -0.01 0.0 0.02
     rpy: 0.0 0.0 0.0
+
+  - type: RCK
+    name: rack
+    parent_link: mount_link
+    xyz: 0.0 0.0 0.0
+    rpy: 0.0 0.0 0.0
+    elements:
+      - length: 0.42
+        xyz: 0.185 0.0 0.21
+        rpy: 0.0 0.0 1.5708
+      - length: 0.2
+        xyz: 0.185 0.2 0.1
+        rpy: 0.0 1.5708 0.0
+      - length: 0.2
+        xyz: 0.185 -0.2 0.1
+        rpy: 0.0 1.5708 0.0
 ```
 
 ### Config schema
