@@ -45,22 +45,11 @@ limitations under the License.
     </joint>
 
     <link name="${component_name_underscore_nonempty}link">
-      <!-- <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-        <geometry>
-          <mesh filename="package://husarion_components_description/meshes/velodyne_puck.dae" />
-        </geometry>
-      </visual> -->
-
-      <!-- TODO Remove simple visuals when mesh is ready -->
       <visual>
-        <origin xyz="0.0 0.0 ${0.072/2.0}" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
         <geometry>
-          <cylinder radius="${0.103/2.0}" length="0.072" />
+          <mesh filename="package://husarion_components_description/meshes/velodyne_puck.glb" />
         </geometry>
-        <material name="LightGrey">
-          <color rgba="0.6 0.6 0.6 1.0" />
-        </material>
       </visual>
 
       <collision>
