@@ -97,7 +97,7 @@ def generate_launch_description():
             "--namespace",
             robot_namespace,
             "--param-file",
-            namespaced_initial_joint_controllers_path
+            namespaced_initial_joint_controllers_path,
         ],
     )
 
@@ -135,7 +135,7 @@ def generate_launch_description():
             "100",
             [robot_namespace, "/controller_manager"],
             [component_name, "_joint_trajectory_controller.type"],
-            "joint_trajectory_controller/JointTrajectoryController"
+            "joint_trajectory_controller/JointTrajectoryController",
         ],
         output="screen",
         on_exit=[initial_joint_controller_spawner_started],
@@ -155,7 +155,6 @@ def generate_launch_description():
         output="screen",
         on_exit=[robot_hand_controller_spawner],
     )
-
 
     return LaunchDescription(
         [
