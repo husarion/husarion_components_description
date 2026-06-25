@@ -17,7 +17,7 @@ from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import ReplaceString
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
@@ -67,8 +67,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             [component_name, "_robotiq_gripper_controller"],
-            "-t",
-            "position_controllers/GripperActionController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
@@ -78,13 +76,27 @@ def generate_launch_description():
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
-        namespace=robot_namespace,
+    )
+
+    set_robotiq_gripper_controller_type = ExecuteProcess(
+        cmd=[
+            "ros2",
+            "param",
+            "set",
+            "--timeout",
+            "100",
+            [robot_namespace, "/controller_manager"],
+            [component_name, "_robotiq_gripper_controller.type"],
+            "parallel_gripper_action_controller/GripperActionController",
+        ],
+        output="screen",
+        on_exit=[robotiq_gripper_controller],
     )
 
     return LaunchDescription(
         [
             declare_component_name,
             declare_robot_namespace,
-            robotiq_gripper_controller,
+            set_robotiq_gripper_controller_type,
         ]
     )
