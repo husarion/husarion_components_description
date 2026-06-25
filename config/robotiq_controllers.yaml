@@ -7,4 +7,3 @@
       joint: robotiq_85_left_knuckle_joint
       use_effort_interface: true
       use_speed_interface: true
-

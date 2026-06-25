@@ -126,7 +126,6 @@ def generate_launch_description():
         output="screen",
     )
 
-
     return LaunchDescription(
         [
             declare_component_name,
