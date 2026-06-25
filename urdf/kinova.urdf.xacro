@@ -119,17 +119,16 @@ limitations under the License.
       connection_inactivity_timeout_ms="${connection_inactivity_timeout_ms}"
       use_internal_bus_gripper_comm="${use_internal_bus_gripper_comm}"
       prefix="${component_name_underscore}"
-      sim_ignition="true"
       use_fake_hardware="${use_fake_hardware}"
       fake_sensor_commands="${fake_sensor_commands}"
+      sim_gazebo="true"
     >
       <origin xyz="${xyz}" rpy="${rpy}" />
     </xacro:kinova_manipulator.load_robot>
 
     <!-- Include and load the gripper if defined -->
     <xacro:unless value="${not gripper}">
-      <xacro:include
-        filename="$(find kortex_description)/grippers/${gripper}/urdf/${gripper}_macro.xacro"
+      <xacro:include     filename="$(find husarion_components_description)/urdf/${gripper}_macro.urdf.xacro"
         ns="kinova_manipulator" />
 
       <xacro:if value="${kinova_type == 'gen3'}">
@@ -139,17 +138,14 @@ limitations under the License.
         <xacro:property name="last_arm_link" value="dummy_link" />
       </xacro:unless>
 
-      <xacro:arg name="sim_ignition" default="true" />
-      <xacro:arg name="sim_isaac" default="false" />
 
       <xacro:kinova_manipulator.load_gripper
         parent="${component_name_underscore}${last_arm_link}"
         prefix="${component_name_underscore}"
         use_fake_hardware="${use_fake_hardware}"
         fake_sensor_commands="${fake_sensor_commands}"
-        sim_ignition="true"
-        sim_isaac="false"
-      />
+        sim_gazebo="True"
+        use_internal_bus_gripper_comm="${use_internal_bus_gripper_comm}"/>
     </xacro:unless>
 
     <xacro:if value="${vision}">
