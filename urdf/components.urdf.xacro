@@ -43,18 +43,79 @@ limitations under the License.
 
       <xacro:property name="type" value="${component['type']}" scope="parent" />
 
+      <!-- `type` may be the canonical (intuitive) component name, a short alias, or -->
+      <!-- the historical SKU code - all are accepted. This single table maps every -->
+      <!-- alias/code to its canonical name; canonical names pass through unchanged, -->
+      <!-- and the dispatch below keys on the canonical name. Codes are optional: a -->
+      <!-- component without one (e.g. rplidar_c1) is selected by name only. -->
+      <xacro:property name="aliases"
+        value="${dict ([
+        ('DEV01', 'cover_access_panel'),
+        ('DEV02', 'carrying_handles'),
+        ('DEV03', 'mounting_plate'),
+        ('wooden_plate', 'mounting_plate'),
+        ('DEV04H', 'frame_370'),
+        ('DEV04L', 'frame_170'),
+        ('DEV05', 'pillar_350'),
+        ('DEV06', 'basket_railings'),
+        ('DEV07', 'gate_small'),
+        ('gate_475', 'gate_small'),
+        ('DEV07T', 'gate_small_rotated'),
+        ('gate_350_rotated', 'gate_small_rotated'),
+        ('DEV09', 'gate_large'),
+        ('RCK', 'rack'),
+        ('ANT02', 'teltonika'),
+        ('WCH01', 'wibotic_receiver'),
+        ('wibotic', 'wibotic_receiver'),
+        ('CAM01', 'orbbec_astra'),
+        ('astra', 'orbbec_astra'),
+        ('CAM02', 'realsense_d435'),
+        ('realsense', 'realsense_d435'),
+        ('CAM03', 'zed_2'),
+        ('CAM04', 'zed_2i'),
+        ('CAM05', 'zed_m'),
+        ('CAM06', 'zed_x'),
+        ('CAM11', 'oak_d_pro'),
+        ('oak', 'oak_d_pro'),
+        ('luxonis_oak_d_pro', 'oak_d_pro'),
+        ('LDR01', 'rplidar_s1'),
+        ('LDR02', 'rplidar_s2'),
+        ('LDR03', 'rplidar_a2m12'),
+        ('LDR04', 'rplidar_a3'),
+        ('LDR06', 'rplidar_s3'),
+        ('LDR10', 'ouster_os0_32'),
+        ('LDR11', 'ouster_os0_64'),
+        ('LDR12', 'ouster_os0_128'),
+        ('LDR13', 'ouster_os1_32'),
+        ('LDR14', 'ouster_os1_64'),
+        ('LDR15', 'ouster_os1_128'),
+        ('LDR20', 'velodyne_puck'),
+        ('LDR22', 'velodyne_alpha_prime'),
+        ('MAN01', 'ur3e'),
+        ('MAN02', 'ur5e'),
+        ('MAN04', 'kinova_gen3_6dof'),
+        ('MAN05', 'kinova_gen3_6dof_vision'),
+        ('MAN06', 'kinova_gen3_7dof'),
+        ('MAN07', 'kinova_gen3_7dof_vision'),
+        ('GRP02', 'robotiq_2f_85'),
+      ])}" />
+
+      <xacro:if value="${type in aliases}">
+        <xacro:property name="type" value="${aliases[type]}" scope="parent" />
+      </xacro:if>
+
       <xacro:property name="dev_models_dict"
         value="${dict ([
-        ('DEV01', 'dev01'),
-        ('DEV02', 'dev02'),
-        ('DEV03', 'dev03'),
-        ('DEV04H', 'dev04h'),
-        ('DEV04L', 'dev04l'),
-        ('DEV05', 'dev05'),
-        ('DEV06', 'dev06'),
-        ('DEV07', 'dev07'),
-        ('DEV07T', 'dev07t'),
-        ('DEV09', 'dev09')
+        ('cover_access_panel', 'dev01'),
+        ('carrying_handles', 'dev02'),
+        ('mounting_plate', 'dev03'),
+        ('frame_370', 'dev04h'),
+        ('frame_170', 'dev04l'),
+        ('pillar_350', 'dev05'),
+        ('basket_railings', 'dev06'),
+        ('gate_small', 'dev07'),
+        ('gate_small_rotated', 'dev07t'),
+        ('gate_large', 'dev09')
       ])}" />
 
       <xacro:if value="${type in dev_models_dict}">
@@ -73,7 +134,7 @@ limitations under the License.
         <xacro:property name="rpy" value="${component['rpy'] if 'rpy' in component else '0.0 0.0 0.0'}" scope="parent" />
         <xacro:property name="component_name" value="${component['name'] if 'name' in component else ''}" scope="parent" />
 
-        <xacro:if value="${type == 'ANT02'}">
+        <xacro:if value="${type == 'teltonika'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/teltonika_003R-00253.urdf.xacro"
             ns="teltonika" />
@@ -88,7 +149,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'RCK'}">
+        <xacro:if value="${type == 'rack'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/rack.urdf.xacro"
             ns="rack" />
@@ -105,7 +166,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'CAM01'}">
+        <xacro:if value="${type == 'orbbec_astra'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/orbbec_astra.urdf.xacro"
             ns="camera" />
@@ -120,7 +181,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'CAM02'}">
+        <xacro:if value="${type == 'realsense_d435'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/intel_realsense_d435.urdf.xacro"
             ns="camera" />
@@ -138,10 +199,10 @@ limitations under the License.
 
         <xacro:property name="zed_models_dict"
           value="${dict ([
-          ('CAM03', 'zed2'),
-          ('CAM04', 'zed2i'),
-          ('CAM05', 'zedm'),
-          ('CAM06', 'zedx'),
+          ('zed_2', 'zed2'),
+          ('zed_2i', 'zed2i'),
+          ('zed_m', 'zedm'),
+          ('zed_x', 'zedx'),
           ])}" />
 
           <xacro:if value="${type in zed_models_dict}">
@@ -160,10 +221,10 @@ limitations under the License.
           />
         </xacro:if>
 
-        <!-- 'CAM10', 'OAK-1-LITE' is not available in luxonis repo -->
+        <!-- oak_1_lite (OAK-1-LITE) is not available in the luxonis repo -->
         <xacro:property name="luxonis_models_dict"
           value="${dict ([
-          ('CAM11', 'OAK-D-PRO'),
+          ('oak_d_pro', 'OAK-D-PRO'),
           ])}" />
 
         <xacro:if value="${type in luxonis_models_dict}">
@@ -184,11 +245,12 @@ limitations under the License.
 
         <xacro:property name="rplidar_models_dict"
           value="${dict ([
-          ('LDR01', 's1'),
-          ('LDR02', 's2'),
-          ('LDR03', 'a2m12'),
-          ('LDR04', 'a3'),
-          ('LDR06', 's3'),
+          ('rplidar_s1', 's1'),
+          ('rplidar_s2', 's2'),
+          ('rplidar_a2m12', 'a2m12'),
+          ('rplidar_a3', 'a3'),
+          ('rplidar_c1', 'c1'),
+          ('rplidar_s3', 's3'),
         ])}" />
 
         <xacro:if value="${type in rplidar_models_dict}">
@@ -210,12 +272,12 @@ limitations under the License.
 
         <xacro:property name="ouster_models_dict"
           value="${dict ([
-          ('LDR10', 'os0_32'),
-          ('LDR11', 'os0_64'),
-          ('LDR12', 'os0_128'),
-          ('LDR13', 'os1_32'),
-          ('LDR14', 'os1_64'),
-          ('LDR15', 'os1_128')
+          ('ouster_os0_32', 'os0_32'),
+          ('ouster_os0_64', 'os0_64'),
+          ('ouster_os0_128', 'os0_128'),
+          ('ouster_os1_32', 'os1_32'),
+          ('ouster_os1_64', 'os1_64'),
+          ('ouster_os1_128', 'os1_128')
         ])}" />
 
         <xacro:if value="${type in ouster_models_dict}">
@@ -234,7 +296,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'LDR20'}">
+        <xacro:if value="${type == 'velodyne_puck'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/velodyne_puck.urdf.xacro"
             ns="lidar"
@@ -250,7 +312,23 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'MAN01'}">
+        <xacro:if value="${type == 'velodyne_alpha_prime'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/velodyne_alpha_prime.urdf.xacro"
+            ns="lidar"
+          />
+
+          <xacro:lidar.velodyne_alpha_prime
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'ur3e'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/ur.urdf.xacro"
             ns="manipulator"
@@ -265,7 +343,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'MAN02'}">
+        <xacro:if value="${type == 'ur5e'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/ur.urdf.xacro"
             ns="manipulator"
@@ -281,7 +359,7 @@ limitations under the License.
         </xacro:if>
 
 
-        <xacro:if value="${type == 'MAN04'}">
+        <xacro:if value="${type == 'kinova_gen3_6dof'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
             ns="manipulator"
@@ -301,7 +379,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'MAN05'}">
+        <xacro:if value="${type == 'kinova_gen3_6dof_vision'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
             ns="manipulator"
@@ -321,7 +399,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'MAN06'}">
+        <xacro:if value="${type == 'kinova_gen3_7dof'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
             ns="manipulator"
@@ -341,7 +419,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'MAN07'}">
+        <xacro:if value="${type == 'kinova_gen3_7dof_vision'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/kinova.urdf.xacro"
             ns="manipulator"
@@ -361,7 +439,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'GRP02'}">
+        <xacro:if value="${type == 'robotiq_2f_85'}">
           <xacro:include filename="$(find husarion_components_description)/urdf/robotiq.urdf.xacro"
             ns="gripper" />
 
@@ -374,7 +452,7 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:if value="${type == 'WCH01'}">
+        <xacro:if value="${type == 'wibotic_receiver'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/wibotic_receiver.urdf.xacro"
             ns="wireless_charger" />

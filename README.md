@@ -28,17 +28,18 @@ colcon build
 
 ## Usage via config
 
-List the components you want under `components:`. Each entry selects a `type` (see
-[Available components](#available-components)) and where to mount it:
+List the components you want under `components:`. Each entry selects a `type` — an
+intuitive **name** or its historical **code** (both work, see
+[Available components](#available-components)) — and where to mount it:
 
 ```yaml
 components:
-  - type: LDR06
+  - type: rplidar_s3        # intuitive name
     parent_link: cover_link
     xyz: 0.0 0.0 0.2
     rpy: 0.0 0.0 0.0
 
-  - type: CAM06
+  - type: CAM06             # or the historical code (here: zed_x)
     name: front
     parent_link: camera_mount_link
     xyz: -0.01 0.0 0.02
@@ -65,7 +66,7 @@ components:
 
 | field         | required | description                                                                         |
 | ------------- | -------- | ----------------------------------------------------------------------------------- |
-| `type`        | yes      | component code (see [Available components](#available-components)), or `custom`      |
+| `type`        | yes      | component name or code (see [Available components](#available-components)), or `custom` |
 | `parent_link` | yes      | robot link the component is attached to                                             |
 | `name`        | no       | local name; prefixes the component's frames so identical devices don't collide      |
 | `xyz`         | no       | translation from `parent_link` `[m]`, default `0.0 0.0 0.0`                          |
@@ -75,57 +76,67 @@ Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `pac
 
 ## Available components
 
+Put the **Name** in `type:` (recommended) or the **Code** — both resolve to the same
+component. Some devices have no code (e.g. `rplidar_c1`) and are selected by name only.
+A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
+
 ### Frames & mounts
 
-| Code   | Device Name               |
-| ------ | ------------------------- |
-| DEV01  | Cover with Access Panel   |
-| DEV02  | Carrying Handles          |
-| DEV03  | Wooden Mounting Plate     |
-| DEV04H | 370 mm High Frame         |
-| DEV04L | 170 mm High Frame         |
-| DEV05  | 350 mm Pillar             |
-| DEV06  | Basket on Railings        |
-| DEV07  | 475 mm Small Gate         |
-| DEV07T | 350 mm Rotated Small Gate |
-| DEV09  | Large Gate                |
-| RCK    | Rack made of profiles     |
+| Name               | Code   | Device                                         |
+| ------------------ | ------ | ---------------------------------------------- |
+| cover_access_panel | DEV01  | User Compartment Cover with Quick Access Panel |
+| carrying_handles   | DEV02  | Handles for Carrying the Robot                 |
+| mounting_plate     | DEV03  | Mounting Plate for Mounting Rails              |
+| frame_370          | DEV04H | 370 mm High Frame for Sensors                  |
+| frame_170          | DEV04L | 170 mm High Frame for Sensors                  |
+| pillar_350         | DEV05  | 350 mm Pillar for Sensors                      |
+| basket_railings    | DEV06  | Basket on Railings                             |
+| gate_small         | DEV07  | Small Gate                                     |
+| gate_small_rotated | DEV07T | Small Gate (rotated)                           |
+| gate_large         | DEV09  | Large Gate                                     |
+| rack               | RCK    | Rack made of profiles                          |
 
 ### Cameras
 
-| Code  | Device Name      |
-| ----- | ---------------- |
-| CAM01 | Orbbec Astra     |
-| CAM03 | StereoLabs ZED 2 |
-| CAM04 | StereoLabs ZED 2i |
-| CAM05 | StereoLabs ZED M |
-| CAM06 | StereoLabs ZED X |
-| CAM11 | Luxonis OAK-D-PRO |
+| Name           | Code  | Device               |
+| -------------- | ----- | -------------------- |
+| orbbec_astra   | CAM01 | Orbbec Astra         |
+| realsense_d435 | CAM02 | Intel RealSense D435 |
+| zed_2          | CAM03 | StereoLabs ZED 2     |
+| zed_2i         | CAM04 | StereoLabs ZED 2i    |
+| zed_m          | CAM05 | StereoLabs ZED M     |
+| zed_x          | CAM06 | StereoLabs ZED X     |
+| oak_d_pro      | CAM11 | Luxonis OAK-D-PRO    |
 
 ### Lidars
 
-| Code  | Device Name    |
-| ----- | -------------- |
-| LDR01 | RPLIDAR S1     |
-| LDR06 | RPLIDAR S3     |
-| LDR10 | Ouster OS0-32  |
-| LDR11 | Ouster OS0-64  |
-| LDR12 | Ouster OS0-128 |
-| LDR13 | Ouster OS1-32  |
-| LDR14 | Ouster OS1-64  |
-| LDR15 | Ouster OS1-128 |
-| LDR20 | Velodyne Puck  |
+| Name           | Code  | Device         |
+| -------------- | ----- | -------------- |
+| rplidar_s1     | LDR01 | RPLIDAR S1     |
+| rplidar_s2     | LDR02 | RPLIDAR S2     |
+| rplidar_a2m12  | LDR03 | RPLIDAR A2M12  |
+| rplidar_a3     | LDR04 | RPLIDAR A3     |
+| rplidar_c1     | —     | RPLIDAR C1     |
+| rplidar_s3     | LDR06 | RPLIDAR S3     |
+| ouster_os0_32  | LDR10 | Ouster OS0-32  |
+| ouster_os0_64  | LDR11 | Ouster OS0-64  |
+| ouster_os0_128 | LDR12 | Ouster OS0-128 |
+| ouster_os1_32  | LDR13 | Ouster OS1-32  |
+| ouster_os1_64  | LDR14 | Ouster OS1-64  |
+| ouster_os1_128 | LDR15 | Ouster OS1-128 |
+| velodyne_puck  | LDR20 | Velodyne Puck  |
+| velodyne_alpha_prime | LDR22 | Velodyne Alpha Prime |
 
 ### Manipulators
 
-| Code  | Device Name                 |
-| ----- | --------------------------- |
-| MAN01 | Universal Robots UR3e       |
-| MAN02 | Universal Robots UR5e       |
-| MAN04 | 6DoF Kinova Gen3            |
-| MAN05 | 6DoF Kinova Gen3 + 3D vision |
-| MAN06 | 7DoF Kinova Gen3            |
-| MAN07 | 7DoF Kinova Gen3 + 3D vision |
+| Name                    | Code  | Device                       |
+| ----------------------- | ----- | ---------------------------- |
+| ur3e                    | MAN01 | Universal Robots UR3e        |
+| ur5e                    | MAN02 | Universal Robots UR5e        |
+| kinova_gen3_6dof        | MAN04 | 6DoF Kinova Gen3             |
+| kinova_gen3_6dof_vision | MAN05 | 6DoF Kinova Gen3 + 3D vision |
+| kinova_gen3_7dof        | MAN06 | 7DoF Kinova Gen3             |
+| kinova_gen3_7dof_vision | MAN07 | 7DoF Kinova Gen3 + 3D vision |
 
 > [!NOTE]
 > The manipulators (code `MAN<X>`) must only be used within the simulation environment.
@@ -134,16 +145,16 @@ Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `pac
 
 ### Grippers
 
-| Code  | Device Name  |
-| ----- | ------------ |
-| GRP02 | Robotiq 2F-85 |
+| Name          | Code  | Device        |
+| ------------- | ----- | ------------- |
+| robotiq_2f_85 | GRP02 | Robotiq 2F-85 |
 
 ### Connectivity & power
 
-| Code  | Device Name          |
-| ----- | -------------------- |
-| ANT02 | Teltonika 003R-00253 |
-| WCH01 | Wibotic receiver     |
+| Name             | Code  | Device               |
+| ---------------- | ----- | -------------------- |
+| teltonika        | ANT02 | Teltonika 003R-00253 |
+| wibotic_receiver | WCH01 | Wibotic receiver     |
 
 ## Custom component
 
