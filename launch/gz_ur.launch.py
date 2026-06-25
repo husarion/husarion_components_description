@@ -17,7 +17,7 @@ from launch_ros.substitutions import FindPackageShare
 from nav2_common.launch import ReplaceString
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
@@ -79,25 +79,10 @@ def generate_launch_description():
         ],
     )
 
-    set_joint_trajectory_controller_type = ExecuteProcess(
-        cmd=[
-            "ros2",
-            "param",
-            "set",
-            "--timeout",
-            "100",
-            [robot_namespace, "/controller_manager"],
-            [component_name, "_joint_trajectory_controller.type"],
-            "joint_trajectory_controller/JointTrajectoryController",
-        ],
-        output="screen",
-        on_exit=[initial_joint_controller_spawner_started],
-    )
-
     return LaunchDescription(
         [
             declare_component_name,
             declare_robot_namespace,
-            set_joint_trajectory_controller_type,
+            initial_joint_controller_spawner_started,
         ]
     )

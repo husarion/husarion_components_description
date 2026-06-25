@@ -29,7 +29,7 @@ Modified from https://github.com/Kinovarobotics/ros2_kortex/blob/jazzy/kortex_de
     </xacro:if>
 
     <xacro:robotiq_gripper
-        name="RobotiqGripperHardwareInterface"
+        name="${prefix}RobotiqGripperHardwareInterface"
         prefix="${prefix}"
         parent="${parent}"
         include_ros2_control="${include_ros2_control}"
