@@ -2,8 +2,8 @@
 Changelog for package husarion_components_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.1 (2026-06-29)
+------------------
 * Add readable component-type names
 * Add LPX-E3/T1, Velodyne & Astra meshes; improve RPLidar meshes (`#23 <https://github.com/husarion/husarion_components_description/issues/23>`_)
 * rack example (`#22 <https://github.com/husarion/husarion_components_description/issues/22>`_)
