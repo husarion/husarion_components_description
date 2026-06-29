@@ -2,6 +2,19 @@
 Changelog for package husarion_components_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add readable component-type names
+* Add LPX-E3/T1, Velodyne & Astra meshes; improve RPLidar meshes (`#23 <https://github.com/husarion/husarion_components_description/issues/23>`_)
+* rack example (`#22 <https://github.com/husarion/husarion_components_description/issues/22>`_)
+* Add all rplidar mesh models
+* Add custom component type for user URDF/mesh (`#21 <https://github.com/husarion/husarion_components_description/issues/21>`_)
+* Use upstream zed_description for ZED camera URDF (`#20 <https://github.com/husarion/husarion_components_description/issues/20>`_)
+* Rails elements (`#17 <https://github.com/husarion/husarion_components_description/issues/17>`_)
+* Fix os0-32 ranges (`#16 <https://github.com/husarion/husarion_components_description/issues/16>`_)
+* Add reling component (`#15 <https://github.com/husarion/husarion_components_description/issues/15>`_)
+* Contributors: Dawid Kmak, Jakub Delicat, Rafal Gorecki, rafal-gorecki
+
 0.1.0 (2025-12-12)
 ------------------
 * Add tf_prefix arg and fix depthai reference frame for camera (`#14 <https://github.com/husarion/husarion_components_description/issues/14>`_)
