@@ -42,11 +42,6 @@ def generate_launch_description():
                 component_name,
                 "_robotiq_gripper_controller:",
             ],
-            "  robotiq_activation_controller:": [
-                "  ",
-                component_name,
-                "_robotiq_activation_controller:",
-            ],
         },
     )
 
@@ -67,8 +62,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             [component_name, "_robotiq_gripper_controller"],
-            "-t",
-            "position_controllers/GripperActionController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
@@ -78,7 +71,6 @@ def generate_launch_description():
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
-        namespace=robot_namespace,
     )
 
     return LaunchDescription(

@@ -90,8 +90,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             [component_name, "_joint_trajectory_controller"],
-            "-t",
-            "joint_trajectory_controller/JointTrajectoryController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
@@ -101,7 +99,6 @@ def generate_launch_description():
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
-        namespace=robot_namespace,
     )
 
     robot_hand_controller_spawner = Node(
@@ -109,8 +106,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             [component_name, "_robotiq_gripper_controller"],
-            "-t",
-            "position_controllers/GripperActionController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
@@ -120,7 +115,6 @@ def generate_launch_description():
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
-        namespace=robot_namespace,
     )
 
     gz_bridge = Node(
@@ -136,8 +130,8 @@ def generate_launch_description():
         [
             declare_component_name,
             declare_robot_namespace,
+            gz_bridge,
             initial_joint_controller_spawner_started,
             robot_hand_controller_spawner,
-            gz_bridge,
         ]
     )

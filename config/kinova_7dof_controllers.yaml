@@ -2,6 +2,7 @@
 /**:
   joint_trajectory_controller:
     ros__parameters:
+      type: joint_trajectory_controller/JointTrajectoryController
       joints:
         - joint_1
         - joint_2
@@ -22,19 +23,9 @@
         stopped_velocity_tolerance: 0.0
         goal_time: 0.0
 
-  twist_controller:
-    ros__parameters:
-      joint: tcp
-      interface_names:
-        - twist.linear.x
-        - twist.linear.y
-        - twist.linear.z
-        - twist.angular.x
-        - twist.angular.y
-        - twist.angular.z
-
   robotiq_gripper_controller:
     ros__parameters:
+      type: parallel_gripper_action_controller/GripperActionController
       default: true
       joint: robotiq_85_left_knuckle_joint
       allow_stalling: true

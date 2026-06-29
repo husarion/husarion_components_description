@@ -2,12 +2,8 @@
 /**:
   robotiq_gripper_controller:
     ros__parameters:
+      type: parallel_gripper_action_controller/GripperActionController
       default: true
       joint: robotiq_85_left_knuckle_joint
       use_effort_interface: true
       use_speed_interface: true
-
-  robotiq_activation_controller:
-    ros__parameters:
-      default: true
-      joint: robotiq_85_left_knuckle_joint

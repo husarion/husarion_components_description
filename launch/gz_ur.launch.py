@@ -68,8 +68,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             [component_name, "_joint_trajectory_controller"],
-            "-t",
-            "joint_trajectory_controller/JointTrajectoryController",
             "-c",
             "controller_manager",
             "--controller-manager-timeout",
@@ -79,7 +77,6 @@ def generate_launch_description():
             "--param-file",
             namespaced_initial_joint_controllers_path,
         ],
-        namespace=robot_namespace,
     )
 
     return LaunchDescription(
