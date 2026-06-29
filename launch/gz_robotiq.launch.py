@@ -42,11 +42,6 @@ def generate_launch_description():
                 component_name,
                 "_robotiq_gripper_controller:",
             ],
-            "  robotiq_activation_controller:": [
-                "  ",
-                component_name,
-                "_robotiq_activation_controller:",
-            ],
         },
     )
 

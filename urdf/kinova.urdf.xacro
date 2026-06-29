@@ -128,7 +128,7 @@ limitations under the License.
 
     <!-- Include and load the gripper if defined -->
     <xacro:unless value="${not gripper}">
-      <xacro:include     filename="$(find husarion_components_description)/urdf/${gripper}_macro.urdf.xacro"
+      <xacro:include filename="$(find husarion_components_description)/urdf/${gripper}_macro.urdf.xacro"
         ns="kinova_manipulator" />
 
       <xacro:if value="${kinova_type == 'gen3'}">
@@ -144,7 +144,7 @@ limitations under the License.
         prefix="${component_name_underscore}"
         use_fake_hardware="${use_fake_hardware}"
         fake_sensor_commands="${fake_sensor_commands}"
-        sim_gazebo="True"
+        sim_gazebo="true"
         use_internal_bus_gripper_comm="${use_internal_bus_gripper_comm}"/>
     </xacro:unless>
 
