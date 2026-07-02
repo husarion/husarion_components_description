@@ -47,6 +47,46 @@ limitations under the License.
       cam_roll="${rpy.split()[0]}" cam_pitch="${rpy.split()[1]}" cam_yaw="${rpy.split()[2]}"
       simulation="${use_sim}" />
 
+    <!-- depthai_descriptions ships no collision geometry for the camera body (visual-only
+         upstream meshes); add a simple box per model, sized from each model's own STL bbox,
+         rigidly attached to the visual link so it moves with it. size/xyz measured directly
+         off depthai_descriptions/urdf/models/<model>.stl (bbox size / bbox center). -->
+    <xacro:property name="oak_collision_dict"
+      value="${dict([
+      ('OAK-1',          ('0.0360 0.0545 0.0279', '0.00004 -0.00470 -0.00945')),
+      ('OAK-D',          ('0.1100 0.0545 0.0330', '0.0 -0.01525 -0.01641')),
+      ('OAK-D-CM4-POE',  ('0.1300 0.1021 0.0300', '0.03350 -0.02603 -0.01482')),
+      ('OAK-D-IOT-75',   ('0.1040 0.0410 0.0233', '-0.00213 -0.01060 -0.01140')),
+      ('OAK-D-LITE',     ('0.0910 0.0280 0.0175', '0.0 -0.00504 -0.00643')),
+      ('OAK-D-LR',       ('0.2016 0.0744 0.0406', '0.02100 -0.01945 -0.02022')),
+      ('OAK-D-POE',      ('0.1300 0.1041 0.0299', '0.0 -0.01953 -0.01495')),
+      ('OAK-D-PRO',      ('0.0970 0.0295 0.0229', '0.0 -0.00476 -0.01128')),
+      ('OAK-D-PRO-W',    ('0.0970 0.0295 0.0231', '0.04852 0.01477 0.01157')),
+      ('OAK-D-S2',       ('0.0970 0.0295 0.0229', '0.0 -0.00476 -0.01128')),
+      ('OAK-D-S2-POE',   ('0.1110 0.0400 0.0313', '0.0 -0.00951 -0.01395')),
+      ('OAK-D-SR',       ('0.0560 0.0360 0.0254', '0.0 0.00240 -0.01242')),
+      ('OAK-D-SR-POE',   ('0.0798 0.0528 0.0463', '0.0 -0.00300 -0.01296')),
+      ('OAK-T',          ('0.0801 0.0531 0.0615', '-0.01268 0.00051 -0.03056')),
+      ('OAK4-D',         ('0.1435 0.0425 0.0672', '0.0 0.0 -0.03282')),
+      ('OAK4-S',         ('0.0582 0.0582 0.0713', '0.0 0.0 -0.03583')),
+      ])}" />
+
+    <xacro:if value="${model in oak_collision_dict}">
+      <joint name="${component_name}_model_collision_joint" type="fixed">
+        <parent link="${component_name}_model_origin" />
+        <child link="${component_name}_model_collision" />
+        <origin xyz="${oak_collision_dict[model][1]}" rpy="0.0 0.0 0.0" />
+      </joint>
+
+      <link name="${component_name}_model_collision">
+        <collision>
+          <geometry>
+            <box size="${oak_collision_dict[model][0]}" />
+          </geometry>
+        </collision>
+      </link>
+    </xacro:if>
+
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro"
       ns="gz_sensor" />
 
