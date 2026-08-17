@@ -55,7 +55,7 @@ limitations under the License.
     <xacro:gz_sensor.camera
       reference="${component_name}_camera_center"
       name="${robot_namespace_slash}${component_name}_camera_color"
-      topic="${robot_namespace_slash}${component_name}/zed_node/rgb/image_rect_color"
+      topic="${robot_namespace_slash}${component_name}/zed_node/rgb/color/rect/image"
       frame_id="${tf_prefix}${component_name}_camera_center"
       frequency="30"
       width="1280"
@@ -65,7 +65,7 @@ limitations under the License.
     <xacro:gz_sensor.depth_camera
       reference="${component_name}_camera_center"
       name="${robot_namespace_slash}${component_name}_camera_depth"
-      topic="${robot_namespace_slash}${component_name}/zed_node/depth"
+      topic="${robot_namespace_slash}${component_name}/zed_node/depth/depth_registered"
       frame_id="${tf_prefix}${component_name}_camera_center"
       frequency="30"
       width="1280"

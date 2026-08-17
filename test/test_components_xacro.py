@@ -138,6 +138,17 @@ class ComponentsYamlParseUtils:
 
         return False
 
+    def get_sensor_topic(self, sensor_name: str) -> str:
+        for sensor in self._urdf.getElementsByTagName("sensor"):
+            if sensor.getAttribute("name") != sensor_name:
+                continue
+
+            topics = sensor.getElementsByTagName("topic")
+            if len(topics) == 1 and topics[0].firstChild is not None:
+                return topics[0].firstChild.data
+
+        raise AssertionError(f"Topic for sensor {sensor_name} not found")
+
     def test_component(self, component: dict, expected_result: list, components_config_path: str):
         names = components_types_with_names[component["type"]]
         component_model_name = names[0]
@@ -207,6 +218,28 @@ def test_all_good_single_components(tmpdir_factory):
 
         for component in components["components"]:
             utils.test_component(component, [True, True, True], str(components_config_path))
+
+
+def test_zed_uses_v5_topics(tmpdir_factory):
+    components_config_path = tmpdir_factory.mktemp("zed_v5").join("components.yaml")
+    utils = ComponentsYamlParseUtils(str(components_config_path))
+    utils.save_yaml(
+        {
+            "components": [
+                utils.create_component("CAM03", "front_camera"),
+            ],
+        }
+    )
+
+    assert utils.does_urdf_parse()
+    assert (
+        utils.get_sensor_topic("front_camera_camera_color")
+        == "front_camera/zed_node/rgb/color/rect/image"
+    )
+    assert (
+        utils.get_sensor_topic("front_camera_camera_depth")
+        == "front_camera/zed_node/depth/depth_registered"
+    )
 
 
 EXAMPLE_XACRO = os.path.join(
