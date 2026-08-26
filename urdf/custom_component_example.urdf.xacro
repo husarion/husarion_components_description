@@ -21,6 +21,9 @@ limitations under the License.
   package and reshape the macro body for your hardware - keep the parameter
   signature (the components dispatcher calls it with all of them). The macro name
   defaults to `custom_component`; rename it and point at it via `macro_name` in the config.
+  `component` is the raw yaml entry (a dict) - read it for any extra,
+  component-specific keys you add beyond the standard ones (e.g. camera_mount's
+  camera_mount_angle_1/2 in rosbot_description).
 
   Reference it from a components config:
 
@@ -40,7 +43,8 @@ limitations under the License.
                        rpy:='0.0 0.0 0.0'
                        component_name:=''
                        robot_namespace:=''
-                       use_tf_prefix:=True">
+                       use_tf_prefix:=True
+                       component:={}">
 
     <link name="${component_name}_link">
       <visual>

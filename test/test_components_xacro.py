@@ -294,7 +294,7 @@ def test_custom_component_with_macro_name_override(tmpdir_factory):
             '<robot xmlns:xacro="http://wiki.ros.org/xacro">'
             '<xacro:macro name="my_macro" '
             "params=\"parent_link xyz:='0 0 0' rpy:='0 0 0' "
-            "component_name:='' robot_namespace:='' use_tf_prefix:=True\">"
+            "component_name:='' robot_namespace:='' use_tf_prefix:=True component:={}\">"
             '<link name="${component_name}_link"/>'
             '<joint name="${parent_link}_to_${component_name}_joint" type="fixed">'
             '<parent link="${parent_link}"/><child link="${component_name}_link"/>'
@@ -313,3 +313,36 @@ def test_custom_component_with_macro_name_override(tmpdir_factory):
         },
     )
     assert utils.does_link_exist(utils._urdf, "renamed_link")
+
+
+def test_custom_component_receives_raw_component_dict(tmpdir_factory):
+    """The dispatcher forwards the full yaml entry as `component`, so a custom
+    macro can read its own extra keys beyond the standard signature (e.g.
+    camera_mount's camera_mount_angle_1/2)."""
+    fixture = tmpdir_factory.mktemp("custom_extra").join("extra.urdf.xacro")
+    with open(str(fixture), mode="w", encoding="utf-8") as file:
+        file.write(
+            '<robot xmlns:xacro="http://wiki.ros.org/xacro">'
+            '<xacro:macro name="with_extra" '
+            "params=\"parent_link xyz:='0 0 0' rpy:='0 0 0' "
+            "component_name:='' robot_namespace:='' use_tf_prefix:=True component:={}\">"
+            "<link name=\"${component_name}_${component['extra_field']}_link\"/>"
+            '<joint name="${parent_link}_to_${component_name}_joint" type="fixed">'
+            '<parent link="${parent_link}"/>'
+            "<child link=\"${component_name}_${component['extra_field']}_link\"/>"
+            '<origin xyz="${xyz}" rpy="${rpy}"/></joint>'
+            "</xacro:macro></robot>"
+        )
+    utils = _render_custom(
+        tmpdir_factory,
+        "custom_extra_cfg",
+        {
+            "type": "custom",
+            "name": "sensor",
+            "file": str(fixture),
+            "macro_name": "with_extra",
+            "parent_link": "cover_link",
+            "extra_field": "hello",
+        },
+    )
+    assert utils.does_link_exist(utils._urdf, "sensor_hello_link")

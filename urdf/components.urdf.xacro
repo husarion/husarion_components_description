@@ -474,7 +474,10 @@ limitations under the License.
         <!-- present ($(find package)/file), otherwise taken as an absolute path. -->
         <!-- The included file must define a macro with the standard component -->
         <!-- signature; its name defaults to `custom_component` and is overridable -->
-        <!-- via `macro_name`. -->
+        <!-- via `macro_name`. The raw yaml entry is also passed as `component` (a -->
+        <!-- dict) so a macro can read its own extra, component-specific keys (e.g. -->
+        <!-- camera_mount's camera_mount_angle_1/2) beyond the standard params - the -->
+        <!-- macro must declare a `component:={}` param even if it doesn't use it. -->
         <xacro:if value="${type == 'custom'}">
           <xacro:property name="macro_name"
             value="${component['macro_name'] if 'macro_name' in component else 'custom_component'}" scope="parent" />
@@ -493,6 +496,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             use_tf_prefix="${use_tf_prefix}"
+            component="${component}"
           />
         </xacro:if>
       </xacro:unless>
