@@ -221,10 +221,14 @@ limitations under the License.
           />
         </xacro:if>
 
-        <!-- oak_1_lite (OAK-1-LITE) is not available in the luxonis repo -->
+        <!-- OAK-1-LITE has no dedicated mesh in the luxonis repo - it shares the
+             OAK-1 enclosure (same mesh), the two only differ by the internal sensor. -->
         <xacro:property name="luxonis_models_dict"
           value="${dict ([
           ('oak_d_pro', 'OAK-D-PRO'),
+          ('oak_d_lite', 'OAK-D-LITE'),
+          ('oak_1', 'OAK-1'),
+          ('oak_1_lite', 'OAK-1'),
           ])}" />
 
         <xacro:if value="${type in luxonis_models_dict}">
