@@ -26,6 +26,18 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 colcon build
 ```
 
+> [!NOTE]
+> On ROS 2 Lyrical, this package does not automatically install `depthai_descriptions`
+> or `kortex_description`. Install the corresponding package separately—using a binary
+> when available or by building it from source—before using a Luxonis OAK camera
+> (`oak_d_pro`, `oak_d_lite`, `oak_1`, or `oak_1_lite`) or a Kinova Gen3 manipulator
+> (`MAN04`–`MAN07`). Other component types are unaffected.
+>
+> As of Sep 2, 2026 there are no visible plans for Kortex Lyrical support.
+> `depthai_descriptions` 3.4.0-1 is registered for Lyrical. The build-farm status page
+> marks it SYNC. The September 1 ROS PMC notes say a Lyrical freeze and sync is planned
+> for the week. This package should be updated to unskip that dependency once available.
+
 ## Usage via config
 
 List the components you want under `components:`. Each entry selects a `type` — an

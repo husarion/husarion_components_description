@@ -5,10 +5,10 @@ on:
   - push
 
 jobs:
-  colcon-test-build-jazzy:
+  colcon-test-build:
     strategy:
       matrix:
-        ros-distro: [jazzy, humble]
+        ros-distro: [lyrical, jazzy, humble]
     runs-on: ubuntu-24.04
     container:
       image: ros:${{ matrix.ros-distro }}-ros-core
@@ -24,7 +24,7 @@ jobs:
       - name: Initialize rosdep
         run: rosdep init
 
-      - uses: ros-tooling/action-ros-ci@v0.3
+      - uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: husarion_components_description
           target-ros2-distro: ${{ matrix.ros-distro }}
