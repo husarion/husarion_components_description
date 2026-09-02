@@ -20,9 +20,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>depthai_descriptions</depend>
+  <depend condition="$ROS_DISTRO != 'lyrical'">depthai_descriptions</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">joint_trajectory_controller</depend>
-  <depend>kortex_description</depend>
+  <depend condition="$ROS_DISTRO != 'lyrical'">kortex_description</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">launch_ros</depend>
   <depend condition="($HUSARION_ROS_BUILD_TYPE == simulation)">nav2_common</depend>
