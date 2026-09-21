@@ -19,7 +19,7 @@ limitations under the License.
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!--
     Frame convention for devNN_link
-    --------------------------------
+
     Every devNN_link's origin sits at the *mount surface* of the structure
     (top of the cover, top profile of a gate, top of the pillar). Sensors
     mounted on that frame with xyz=(0,0,0) therefore land on the surface a
