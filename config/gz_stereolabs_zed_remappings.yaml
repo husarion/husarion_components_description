@@ -2,24 +2,28 @@
 # https://github.com/stereolabs/zed-ros2-wrapper
   - topic_name: <robot_namespace><component_name>/zed_node/rgb/color/rect/camera_info
     ros_type_name: sensor_msgs/msg/CameraInfo
+    frame_id: <optical_frame>
     gz_type_name: gz.msgs.CameraInfo
     lazy: true
     direction: GZ_TO_ROS
 
   - topic_name: <robot_namespace><component_name>/zed_node/rgb/color/rect/image
     ros_type_name: sensor_msgs/msg/Image
+    frame_id: <optical_frame>
     gz_type_name: gz.msgs.Image
     lazy: true
     direction: GZ_TO_ROS
 
   - topic_name: <robot_namespace><component_name>/zed_node/depth/camera_info
     ros_type_name: sensor_msgs/msg/CameraInfo
+    frame_id: <optical_frame>
     gz_type_name: gz.msgs.CameraInfo
     lazy: true
     direction: GZ_TO_ROS
 
   - topic_name: <robot_namespace><component_name>/zed_node/depth/depth_registered
     ros_type_name: sensor_msgs/msg/Image
+    frame_id: <optical_frame>
     gz_type_name: gz.msgs.Image
     lazy: true
     direction: GZ_TO_ROS
