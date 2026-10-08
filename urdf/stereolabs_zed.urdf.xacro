@@ -28,7 +28,8 @@ limitations under the License.
                        model:=zed
                        robot_namespace:=''
                        component_name:=''
-                       use_tf_prefix:=True">
+                       use_tf_prefix:=True
+                       simulation:=${dict()}">
 
     <xacro:if value="${component_name == ''}">
       <xacro:property name="component_name" value="zed" />
@@ -49,6 +50,11 @@ limitations under the License.
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:zed_camera>
 
+    <!-- Keep RGB and depth sampling settings aligned for registered consumers. -->
+    <xacro:property name="sim_frequency" value="${simulation.get('frequency', 30)}" />
+    <xacro:property name="sim_width" value="${simulation.get('width', 1280)}" />
+    <xacro:property name="sim_height" value="${simulation.get('height', 720)}" />
+
     <!-- GAZEBO -->
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 
@@ -57,9 +63,9 @@ limitations under the License.
       name="${robot_namespace_slash}${component_name}_camera_color"
       topic="${robot_namespace_slash}${component_name}/zed_node/rgb/color/rect/image"
       frame_id="${tf_prefix}${component_name}_camera_center"
-      frequency="30"
-      width="1280"
-      height="720"
+      frequency="${sim_frequency}"
+      width="${sim_width}"
+      height="${sim_height}"
       fov="${110.0/180.0*pi}" />
 
     <xacro:gz_sensor.depth_camera
@@ -67,9 +73,9 @@ limitations under the License.
       name="${robot_namespace_slash}${component_name}_camera_depth"
       topic="${robot_namespace_slash}${component_name}/zed_node/depth/depth_registered"
       frame_id="${tf_prefix}${component_name}_camera_center"
-      frequency="30"
-      width="1280"
-      height="720"
+      frequency="${sim_frequency}"
+      width="${sim_width}"
+      height="${sim_height}"
       fov="${110.0/180.0*pi}"
       min_dist="0.3"
       max_dist="20.0"

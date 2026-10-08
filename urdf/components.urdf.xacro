@@ -217,6 +217,7 @@ limitations under the License.
             robot_namespace="${robot_namespace}"
             component_name="${component_name}"
             model="${zed_models_dict[type]}"
+            simulation="${component.get('simulation', dict())}"
             use_tf_prefix="${use_tf_prefix}"
           />
         </xacro:if>
