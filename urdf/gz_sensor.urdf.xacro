@@ -59,9 +59,7 @@ limitations under the License.
             <height>${height}</height>
             <format>R_FLOAT32</format>
           </image>
-        </camera>
 
-        <depth_camera>
           <clip>
             <near>${min_dist}</near>
             <far>${max_dist}</far>
@@ -72,7 +70,7 @@ limitations under the License.
             <mean>0.0</mean>
             <stddev>${stddev_error}</stddev>
           </noise>
-        </depth_camera>
+        </camera>
       </sensor>
     </gazebo>
   </xacro:macro>
