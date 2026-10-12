@@ -49,6 +49,14 @@ limitations under the License.
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:zed_camera>
 
+    <!-- Optical axes at the simulated camera origin: x right, y down, z forward. -->
+    <link name="${component_name}_camera_center_optical_frame" />
+    <joint name="${component_name}_camera_center_optical_joint" type="fixed">
+      <parent link="${component_name}_camera_center" />
+      <child link="${component_name}_camera_center_optical_frame" />
+      <origin xyz="0 0 0" rpy="-${M_PI/2} 0.0 -${M_PI/2}" />
+    </joint>
+
     <!-- GAZEBO -->
     <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
 

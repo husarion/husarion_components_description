@@ -181,6 +181,12 @@ def generate_launch_description():
     actions = [
         declare_components_config_path_arg,
         declare_namespace_arg,
+        DeclareLaunchArgument(
+            "use_tf_prefix",
+            default_value="True",
+            choices=["True", "False"],
+            description="Whether to use_tf_prefix.",
+        ),
         SetParameter(name="use_sim_time", value=True),
         OpaqueFunction(function=launch_setup),
     ]

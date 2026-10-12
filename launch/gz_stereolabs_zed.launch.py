@@ -18,12 +18,23 @@ from ament_index_python import get_package_share_directory
 from launch_ros.actions import Node
 from nav2_common.launch import ReplaceString
 
-from launch import LaunchDescription
+from launch import LaunchDescription, Substitution
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import (
     EnvironmentVariable,
     LaunchConfiguration,
 )
+
+
+class CameraOpticalFrame(Substitution):
+    """Resolve the simulated optical frame using the URDF's TF prefix setting."""
+
+    def perform(self, context):
+        namespace = LaunchConfiguration("robot_namespace").perform(context).strip("/")
+        name = LaunchConfiguration("component_name").perform(context).strip("/") or "zed"
+        use_tf_prefix = LaunchConfiguration("use_tf_prefix").perform(context) == "True"
+        prefix = namespace + "/" if namespace and use_tf_prefix else ""
+        return prefix + name + "_camera_center_optical_frame"
 
 
 def generate_launch_description():
@@ -43,6 +54,7 @@ def generate_launch_description():
         replacements={
             "<robot_namespace>": robot_namespace,
             "<component_name>": component_name,
+            "<optical_frame>": CameraOpticalFrame(),
         },
     )
 
@@ -78,6 +90,12 @@ def generate_launch_description():
             declare_component_name,
             declare_robot_namespace,
             declare_gz_bridge_name,
+            DeclareLaunchArgument(
+                "use_tf_prefix",
+                default_value="True",
+                choices=["True", "False"],
+                description="Match use_tf_prefix in the camera URDF.",
+            ),
             gz_bridge,
         ]
     )
