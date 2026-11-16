@@ -184,6 +184,23 @@ limitations under the License.
           />
         </xacro:if>
 
+        <!-- A camera with no 3D model, drawn as a box; `size` is optional. -->
+        <xacro:if value="${type == 'camera_box'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/camera_box.urdf.xacro"
+            ns="camera" />
+
+          <xacro:camera.camera_box
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
+            size="${component['size'] if 'size' in component else '0.03 0.08 0.03'}"
+          />
+        </xacro:if>
+
         <xacro:if value="${type == 'realsense_d435'}">
           <xacro:include
             filename="$(find husarion_components_description)/urdf/intel_realsense_d435.urdf.xacro"

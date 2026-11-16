@@ -72,7 +72,8 @@ components:
 | `xyz`         | no       | translation from `parent_link` `[m]`, default `0.0 0.0 0.0`                          |
 | `rpy`         | no       | rotation from `parent_link` `[rad]`, default `0.0 0.0 0.0`                           |
 
-Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `package`/`file`).
+Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `package`/`file`,
+`camera_box` takes `size`).
 
 ## Available components
 
@@ -107,6 +108,22 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 | zed_m          | CAM05 | StereoLabs ZED M     |
 | zed_x          | CAM06 | StereoLabs ZED X     |
 | oak_d_pro      | CAM11 | Luxonis OAK-D-PRO    |
+| camera_box     | —     | Any camera, drawn as a box (see below) |
+
+`camera_box` is for a camera with no 3D model, such as a small USB camera. `xyz` and `rpy`
+place the centre of the lens; `rpy: 0.0 0.0 0.0` looks forward and is level. The box
+extends back from the lens. `size` is the depth, width and height in metres, default
+`0.03 0.08 0.03`. The frames are `<name>_link` (x out of the lens) and
+`<name>_optical_frame` (z out of the lens); the default name is `camera`, so a camera
+node that stamps `camera_optical_frame` needs no change.
+
+```yaml
+  - type: camera_box
+    parent_link: cover_link
+    xyz: 0.20 0.0 0.05
+    rpy: 0.0 0.0 0.0
+    size: 0.03 0.08 0.03
+```
 
 ### Lidars
 
