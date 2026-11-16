@@ -39,6 +39,17 @@ limitations under the License.
     <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'ouster_'}" />
     <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
 
+    <!-- Lidar origin above the sensor base (Ouster's lidar_to_sensor_transform z): 36.180 mm on
+         OS0/OS1, 74.296 mm on OS2 (OS-2-32 metadata; units differ by a few mm, so check the
+         unit's own lidar_intrinsics). The collision cylinder is the housing. -->
+    <xacro:property name="is_os2" value="${model.startswith('os2')}" />
+    <xacro:property name="lidar_z" value="${0.074296 if is_os2 else 0.03618}" />
+    <xacro:property name="mesh_file" value="${'ouster_os2.glb' if is_os2 else 'ouster_os01.dae'}" />
+    <!-- the OS2 glb is Y-up; turn it Z-up -->
+    <xacro:property name="mesh_rpy" value="${str(pi/2.0) + ' 0.0 0.0' if is_os2 else '0.0 0.0 0.0'}" />
+    <xacro:property name="housing_radius" value="${0.062 if is_os2 else 0.085/2.0}" />
+    <xacro:property name="housing_height" value="${0.103 if is_os2 else 0.015+0.074}" />
+
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
       <xacro:property name="range_min" value="0.4" scope="parent"/>
@@ -93,6 +104,33 @@ limitations under the License.
       <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
+    <xacro:if value="${model == 'os2_32'}">
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="240" scope="parent" />
+      <xacro:property name="layers" value="32" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.025" scope="parent"/>
+    </xacro:if>
+
+    <xacro:if value="${model == 'os2_64'}">
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="240" scope="parent" />
+      <xacro:property name="layers" value="64" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.025" scope="parent"/>
+    </xacro:if>
+
+    <xacro:if value="${model == 'os2_128'}">
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="240" scope="parent" />
+      <xacro:property name="layers" value="128" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.025" scope="parent"/>
+    </xacro:if>
+
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
@@ -101,16 +139,16 @@ limitations under the License.
 
     <link name="${component_name_underscore_nonempty}link">
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${mesh_rpy}" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/${mesh}.dae" />
+          <mesh filename="package://husarion_components_description/meshes/${mesh_file}" />
         </geometry>
       </visual>
 
       <collision>
-        <origin xyz="0.0 0.0 ${0.015+0.074/2.0}" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 ${housing_height/2.0}" rpy="0.0 0.0 0.0" />
         <geometry>
-          <cylinder radius="${0.085/2.0}" length="${0.015+0.074}" /> <!-- base + lidar height -->
+          <cylinder radius="${housing_radius}" length="${housing_height}" /> <!-- the housing -->
         </geometry>
       </collision>
 
@@ -124,7 +162,10 @@ limitations under the License.
     </link>
 
     <joint name="${component_name_underscore_nonempty}to_${component_name_underscore}os_lidar_joint" type="fixed">
-      <origin xyz="0.0 0.0 0.03618" rpy="0.0 0.0 0.0" />
+      <!-- Ouster's lidar frame is turned 180 deg about z from the sensor frame (the sensor's own
+           lidar_to_sensor_transform; the connector is on the sensor frame's -x). The driver
+           stamps the cloud in os_lidar, so without the turn every point lands mirrored. -->
+      <origin xyz="0.0 0.0 ${lidar_z}" rpy="0.0 0.0 ${pi}" />
       <parent link="${component_name_underscore_nonempty}link" />
       <child link="${component_name_underscore}os_lidar" />
     </joint>

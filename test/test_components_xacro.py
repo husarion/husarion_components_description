@@ -45,6 +45,9 @@ components_types_with_names = {
     "LDR13": ["ouster_os1_32", "os_lidar", "os_lidar", "lidar", ""],
     "LDR14": ["ouster_os1_64", "os_lidar", "os_lidar", "lidar", ""],
     "LDR15": ["ouster_os1_128", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR16": ["ouster_os2_32", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR17": ["ouster_os2_64", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR18": ["ouster_os2_128", "os_lidar", "os_lidar", "lidar", ""],
     "LDR20": ["velodyne_puck", "velodyne", "velodyne", "lidar", ""],
     "CAM01": ["orbbec_astra", "link", "link", "camera_color", "camera"],
     "CAM03": ["zed2", "camera_center", "camera_center", "camera_color", "zed"],
@@ -346,3 +349,28 @@ def test_custom_component_receives_raw_component_dict(tmpdir_factory):
         },
     )
     assert utils.does_link_exist(utils._urdf, "sensor_hello_link")
+
+
+def _ouster_lidar_joint(tmpdir_factory, type_name):
+    dir = tmpdir_factory.mktemp(type_name)
+    path = str(dir.join("components.yaml"))
+    utils = ComponentsYamlParseUtils(path)
+    utils.save_yaml({"components": [utils.create_component(type_name, "")]})
+    urdf = xacro.process_file(xacro_path, mappings={"components_config_path": path})
+    for joint in urdf.getElementsByTagName("joint"):
+        child = joint.getElementsByTagName("child")[0].getAttribute("link")
+        if child.endswith("os_lidar"):
+            origin = joint.getElementsByTagName("origin")[0]
+            xyz = [float(v) for v in origin.getAttribute("xyz").split()]
+            rpy = [float(v) for v in origin.getAttribute("rpy").split()]
+            return xyz, rpy
+    raise AssertionError(f"no os_lidar joint for {type_name}")
+
+
+def test_ouster_lidar_frame_matches_the_sensor(tmpdir_factory):
+    # Ouster's lidar_to_sensor_transform: a 180 deg turn about z and the lidar origin's height,
+    # 36.180 mm on OS0/OS1 and 74.296 mm on OS2. The driver stamps the cloud in os_lidar.
+    for type_name, height in (("LDR10", 0.03618), ("LDR15", 0.03618), ("LDR17", 0.074296)):
+        xyz, rpy = _ouster_lidar_joint(tmpdir_factory, type_name)
+        assert abs(xyz[2] - height) < 1e-6, (type_name, xyz)
+        assert abs(rpy[2] - 3.141592653589793) < 1e-6, (type_name, rpy)

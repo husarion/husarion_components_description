@@ -124,6 +124,9 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 | ouster_os1_32  | LDR13 | Ouster OS1-32  |
 | ouster_os1_64  | LDR14 | Ouster OS1-64  |
 | ouster_os1_128 | LDR15 | Ouster OS1-128 |
+| ouster_os2_32  | LDR16 | Ouster OS2-32  |
+| ouster_os2_64  | LDR17 | Ouster OS2-64  |
+| ouster_os2_128 | LDR18 | Ouster OS2-128 |
 | velodyne_puck  | LDR20 | Velodyne Puck  |
 | velodyne_alpha_prime | LDR22 | Velodyne Alpha Prime |
 
