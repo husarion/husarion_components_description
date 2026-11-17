@@ -56,6 +56,7 @@ components_types_with_names = {
     "CAM04": ["zed2i", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM05": ["zedm", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM06": ["zedx", "camera_center", "camera_center", "camera_color", "zed"],
+    "CAM12": ["oak_d_pro_poe", "link", "link", "color", "oak"],
     "MAN01": ["ur3e", "base_link", "", "", "ur"],
     "MAN02": ["ur5e", "base_link", "", "", "ur"],
     # "MAN03": ["kinova_lite",               "base_link",    "",         "",""], use_isaac error
@@ -478,3 +479,37 @@ def test_camera_box_default_size(tmpdir_factory):
     size, centre = _box_of(urdf, "camera_link")
     assert _close(size, [0.03, 0.08, 0.03])
     assert _close(centre, [-0.015, 0.0, 0.0])
+
+
+def test_oak_d_pro_poe_frames(tmpdir_factory):
+    # CAM12 gives the frames depthai stamps, each with one parent: oak_rgb_camera_optical_frame
+    # and the stereo pair 75 mm apart (Luxonis' NG9097 datasheet), plus a collision box of the
+    # datasheet's 111 x 40 x 31.3 mm.
+    config_path = tmpdir_factory.mktemp("oak_d_pro_poe").join("components.yaml")
+    utils = ComponentsYamlParseUtils(str(config_path))
+    utils.save_yaml(
+        {"components": [utils.create_component("CAM12", "", xyz="0.1 0.0 0.05")]}
+    )
+    assert utils.does_urdf_parse()
+    urdf = utils._urdf
+
+    body = _joints_to(urdf, "oak_link")
+    assert len(body) == 1
+    assert body[0].getElementsByTagName("parent")[0].getAttribute("link") == "cover_link"
+    assert _close(_origin(body[0])[0], [0.1, 0.0, 0.05])
+
+    for side, y in (("rgb", 0.0), ("left", 0.0375), ("right", -0.0375)):
+        frame = _joints_to(urdf, f"oak_{side}_camera_frame")
+        optical = _joints_to(urdf, f"oak_{side}_camera_optical_frame")
+        assert len(frame) == 1 and len(optical) == 1, side
+        assert frame[0].getElementsByTagName("parent")[0].getAttribute("link") == "oak_link"
+        assert _close(_origin(frame[0])[0], [0.0, y, 0.0]), side
+        assert _close(_origin(optical[0])[1], [-math.pi / 2, 0.0, -math.pi / 2]), side
+
+    for link in urdf.getElementsByTagName("link"):
+        if link.getAttribute("name") == "oak_model_collision":
+            size = link.getElementsByTagName("box")[0].getAttribute("size")
+            assert _close([float(v) for v in size.split()], [0.111, 0.040, 0.0313])
+            break
+    else:
+        raise AssertionError("no oak_model_collision link")

@@ -78,6 +78,8 @@ limitations under the License.
         ('CAM11', 'oak_d_pro'),
         ('oak', 'oak_d_pro'),
         ('luxonis_oak_d_pro', 'oak_d_pro'),
+        ('CAM12', 'oak_d_pro_poe'),
+        ('luxonis_oak_d_pro_poe', 'oak_d_pro_poe'),
         ('LDR01', 'rplidar_s1'),
         ('LDR02', 'rplidar_s2'),
         ('LDR03', 'rplidar_a2m12'),
@@ -243,9 +245,26 @@ limitations under the License.
 
         <!-- OAK-1-LITE has no dedicated mesh in the luxonis repo - it shares the
              OAK-1 enclosure (same mesh), the two only differ by the internal sensor. -->
+        <!-- OAK-D-PRO-POE (CAM12) has no mesh in depthai_descriptions either. It takes the
+             OAK-D-S2-POE one: both are board NG9097, and that mesh's bounding box is the Pro
+             PoE's 111 x 40 x 31.3 mm (width x height x depth) from Luxonis' datasheet,
+             https://github.com/luxonis/depthai-hardware/blob/master/NG9097_OAK-D-Pro-PoE/Datasheet/NG9097_OAK-D-Pro-PoE_Datasheet.pdf
+             (linked from https://docs.luxonis.com/hardware/products/OAK-D%20Pro%20PoE).
+             The Pro PoE's projector window is not drawn, and there is no oak_imu_frame
+             because Luxonis publishes no IMU position for it.
+             <name>_link sits on the RGB camera's axis, 1.7 mm behind the front face, as that mesh
+             places it. Measured off Luxonis' own Pro PoE enclosure STL (NG9097.STL, linked from
+             https://github.com/luxonis/depthai-hardware/blob/master/NG9097_OAK-D-Pro-PoE/Mechanical/README.md),
+             in <name>_link (x forward, y left, z up): the RGB camera at y 0 and the stereo
+             cameras at y +-37.5 mm, on one axis 29.5 mm above the bottom face (the datasheet
+             rounds it to 30); the two M4 holes (VESA 75 mm, 8 mm deep) at x -29.6, y +-37.5,
+             z +1.0 mm on the back face; the 1/4-20 tripod hole at x -15.5, y -37.5 (under the
+             right stereo camera), z -29.5 mm on the bottom face.
+             xyz and rpy place <name>_link, as for CAM11. -->
         <xacro:property name="luxonis_models_dict"
           value="${dict ([
           ('oak_d_pro', 'OAK-D-PRO'),
+          ('oak_d_pro_poe', 'OAK-D-S2-POE'),
           ('oak_d_lite', 'OAK-D-LITE'),
           ('oak_1', 'OAK-1'),
           ('oak_1_lite', 'OAK-1'),
