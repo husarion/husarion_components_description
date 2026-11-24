@@ -58,6 +58,13 @@ components_types_with_names = {
     "CAM04": ["zed2i", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM05": ["zedm", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM06": ["zedx", "camera_center", "camera_center", "camera_color", "zed"],
+    "CAM07": [
+        "realsense_d555",
+        "link",
+        "link",
+        "intel_realsense_d555_color",
+        "camera",
+    ],
     "MAN01": ["ur3e", "base_link", "", "", "ur"],
     "MAN02": ["ur5e", "base_link", "", "", "ur"],
     # "MAN03": ["kinova_lite",               "base_link",    "",         "",""], use_isaac error

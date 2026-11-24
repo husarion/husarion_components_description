@@ -118,6 +118,7 @@ def get_launch_descriptions_from_yaml_node(
         "CAM04": "stereolabs_zed",
         "CAM05": "stereolabs_zed",
         "CAM06": "stereolabs_zed",
+        "CAM07": "intel_realsense_d435",  # same realsense-ros topics as D435
         "CAM11": "luxonis_depthai",
         "MAN01": "ur",
         "MAN02": "ur",

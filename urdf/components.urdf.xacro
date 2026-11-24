@@ -71,6 +71,7 @@ limitations under the License.
         ('astra', 'orbbec_astra'),
         ('CAM02', 'realsense_d435'),
         ('realsense', 'realsense_d435'),
+        ('CAM07', 'realsense_d555'),
         ('CAM03', 'zed_2'),
         ('CAM04', 'zed_2i'),
         ('CAM05', 'zed_m'),
@@ -193,6 +194,22 @@ limitations under the License.
             ns="camera" />
 
           <xacro:camera.intel_realsense_d435
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            use_nominal_extrinsics="${use_sim}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'realsense_d555'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/intel_realsense_d555.urdf.xacro"
+            ns="camera" />
+
+          <xacro:camera.intel_realsense_d555
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"

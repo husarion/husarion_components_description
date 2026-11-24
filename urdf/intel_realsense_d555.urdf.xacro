@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2023 Intel Corporation. All Rights Reserved.
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Structure follows intel_realsense_d435.urdf.xacro.
+  Spec: https://realsenseai.com/wp-content/uploads/2025/08/D555-Datasheet-v1.1.pdf -->
+<robot name="intel_realsense_d555" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="intel_realsense_d555"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       use_nominal_extrinsics:=false
+                       robot_namespace:=''
+                       component_name:=''
+                       use_tf_prefix:=True">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="camera" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <!-- The following values are approximate (measured on the mesh apertures), and the
+      camera node publishing TF values with actual calibrated camera extrinsic values -->
+    <xacro:property name="d555_cam_depth_to_infra1_offset" value="0.0" />
+    <xacro:property name="d555_cam_depth_to_infra2_offset" value="-0.095" />
+    <xacro:property name="d555_cam_depth_to_color_offset" value="-0.0587" />
+
+    <!-- camera_link (left IR imager) relative to the bottom tripod mount -->
+    <xacro:property name="d555_cam_depth_px" value="0.031" />
+    <xacro:property name="d555_cam_depth_py" value="0.0475" />
+    <xacro:property name="d555_cam_depth_pz" value="0.0208" />
+
+    <!-- camera body, with origin at bottom screw mount -->
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore}bottom_screw_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${component_name_underscore}bottom_screw_frame" />
+    </joint>
+
+    <link name="${component_name_underscore}bottom_screw_frame" />
+
+    <joint name="${component_name_underscore}bottom_screw_to_${component_name_underscore}joint" type="fixed">
+      <origin xyz="${d555_cam_depth_px} ${d555_cam_depth_py} ${d555_cam_depth_pz}"
+        rpy="0.0 0.0 0.0" />
+      <parent link="${component_name_underscore}bottom_screw_frame" />
+      <child link="${component_name_underscore}link" />
+    </joint>
+
+    <link name="${component_name_underscore}link">
+      <visual>
+        <origin xyz="${-d555_cam_depth_px} ${-d555_cam_depth_py} ${-d555_cam_depth_pz}" rpy="${pi/2.0} 0.0 ${pi/2.0}" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/realsense_d555.glb" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="-0.024 -0.0475 0.0002" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.048 0.167 0.042" />
+        </geometry>
+      </collision>
+
+      <!-- mass: datasheet; inertia: solid box approximation of the collision geometry -->
+      <inertial>
+        <origin xyz="-0.024 -0.0475 0.0002" rpy="0.0 0.0 0.0" />
+        <mass value="0.337" />
+        <inertia ixx="0.000833" ixy="0.0"      ixz="0.0"
+                                iyy="0.000114" iyz="0.0"
+                                               izz="0.000848" />
+      </inertial>
+    </link>
+
+    <!-- Use the nominal extrinsics between camera frames if the calibrated extrinsics aren't being
+      published. e.g. running the device in simulation  -->
+    <xacro:if value="${use_nominal_extrinsics}">
+      <!-- camera depth joints and links -->
+      <joint name="${component_name_underscore}to_${component_name_underscore}depth_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}depth_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}depth_frame" />
+
+      <joint name="${component_name_underscore}depth_to_${component_name_underscore}depth_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
+        <parent link="${component_name_underscore}depth_frame" />
+        <child link="${component_name_underscore}depth_optical_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}depth_optical_frame" />
+
+      <!-- camera left IR joints and links -->
+      <joint name="${component_name_underscore}to_${component_name_underscore}infra1_joint" type="fixed">
+        <origin xyz="0.0 ${d555_cam_depth_to_infra1_offset} 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}infra1_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}infra1_frame" />
+
+      <joint name="${component_name_underscore}infra1_to_${component_name_underscore}infra1_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
+        <parent link="${component_name_underscore}infra1_frame" />
+        <child link="${component_name_underscore}infra1_optical_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}infra1_optical_frame" />
+
+      <!-- camera right IR joints and links -->
+      <joint name="${component_name_underscore}to_${component_name_underscore}infra2_joint" type="fixed">
+        <origin xyz="0.0 ${d555_cam_depth_to_infra2_offset} 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}infra2_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}infra2_frame" />
+
+      <joint name="${component_name_underscore}infra2_to_${component_name_underscore}infra2_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
+        <parent link="${component_name_underscore}infra2_frame" />
+        <child link="${component_name_underscore}infra2_optical_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}infra2_optical_frame" />
+
+      <!-- camera color joints and links -->
+      <joint name="${component_name_underscore}to_${component_name_underscore}color_joint" type="fixed">
+        <origin xyz="0.0 ${d555_cam_depth_to_color_offset} 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="${component_name_underscore}link" />
+        <child link="${component_name_underscore}color_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}color_frame" />
+
+      <joint name="${component_name_underscore}color_to_${component_name_underscore}color_optical_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="${-pi/2.0} 0.0 ${-pi/2.0}" />
+        <parent link="${component_name_underscore}color_frame" />
+        <child link="${component_name_underscore}color_optical_frame" />
+      </joint>
+
+      <link name="${component_name_underscore}color_optical_frame" />
+    </xacro:if>
+
+    <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
+
+    <!-- https://github.com/IntelRealSense/realsense-ros#published-topics -->
+    <xacro:gz_sensor.camera
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d555_color"
+      topic="${robot_namespace_slash}${component_name_slash}color/image_raw"
+      frame_id="${tf_prefix}${component_name_underscore}color_optical_frame"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${90.0/180.0*pi}" />
+
+    <xacro:gz_sensor.depth_camera
+      reference="${component_name_underscore}link"
+      name="${robot_namespace_slash}${component_name_underscore}intel_realsense_d555_depth"
+      topic="${robot_namespace_slash}${component_name_slash}depth/image_rect_raw"
+      frame_id="${tf_prefix}${component_name_underscore}depth_optical_frame"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${87.0/180.0*pi}"
+      min_dist="0.52"
+      max_dist="6.0"
+      stddev_error="0.005" />
+
+  </xacro:macro>
+</robot>
