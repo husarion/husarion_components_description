@@ -92,6 +92,8 @@ limitations under the License.
         ('LDR16', 'ouster_os2_32'),
         ('LDR17', 'ouster_os2_64'),
         ('LDR18', 'ouster_os2_128'),
+        ('LDR40', 'ouster_osdome_64'),
+        ('LDR41', 'ouster_osdome_128'),
         ('LDR20', 'velodyne_puck'),
         ('LDR22', 'velodyne_alpha_prime'),
         ('MAN01', 'ur3e'),
@@ -287,7 +289,9 @@ limitations under the License.
           ('ouster_os1_128', 'os1_128'),
           ('ouster_os2_32', 'os2_32'),
           ('ouster_os2_64', 'os2_64'),
-          ('ouster_os2_128', 'os2_128')
+          ('ouster_os2_128', 'os2_128'),
+          ('ouster_osdome_64', 'osdome_64'),
+          ('ouster_osdome_128', 'osdome_128')
         ])}" />
 
         <xacro:if value="${type in ouster_models_dict}">

@@ -107,6 +107,8 @@ def get_launch_descriptions_from_yaml_node(
         "LDR16": "ouster_os",
         "LDR17": "ouster_os",
         "LDR18": "ouster_os",
+        "LDR40": "ouster_os",
+        "LDR41": "ouster_os",
         "LDR20": "velodyne",
         "LDR22": "velodyne",
         "CAM01": "orbbec_astra",
