@@ -1,0 +1,8 @@
+---
+# https://github.com/Livox-SDK/livox_ros_driver2 (xfer_format: 0 - sensor_msgs/PointCloud2)
+  - ros_topic_name: <robot_namespace><component_name>/livox/lidar
+    gz_topic_name: <robot_namespace><component_name>/livox/lidar/points
+    ros_type_name: sensor_msgs/msg/PointCloud2
+    gz_type_name: gz.msgs.PointCloudPacked
+    lazy: true
+    direction: GZ_TO_ROS

@@ -94,6 +94,7 @@ limitations under the License.
         ('LDR18', 'ouster_os2_128'),
         ('LDR40', 'ouster_osdome_64'),
         ('LDR41', 'ouster_osdome_128'),
+        ('LDR50', 'livox_mid360'),
         ('LDR20', 'velodyne_puck'),
         ('LDR22', 'velodyne_alpha_prime'),
         ('MAN01', 'ur3e'),
@@ -333,6 +334,22 @@ limitations under the License.
           />
 
           <xacro:lidar.velodyne_alpha_prime
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
+
+        <xacro:if value="${type == 'livox_mid360'}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/livox_mid360.urdf.xacro"
+            ns="lidar"
+          />
+
+          <xacro:lidar.livox_mid360
             parent_link="${parent_link}"
             xyz="${xyz}"
             rpy="${rpy}"

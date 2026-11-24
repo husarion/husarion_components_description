@@ -111,6 +111,7 @@ def get_launch_descriptions_from_yaml_node(
         "LDR41": "ouster_os",
         "LDR20": "velodyne",
         "LDR22": "velodyne",
+        "LDR50": "livox_mid360",
         "CAM01": "orbbec_astra",
         "CAM02": "intel_realsense_d435",
         "CAM03": "stereolabs_zed",

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="livox_mid360"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       robot_namespace:=''
+                       component_name:=''
+                       use_tf_prefix:=True">
+
+    <!-- no default component_name for compatibility with hw driver -->
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'livox_'}" />
+    <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
+
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${component_name_underscore_nonempty}link" />
+    </joint>
+
+    <!-- Spec: https://terra-1-g.djicdn.com/65c028cd298f4669a7f0e40e50ba1131/Mid360/Livox_Mid-360_User_Manual_EN.pdf -->
+    <link name="${component_name_underscore_nonempty}link">
+      <!-- yaw: +X points away from the M12 connector -->
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 ${pi}" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/livox_mid360.glb" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.065 0.065 0.06" />
+        </geometry>
+      </collision>
+
+      <!-- mass: user manual; inertia: solid box approximation of the collision geometry -->
+      <inertial>
+        <origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0" />
+        <mass value="0.265" />
+        <inertia ixx="0.000173" ixy="0.0"      ixz="0.0"
+                                iyy="0.000173" iyz="0.0"
+                                               izz="0.000187" />
+      </inertial>
+    </link>
+
+    <!-- point cloud origin 47 mm above the bottom mounting surface (user manual) -->
+    <joint name="${component_name_underscore_nonempty}to_${component_name_underscore}livox_frame_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.047" rpy="0.0 0.0 0.0" />
+      <parent link="${component_name_underscore_nonempty}link" />
+      <child link="${component_name_underscore}livox_frame" />
+    </joint>
+
+    <link name="${component_name_underscore}livox_frame" />
+
+    <gazebo reference="${component_name_underscore}livox_frame">
+      <!-- gpu_lidar has to be set, CPU lidar doesn't work in ignition -
+      https://github.com/gazebosim/gz-sensors/issues/26 -->
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
+        <visualize>false</visualize>
+        <update_rate>10.0</update_rate>
+
+        <!-- the real non-repetitive scan pattern is approximated with a regular grid
+          of a similar point count (200k points/s at 10 Hz) -->
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>500</samples>
+              <resolution>1</resolution>
+              <min_angle>-${pi}</min_angle>
+              <max_angle>${pi}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>40</samples>
+              <resolution>1</resolution>
+              <min_angle>-${7.0/180.0*pi}</min_angle>
+              <max_angle>${52.0/180.0*pi}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>40.0</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.02</stddev>
+          </noise>
+        </ray>
+
+        <topic>${robot_namespace_slash}${component_name_slash}livox/lidar</topic>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}livox_frame</gz_frame_id>
+        <always_on>true</always_on>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
