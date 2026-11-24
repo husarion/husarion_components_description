@@ -106,26 +106,33 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 | zed_2i         | CAM04 | StereoLabs ZED 2i    |
 | zed_m          | CAM05 | StereoLabs ZED M     |
 | zed_x          | CAM06 | StereoLabs ZED X     |
+| realsense_d555 | CAM07 | Intel RealSense D555 |
 | oak_d_pro      | CAM11 | Luxonis OAK-D-PRO    |
 
 ### Lidars
 
-| Name           | Code  | Device         |
-| -------------- | ----- | -------------- |
-| rplidar_s1     | LDR01 | RPLIDAR S1     |
-| rplidar_s2     | LDR02 | RPLIDAR S2     |
-| rplidar_a2m12  | LDR03 | RPLIDAR A2M12  |
-| rplidar_a3     | LDR04 | RPLIDAR A3     |
-| rplidar_c1     | —     | RPLIDAR C1     |
-| rplidar_s3     | LDR06 | RPLIDAR S3     |
-| ouster_os0_32  | LDR10 | Ouster OS0-32  |
-| ouster_os0_64  | LDR11 | Ouster OS0-64  |
-| ouster_os0_128 | LDR12 | Ouster OS0-128 |
-| ouster_os1_32  | LDR13 | Ouster OS1-32  |
-| ouster_os1_64  | LDR14 | Ouster OS1-64  |
-| ouster_os1_128 | LDR15 | Ouster OS1-128 |
-| velodyne_puck  | LDR20 | Velodyne Puck  |
+| Name                 | Code  | Device               |
+| -------------------- | ----- | -------------------- |
+| rplidar_s1           | LDR01 | RPLIDAR S1           |
+| rplidar_s2           | LDR02 | RPLIDAR S2           |
+| rplidar_a2m12        | LDR03 | RPLIDAR A2M12        |
+| rplidar_a3           | LDR04 | RPLIDAR A3           |
+| rplidar_c1           | —     | RPLIDAR C1           |
+| rplidar_s3           | LDR06 | RPLIDAR S3           |
+| ouster_os0_32        | LDR10 | Ouster OS0-32        |
+| ouster_os0_64        | LDR11 | Ouster OS0-64        |
+| ouster_os0_128       | LDR12 | Ouster OS0-128       |
+| ouster_os1_32        | LDR13 | Ouster OS1-32        |
+| ouster_os1_64        | LDR14 | Ouster OS1-64        |
+| ouster_os1_128       | LDR15 | Ouster OS1-128       |
+| ouster_os2_32        | LDR16 | Ouster OS2-32        |
+| ouster_os2_64        | LDR17 | Ouster OS2-64        |
+| ouster_os2_128       | LDR18 | Ouster OS2-128       |
+| velodyne_puck        | LDR20 | Velodyne Puck        |
 | velodyne_alpha_prime | LDR22 | Velodyne Alpha Prime |
+| ouster_osdome_64     | LDR40 | Ouster OSDome-64     |
+| ouster_osdome_128    | LDR41 | Ouster OSDome-128    |
+| livox_mid360         | LDR50 | Livox MID-360        |
 
 ### Manipulators
 

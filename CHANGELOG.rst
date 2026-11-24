@@ -2,6 +2,14 @@
 Changelog for package husarion_components_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add Velodyne Alpha Prime URDF (LDR22)
+* Add Ouster OS2-32/64/128 (LDR16/17/18) and OSDome-64/128 (LDR40/41)
+* Add Livox MID-360 (LDR50)
+* Add Intel RealSense D555 (CAM07)
+* Add tests for mesh paths and gz bridge topics
+
 0.1.1 (2026-06-29)
 ------------------
 * Add readable component-type names
