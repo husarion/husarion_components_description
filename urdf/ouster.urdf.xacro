@@ -39,6 +39,24 @@ limitations under the License.
     <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'ouster_'}" />
     <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
 
+    <!-- Defaults (OS0/OS1 geometry), overridden per model below where needed -->
+    <xacro:property name="mesh_ext" value=".dae" />
+    <xacro:property name="visual_rpy" value="0.0 0.0 0.0" />
+    <xacro:property name="lidar_z" value="0.03618" />
+    <xacro:property name="collision">
+      <origin xyz="0.0 0.0 ${0.015+0.074/2.0}" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <cylinder radius="${0.085/2.0}" length="${0.015+0.074}" /> <!-- base + lidar height -->
+      </geometry>
+    </xacro:property>
+    <xacro:property name="inertial">
+      <origin xyz="0.0 0.0 ${0.072/2.0}" rpy="0.0 0.0 0.0" />
+      <mass value="0.447" />
+      <inertia ixx="0.00047706" ixy="0.0"        ixz="0.0"
+                                iyy="0.00047706" iyz="0.0"
+                                                 izz="0.00053722" />
+    </xacro:property>
+
     <xacro:if value="${model == 'os0_32'}">
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
       <xacro:property name="range_min" value="0.4" scope="parent"/>
@@ -93,6 +111,87 @@ limitations under the License.
       <xacro:property name="precision" value="0.005" scope="parent"/>
     </xacro:if>
 
+    <xacro:if value="${model == 'os2_32'}">
+      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="200" scope="parent" />
+      <xacro:property name="layers" value="32" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.02" scope="parent"/>
+      <xacro:property name="mesh_ext" value=".glb" />
+      <xacro:property name="visual_rpy" value="${pi/2} 0.0 0.0" />
+      <xacro:property name="lidar_z" value="0.078296" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="0.0598" length="0.1029" />
+        </geometry>
+      </xacro:property>
+      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <mass value="1.1" />
+        <inertia ixx="0.001954" ixy="0.0"      ixz="0.0"
+                                iyy="0.001954" iyz="0.0"
+                                               izz="0.001967" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'os2_64'}">
+      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="200" scope="parent" />
+      <xacro:property name="layers" value="64" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.02" scope="parent"/>
+      <xacro:property name="mesh_ext" value=".glb" />
+      <xacro:property name="visual_rpy" value="${pi/2} 0.0 0.0" />
+      <xacro:property name="lidar_z" value="0.078296" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="0.0598" length="0.1029" />
+        </geometry>
+      </xacro:property>
+      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <mass value="1.1" />
+        <inertia ixx="0.001954" ixy="0.0"      ixz="0.0"
+                                iyy="0.001954" iyz="0.0"
+                                               izz="0.001967" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'os2_128'}">
+      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
+      <xacro:property name="range_min" value="0.8" scope="parent" />
+      <xacro:property name="range_max" value="200" scope="parent" />
+      <xacro:property name="layers" value="128" scope="parent" />
+      <xacro:property name="mesh" value="ouster_os2" scope="parent"/>
+      <xacro:property name="precision" value="0.02" scope="parent"/>
+      <xacro:property name="mesh_ext" value=".glb" />
+      <xacro:property name="visual_rpy" value="${pi/2} 0.0 0.0" />
+      <xacro:property name="lidar_z" value="0.078296" />
+      <xacro:property name="collision">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="0.0598" length="0.1029" />
+        </geometry>
+      </xacro:property>
+      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <xacro:property name="inertial">
+        <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
+        <mass value="1.1" />
+        <inertia ixx="0.001954" ixy="0.0"      ixz="0.0"
+                                iyy="0.001954" iyz="0.0"
+                                               izz="0.001967" />
+      </xacro:property>
+    </xacro:if>
+
     <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link}" />
@@ -101,30 +200,23 @@ limitations under the License.
 
     <link name="${component_name_underscore_nonempty}link">
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${visual_rpy}" />
         <geometry>
-          <mesh filename="package://husarion_components_description/meshes/${mesh}.dae" />
+          <mesh filename="package://husarion_components_description/meshes/${mesh}${mesh_ext}" />
         </geometry>
       </visual>
 
       <collision>
-        <origin xyz="0.0 0.0 ${0.015+0.074/2.0}" rpy="0.0 0.0 0.0" />
-        <geometry>
-          <cylinder radius="${0.085/2.0}" length="${0.015+0.074}" /> <!-- base + lidar height -->
-        </geometry>
+        <xacro:insert_block name="collision" />
       </collision>
 
       <inertial>
-        <origin xyz="0.0 0.0 ${0.072/2.0}" rpy="0.0 0.0 0.0" />
-        <mass value="0.447" />
-        <inertia ixx="0.00047706" ixy="0.0"        ixz="0.0"
-                                  iyy="0.00047706" iyz="0.0"
-                                                   izz="0.00053722" />
+        <xacro:insert_block name="inertial" />
       </inertial>
     </link>
 
     <joint name="${component_name_underscore_nonempty}to_${component_name_underscore}os_lidar_joint" type="fixed">
-      <origin xyz="0.0 0.0 0.03618" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.0 0.0 ${lidar_z}" rpy="0.0 0.0 0.0" />
       <parent link="${component_name_underscore_nonempty}link" />
       <child link="${component_name_underscore}os_lidar" />
     </joint>
