@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import ast
 import os
 import xml
 import xml.dom
@@ -254,6 +255,74 @@ def test_zed_uses_v5_topics(tmpdir_factory):
         utils.get_sensor_topic("front_camera_camera_depth")
         == "front_camera/zed_node/depth/depth_registered"
     )
+
+
+MESH_URI_PREFIX = "package://husarion_components_description/"
+
+
+def _render_single(tmpdir_factory, type_name, component_name="front"):
+    config_path = tmpdir_factory.mktemp(type_name).join("config.yaml")
+    utils = ComponentsYamlParseUtils(str(config_path))
+    utils.save_yaml({"components": [utils.create_component(type_name, component_name)]})
+    assert utils.does_urdf_parse(), f"{type_name} failed to parse"
+    return utils._urdf
+
+
+def test_mesh_files_exist(tmpdir_factory):
+    for type_name in components_types_with_names:
+        urdf = _render_single(tmpdir_factory, type_name)
+        for mesh in urdf.getElementsByTagName("mesh"):
+            uri = mesh.getAttribute("filename")
+            if not uri.startswith(MESH_URI_PREFIX):
+                continue
+            path = os.path.join(husarion_components_description, uri.removeprefix(MESH_URI_PREFIX))
+            assert os.path.isfile(path), f"{type_name}: mesh {uri} does not exist"
+
+
+def _gz_bridge_launch_names():
+    """Component code -> gz launch name, read from gz_components.launch.py."""
+    launch_path = os.path.join(husarion_components_description, "launch/gz_components.launch.py")
+    with open(launch_path, encoding="utf-8") as file:
+        tree = ast.parse(file.read())
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "components_types_with_names"
+        ):
+            return ast.literal_eval(node.value)
+    raise AssertionError("components_types_with_names not found in gz_components.launch.py")
+
+
+def test_gz_sensor_topics_are_bridged(tmpdir_factory):
+    """Every gz sensor topic of a bridged component is present in its gz bridge config
+    (directly or as the `<topic>/points` point cloud published by gz)."""
+    for type_name, launch_name in _gz_bridge_launch_names().items():
+        if type_name not in components_types_with_names:
+            continue
+        bridge_config_path = os.path.join(
+            husarion_components_description, f"config/gz_{launch_name}_remappings.yaml"
+        )
+        if not os.path.isfile(bridge_config_path):
+            continue
+
+        with open(bridge_config_path, encoding="utf-8") as file:
+            bridge_config = file.read()
+        bridge_config = bridge_config.replace("<robot_namespace>", "").replace(
+            "<component_name>", "/front"
+        )
+        bridged_topics = set()
+        for entry in yaml.safe_load(bridge_config):
+            for key in ("topic_name", "gz_topic_name"):
+                if key in entry:
+                    bridged_topics.add(entry[key].lstrip("/"))
+
+        urdf = _render_single(tmpdir_factory, type_name)
+        for sensor in urdf.getElementsByTagName("sensor"):
+            topic = sensor.getElementsByTagName("topic")[0].firstChild.data.lstrip("/")
+            assert (
+                topic in bridged_topics or topic + "/points" in bridged_topics
+            ), f"{type_name}: gz topic {topic} is not bridged in {bridge_config_path}"
 
 
 EXAMPLE_XACRO = os.path.join(
