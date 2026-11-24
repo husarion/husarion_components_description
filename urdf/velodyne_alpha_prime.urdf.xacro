@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="velodyne_alpha_prime"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       robot_namespace:=''
+                       component_name:=''
+                       use_tf_prefix:=True">
+
+    <!-- <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="velodyne" />
+    </xacro:if> -->
+    <!-- ^ removed for compatibility with hw driver -->
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'velodyne_'}" />
+    <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
+
+    <joint name="${parent_link.rstrip('_link')}_to_${component_name_underscore_nonempty}joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${component_name_underscore_nonempty}link" />
+    </joint>
+
+    <!-- Spec: https://data.ouster.io/downloads/datasheets/velodyne/63-9679_Rev-B_DATASHEET_ALPHA-PRIME_web.pdf -->
+    <link name="${component_name_underscore_nonempty}link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/velodyne_alpha_prime.glb" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0.0 0.0 0.07065" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="0.08275" length="0.1413" />
+        </geometry>
+      </collision>
+
+      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <inertial>
+        <origin xyz="0.0 0.0 0.07065" rpy="0.0 0.0 0.0" />
+        <mass value="3.5" />
+        <inertia ixx="0.011815" ixy="0.0"      ixz="0.0"
+                                iyy="0.011815" iyz="0.0"
+                                               izz="0.011983" />
+      </inertial>
+    </link>
+
+    <!-- data origin 66.11 mm above the sensor base (VLS-128 / Alpha Prime user manual) -->
+    <joint name="${component_name_underscore_nonempty}to_${component_name_underscore}velodyne_joint"
+      type="fixed">
+      <origin xyz="0.0 0.0 0.06611" rpy="0.0 0.0 0.0" />
+      <parent link="${component_name_underscore_nonempty}link" />
+      <child link="${component_name_underscore}velodyne" />
+    </joint>
+
+    <link name="${component_name_underscore}velodyne" />
+
+    <gazebo reference="${component_name_underscore}velodyne">
+      <!-- gpu_lidar has to be set, CPU lidar doesn't work in ignition -
+      https://github.com/gazebosim/gz-sensors/issues/26 -->
+      <sensor type="gpu_lidar" name="${robot_namespace_slash}${component_name_underscore}lidar">
+        <visualize>false</visualize>
+        <update_rate>10.0</update_rate>
+
+        <!-- real beams are spaced non-linearly, here approximated as uniform -->
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1800</samples>
+              <resolution>1</resolution>
+              <min_angle>-${pi}</min_angle>
+              <max_angle>${pi}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>128</samples>
+              <resolution>1</resolution>
+              <min_angle>-${25.0/180.0*pi}</min_angle>
+              <max_angle>${15.0/180.0*pi}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.4</min>
+            <max>300.0</max>
+            <resolution>0.003</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.03</stddev>
+          </noise>
+        </ray>
+
+        <topic>${robot_namespace_slash}${component_name_slash}velodyne_points</topic>
+        <gz_frame_id>${tf_prefix}${component_name_underscore}velodyne</gz_frame_id>
+        <always_on>true</always_on>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
