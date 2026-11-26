@@ -44,7 +44,7 @@ limitations under the License.
       <child link="${component_name_underscore_nonempty}link" />
     </joint>
 
-    <!-- Spec: https://data.ouster.io/downloads/datasheets/velodyne/63-9679_Rev-B_DATASHEET_ALPHA-PRIME_web.pdf -->
+    <!-- Spec https://data.ouster.io/downloads/datasheets/velodyne/63-9679_Rev-B_DATASHEET_ALPHA-PRIME_web.pdf -->
     <link name="${component_name_underscore_nonempty}link">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
@@ -60,7 +60,7 @@ limitations under the License.
         </geometry>
       </collision>
 
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <inertial>
         <origin xyz="0.0 0.0 0.07065" rpy="0.0 0.0 0.0" />
         <mass value="3.5" />

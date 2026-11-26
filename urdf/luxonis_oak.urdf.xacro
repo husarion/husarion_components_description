@@ -19,10 +19,10 @@ limitations under the License.
 <!-- Luxonis OAK cameras with Husarion meshes.
   Frame names and offsets follow depthai_descriptions 2.13.0 (depthai_macro.urdf.xacro), so data
   from depthai-ros matches the TF tree; test_components_xacro.py checks the frames against it.
-  Deliberate differences, based on the Luxonis board configs (depthai-boards):
-    - OAK-D-CM4-POE: stereo cameras at +77 mm / -13 mm from the RGB camera (90 mm baseline)
+  Deliberate differences, based on the Luxonis board configs (depthai-boards)
+    - OAK-D-CM4-POE - stereo cameras at +77 mm / -13 mm from the RGB camera (90 mm baseline)
       instead of the generic +-37.5 mm,
-    - OAK-1-POE: RGB camera only (no stereo pair, so no left/right frames nor depth sensor).
+    - OAK-1-POE - RGB camera only (no stereo pair, so no left/right frames nor depth sensor).
   The base frame (<name>_link) is the RGB camera on the front face, as in depthai_descriptions. -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:macro name="luxonis_oak"
@@ -49,7 +49,7 @@ limitations under the License.
     <xacro:property name="base_frame" value="${component_name_underscore_nonempty}link" />
 
     <!-- Visual, collision and inertial are expressed in <name>_model_origin (mesh axes).
-      mass: docs.luxonis.com; inertia: solid box approximation of the collision geometry -->
+      mass from docs.luxonis.com, inertia of a solid box approximation of the collision geometry -->
     <xacro:if value="${model == 'OAK-D-PRO'}">
       <xacro:property name="mesh" value="luxonis_oak_d_pro" />
       <xacro:property name="has_stereo" value="${True}" />
@@ -116,7 +116,7 @@ limitations under the License.
       </xacro:property>
     </xacro:if>
 
-    <!-- base frame of the sensor: the RGB camera on the front face -->
+    <!-- base frame of the sensor is the RGB camera on the front face -->
     <link name="${base_frame}" />
 
     <joint name="${component_name}_center_joint" type="fixed">

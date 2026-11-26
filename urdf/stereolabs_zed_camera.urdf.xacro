@@ -36,10 +36,10 @@ limitations under the License.
     <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
     <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
 
-    <!-- baseline, height, bottom_slope, optical_offset_x: zed_description 0.2.0
-      mass: datasheets; inertia: solid box approximation of the collision geometry -->
+    <!-- baseline, height, bottom_slope, optical_offset_x from zed_description 0.2.0
+      mass from the datasheets, inertia of a solid box approximation of the collision geometry -->
     <xacro:if value="${model == 'zed2'}">
-      <!-- Spec: ZED 2 Datasheet Rev1.1 -->
+      <!-- Spec ZED 2 Datasheet Rev1.1 -->
       <xacro:property name="baseline" value="0.12" />
       <xacro:property name="height" value="0.03" />
       <xacro:property name="bottom_slope" value="0.05" />
@@ -61,7 +61,7 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'zed2i'}">
-      <!-- Spec: ZED 2i Datasheet V1.5 -->
+      <!-- Spec ZED 2i Datasheet V1.5 -->
       <xacro:property name="baseline" value="0.12" />
       <xacro:property name="height" value="0.03" />
       <xacro:property name="bottom_slope" value="0.0" />
@@ -83,7 +83,7 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'zedx'}">
-      <!-- Spec: ZED X / ZED X Mini Datasheet Rev1.6 -->
+      <!-- Spec ZED X / ZED X Mini Datasheet Rev1.6 -->
       <xacro:property name="baseline" value="0.12" />
       <xacro:property name="height" value="0.032" />
       <xacro:property name="bottom_slope" value="0.0" />

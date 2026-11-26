@@ -330,6 +330,20 @@ def test_gz_sensor_topics_are_bridged(tmpdir_factory):
             ), f"{type_name}: gz topic {topic} is not bridged in {bridge_config_path}"
 
 
+def test_urdf_is_valid_launch_parameter(tmpdir_factory):
+    """launch_ros parses string parameters as YAML before passing them on, so a
+    robot_description that isn't valid YAML (e.g. a comment like "<!-- mass: ... -->"
+    copied from a macro into the URDF) stops robot_state_publisher from starting."""
+    for type_name in components_types_with_names:
+        urdf = _render_single(tmpdir_factory, type_name).toprettyxml(indent="  ")
+        try:
+            yaml.safe_load(urdf)
+        except yaml.YAMLError as error:
+            raise AssertionError(
+                f"{type_name}: URDF can't be passed as a launch_ros parameter: {error}"
+            )
+
+
 def _rpy_to_matrix(roll, pitch, yaw):
     cr, sr = math.cos(roll), math.sin(roll)
     cp, sp = math.cos(pitch), math.sin(pitch)

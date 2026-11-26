@@ -18,7 +18,7 @@ limitations under the License.
 -->
 
 <!-- Structure follows intel_realsense_d435.urdf.xacro.
-  Spec: https://realsenseai.com/wp-content/uploads/2025/08/D555-Datasheet-v1.1.pdf -->
+  Spec https://realsenseai.com/wp-content/uploads/2025/08/D555-Datasheet-v1.1.pdf -->
 <robot name="intel_realsense_d555" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="intel_realsense_d555"
                params="parent_link
@@ -86,7 +86,7 @@ limitations under the License.
         </geometry>
       </collision>
 
-      <!-- mass: datasheet; inertia: solid box approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid box approximation of the collision geometry -->
       <inertial>
         <origin xyz="-0.01935 -0.0475 0.0002" rpy="0.0 0.0 0.0" />
         <mass value="0.337" />

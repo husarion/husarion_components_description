@@ -113,7 +113,7 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'os2_32'}">
-      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <!-- Spec https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
       <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
       <xacro:property name="range_min" value="0.8" scope="parent" />
       <xacro:property name="range_max" value="200" scope="parent" />
@@ -129,7 +129,7 @@ limitations under the License.
           <cylinder radius="0.0598" length="0.1029" />
         </geometry>
       </xacro:property>
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <xacro:property name="inertial">
         <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
         <mass value="1.1" />
@@ -140,7 +140,7 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'os2_64'}">
-      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <!-- Spec https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
       <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
       <xacro:property name="range_min" value="0.8" scope="parent" />
       <xacro:property name="range_max" value="200" scope="parent" />
@@ -156,7 +156,7 @@ limitations under the License.
           <cylinder radius="0.0598" length="0.1029" />
         </geometry>
       </xacro:property>
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <xacro:property name="inertial">
         <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
         <mass value="1.1" />
@@ -167,7 +167,7 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'os2_128'}">
-      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
+      <!-- Spec https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-os2.pdf -->
       <xacro:property name="vfov" value="${radians(22.5)}" scope="parent" />
       <xacro:property name="range_min" value="0.8" scope="parent" />
       <xacro:property name="range_max" value="200" scope="parent" />
@@ -183,7 +183,7 @@ limitations under the License.
           <cylinder radius="0.0598" length="0.1029" />
         </geometry>
       </xacro:property>
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <xacro:property name="inertial">
         <origin xyz="0.0 0.0 0.05145" rpy="0.0 0.0 0.0" />
         <mass value="1.1" />
@@ -194,8 +194,8 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'osdome_64'}">
-      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-osdome.pdf -->
-      <!-- hemispherical FOV: from the horizontal plane up to the zenith -->
+      <!-- Spec https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-osdome.pdf -->
+      <!-- hemispherical FOV, from the horizontal plane up to the zenith -->
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
       <xacro:property name="range_min" value="0.5" scope="parent" />
       <xacro:property name="range_max" value="20" scope="parent" />
@@ -212,7 +212,7 @@ limitations under the License.
           <cylinder radius="0.0435" length="0.0853" />
         </geometry>
       </xacro:property>
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <xacro:property name="inertial">
         <origin xyz="0.0 0.0 0.04265" rpy="0.0 0.0 0.0" />
         <mass value="0.47" />
@@ -223,8 +223,8 @@ limitations under the License.
     </xacro:if>
 
     <xacro:if value="${model == 'osdome_128'}">
-      <!-- Spec: https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-osdome.pdf -->
-      <!-- hemispherical FOV: from the horizontal plane up to the zenith -->
+      <!-- Spec https://data.ouster.io/downloads/datasheets/datasheet-rev7-v3p1-osdome.pdf -->
+      <!-- hemispherical FOV, from the horizontal plane up to the zenith -->
       <xacro:property name="vfov" value="${radians(90.0)}" scope="parent" />
       <xacro:property name="range_min" value="0.5" scope="parent" />
       <xacro:property name="range_max" value="20" scope="parent" />
@@ -241,7 +241,7 @@ limitations under the License.
           <cylinder radius="0.0435" length="0.0853" />
         </geometry>
       </xacro:property>
-      <!-- mass: datasheet; inertia: solid cylinder approximation of the collision geometry -->
+      <!-- mass from the datasheet, inertia of a solid cylinder approximation of the collision geometry -->
       <xacro:property name="inertial">
         <origin xyz="0.0 0.0 0.04265" rpy="0.0 0.0 0.0" />
         <mass value="0.47" />
