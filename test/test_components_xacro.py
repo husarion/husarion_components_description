@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import math
 import os
 import xml
 import xml.dom
@@ -45,12 +46,17 @@ components_types_with_names = {
     "LDR13": ["ouster_os1_32", "os_lidar", "os_lidar", "lidar", ""],
     "LDR14": ["ouster_os1_64", "os_lidar", "os_lidar", "lidar", ""],
     "LDR15": ["ouster_os1_128", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR16": ["ouster_os2_32", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR17": ["ouster_os2_64", "os_lidar", "os_lidar", "lidar", ""],
+    "LDR18": ["ouster_os2_128", "os_lidar", "os_lidar", "lidar", ""],
     "LDR20": ["velodyne_puck", "velodyne", "velodyne", "lidar", ""],
     "CAM01": ["orbbec_astra", "link", "link", "camera_color", "camera"],
+    "camera_box": ["front_camera", "link", "", "", "camera"],
     "CAM03": ["zed2", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM04": ["zed2i", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM05": ["zedm", "camera_center", "camera_center", "camera_color", "zed"],
     "CAM06": ["zedx", "camera_center", "camera_center", "camera_color", "zed"],
+    "CAM12": ["oak_d_pro_poe", "link", "link", "color", "oak"],
     "MAN01": ["ur3e", "base_link", "", "", "ur"],
     "MAN02": ["ur5e", "base_link", "", "", "ur"],
     # "MAN03": ["kinova_lite",               "base_link",    "",         "",""], use_isaac error
@@ -346,3 +352,164 @@ def test_custom_component_receives_raw_component_dict(tmpdir_factory):
         },
     )
     assert utils.does_link_exist(utils._urdf, "sensor_hello_link")
+
+
+def _ouster_lidar_joint(tmpdir_factory, type_name):
+    dir = tmpdir_factory.mktemp(type_name)
+    path = str(dir.join("components.yaml"))
+    utils = ComponentsYamlParseUtils(path)
+    utils.save_yaml({"components": [utils.create_component(type_name, "")]})
+    urdf = xacro.process_file(xacro_path, mappings={"components_config_path": path})
+    for joint in urdf.getElementsByTagName("joint"):
+        child = joint.getElementsByTagName("child")[0].getAttribute("link")
+        if child.endswith("os_lidar"):
+            origin = joint.getElementsByTagName("origin")[0]
+            xyz = [float(v) for v in origin.getAttribute("xyz").split()]
+            rpy = [float(v) for v in origin.getAttribute("rpy").split()]
+            return xyz, rpy
+    raise AssertionError(f"no os_lidar joint for {type_name}")
+
+
+def test_ouster_lidar_frame_matches_the_sensor(tmpdir_factory):
+    # Ouster's lidar_to_sensor_transform: a 180 deg turn about z and the lidar origin's height,
+    # 36.180 mm on OS0/OS1 and 74.296 mm on OS2. The driver stamps the cloud in os_lidar.
+    for type_name, height in (("LDR10", 0.03618), ("LDR15", 0.03618), ("LDR17", 0.074296)):
+        xyz, rpy = _ouster_lidar_joint(tmpdir_factory, type_name)
+        assert abs(xyz[2] - height) < 1e-6, (type_name, xyz)
+        assert abs(rpy[2] - 3.141592653589793) < 1e-6, (type_name, rpy)
+
+
+def _render_camera_box(tmpdir_factory, folder, entries):
+    config_path = tmpdir_factory.mktemp(folder).join("components.yaml")
+    utils = ComponentsYamlParseUtils(str(config_path))
+    utils.save_yaml({"components": entries})
+    assert utils.does_urdf_parse(), f"camera_box failed to parse: {entries}"
+    return utils._urdf
+
+
+def _joints_to(urdf, child_link):
+    joints = []
+    for joint in urdf.getElementsByTagName("joint"):
+        if joint.getElementsByTagName("child")[0].getAttribute("link") == child_link:
+            joints.append(joint)
+    return joints
+
+
+def _origin(element):
+    origin = element.getElementsByTagName("origin")[0]
+    xyz = [float(v) for v in origin.getAttribute("xyz").split()]
+    rpy = [float(v) for v in origin.getAttribute("rpy").split()]
+    return xyz, rpy
+
+
+def _box_of(urdf, link_name):
+    for link in urdf.getElementsByTagName("link"):
+        if link.getAttribute("name") == link_name:
+            visual = link.getElementsByTagName("visual")[0]
+            size = visual.getElementsByTagName("box")[0].getAttribute("size")
+            return [float(v) for v in size.split()], _origin(visual)[0]
+    raise AssertionError(f"no link {link_name}")
+
+
+def _close(a, b):
+    return all(abs(x - y) < 1e-6 for x, y in zip(a, b)) and len(a) == len(b)
+
+
+def test_camera_box_default_name_gives_the_camera_node_frame(tmpdir_factory):
+    # The camera node stamps camera_optical_frame by default; the default name must give it,
+    # with exactly one parent each, so nothing else may publish it.
+    urdf = _render_camera_box(
+        tmpdir_factory,
+        "camera_box_default",
+        [{"type": "camera_box", "parent_link": "cover_link", "xyz": "0.2 0.0 0.05"}],
+    )
+    body = _joints_to(urdf, "camera_link")
+    optical = _joints_to(urdf, "camera_optical_frame")
+    assert len(body) == 1 and len(optical) == 1
+    assert body[0].getElementsByTagName("parent")[0].getAttribute("link") == "cover_link"
+    assert optical[0].getElementsByTagName("parent")[0].getAttribute("link") == "camera_link"
+    assert body[0].getAttribute("type") == "fixed" and optical[0].getAttribute("type") == "fixed"
+    assert _close(_origin(body[0])[0], [0.2, 0.0, 0.05])
+    assert _close(_origin(body[0])[1], [0.0, 0.0, 0.0])
+
+
+def test_camera_box_named(tmpdir_factory):
+    urdf = _render_camera_box(
+        tmpdir_factory,
+        "camera_box_named",
+        [
+            {"type": "camera_box", "name": "rear_camera", "parent_link": "cover_link"},
+            {"type": "camera_box", "parent_link": "cover_link"},
+        ],
+    )
+    for frame in ("rear_camera_link", "rear_camera_optical_frame", "camera_link"):
+        assert len(_joints_to(urdf, frame)) == 1, frame
+
+
+def test_camera_box_optical_rotation(tmpdir_factory):
+    urdf = _render_camera_box(
+        tmpdir_factory,
+        "camera_box_optical",
+        [{"type": "camera_box", "parent_link": "cover_link", "rpy": "0.1 0.2 0.3"}],
+    )
+    xyz, rpy = _origin(_joints_to(urdf, "camera_optical_frame")[0])
+    assert _close(xyz, [0.0, 0.0, 0.0])
+    assert _close(rpy, [-math.pi / 2, 0.0, -math.pi / 2])
+    assert _close(_origin(_joints_to(urdf, "camera_link")[0])[1], [0.1, 0.2, 0.3])
+
+
+def test_camera_box_size(tmpdir_factory):
+    # The box extends back from the lens: its centre is half the depth behind the origin.
+    urdf = _render_camera_box(
+        tmpdir_factory,
+        "camera_box_size",
+        [{"type": "camera_box", "parent_link": "cover_link", "size": "0.05 0.12 0.04"}],
+    )
+    size, centre = _box_of(urdf, "camera_link")
+    assert _close(size, [0.05, 0.12, 0.04])
+    assert _close(centre, [-0.025, 0.0, 0.0])
+
+
+def test_camera_box_default_size(tmpdir_factory):
+    urdf = _render_camera_box(
+        tmpdir_factory,
+        "camera_box_default_size",
+        [{"type": "camera_box", "parent_link": "cover_link"}],
+    )
+    size, centre = _box_of(urdf, "camera_link")
+    assert _close(size, [0.03, 0.08, 0.03])
+    assert _close(centre, [-0.015, 0.0, 0.0])
+
+
+def test_oak_d_pro_poe_frames(tmpdir_factory):
+    # CAM12 gives the frames depthai stamps, each with one parent: oak_rgb_camera_optical_frame
+    # and the stereo pair 75 mm apart (Luxonis' NG9097 datasheet), plus a collision box of the
+    # datasheet's 111 x 40 x 31.3 mm.
+    config_path = tmpdir_factory.mktemp("oak_d_pro_poe").join("components.yaml")
+    utils = ComponentsYamlParseUtils(str(config_path))
+    utils.save_yaml(
+        {"components": [utils.create_component("CAM12", "", xyz="0.1 0.0 0.05")]}
+    )
+    assert utils.does_urdf_parse()
+    urdf = utils._urdf
+
+    body = _joints_to(urdf, "oak_link")
+    assert len(body) == 1
+    assert body[0].getElementsByTagName("parent")[0].getAttribute("link") == "cover_link"
+    assert _close(_origin(body[0])[0], [0.1, 0.0, 0.05])
+
+    for side, y in (("rgb", 0.0), ("left", 0.0375), ("right", -0.0375)):
+        frame = _joints_to(urdf, f"oak_{side}_camera_frame")
+        optical = _joints_to(urdf, f"oak_{side}_camera_optical_frame")
+        assert len(frame) == 1 and len(optical) == 1, side
+        assert frame[0].getElementsByTagName("parent")[0].getAttribute("link") == "oak_link"
+        assert _close(_origin(frame[0])[0], [0.0, y, 0.0]), side
+        assert _close(_origin(optical[0])[1], [-math.pi / 2, 0.0, -math.pi / 2]), side
+
+    for link in urdf.getElementsByTagName("link"):
+        if link.getAttribute("name") == "oak_model_collision":
+            size = link.getElementsByTagName("box")[0].getAttribute("size")
+            assert _close([float(v) for v in size.split()], [0.111, 0.040, 0.0313])
+            break
+    else:
+        raise AssertionError("no oak_model_collision link")

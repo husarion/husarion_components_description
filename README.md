@@ -72,7 +72,8 @@ components:
 | `xyz`         | no       | translation from `parent_link` `[m]`, default `0.0 0.0 0.0`                          |
 | `rpy`         | no       | rotation from `parent_link` `[rad]`, default `0.0 0.0 0.0`                           |
 
-Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `package`/`file`).
+Some types accept extra fields (e.g. `RCK` takes `elements`, `custom` takes `package`/`file`,
+`camera_box` takes `size`).
 
 ## Available components
 
@@ -107,6 +108,30 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 | zed_m          | CAM05 | StereoLabs ZED M     |
 | zed_x          | CAM06 | StereoLabs ZED X     |
 | oak_d_pro      | CAM11 | Luxonis OAK-D-PRO    |
+| oak_d_pro_poe  | CAM12 | Luxonis OAK-D Pro PoE |
+| camera_box     | —     | Any camera, drawn as a box (see below) |
+
+`oak_d_pro_poe` (CAM12) has the frames depthai stamps (`<name>_rgb_camera_optical_frame`,
+`<name>_left_…`, `<name>_right_…`; the default name is `oak`) and is drawn with depthai's OAK-D S2
+PoE mesh, whose bounding box is the Pro PoE's 111 x 40 x 31.3 mm. `xyz` places `<name>_link`, on the RGB
+camera's axis 1.7 mm behind the front face. From it (x forward, y left, z up) the M4 mounting
+holes are at x -29.6, y ±37.5, z +1.0 mm and the 1/4-20 tripod hole at x -15.5, y -37.5,
+z -29.5 mm (see the comment in `urdf/components.urdf.xacro` for the sources).
+
+`camera_box` is for a camera with no 3D model, such as a small USB camera. `xyz` and `rpy`
+place the centre of the lens; `rpy: 0.0 0.0 0.0` looks forward and is level. The box
+extends back from the lens. `size` is the depth, width and height in metres, default
+`0.03 0.08 0.03`. The frames are `<name>_link` (x out of the lens) and
+`<name>_optical_frame` (z out of the lens); the default name is `camera`, so a camera
+node that stamps `camera_optical_frame` needs no change.
+
+```yaml
+  - type: camera_box
+    parent_link: cover_link
+    xyz: 0.20 0.0 0.05
+    rpy: 0.0 0.0 0.0
+    size: 0.03 0.08 0.03
+```
 
 ### Lidars
 
@@ -124,6 +149,9 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 | ouster_os1_32  | LDR13 | Ouster OS1-32  |
 | ouster_os1_64  | LDR14 | Ouster OS1-64  |
 | ouster_os1_128 | LDR15 | Ouster OS1-128 |
+| ouster_os2_32  | LDR16 | Ouster OS2-32  |
+| ouster_os2_64  | LDR17 | Ouster OS2-64  |
+| ouster_os2_128 | LDR18 | Ouster OS2-128 |
 | velodyne_puck  | LDR20 | Velodyne Puck  |
 | velodyne_alpha_prime | LDR22 | Velodyne Alpha Prime |
 

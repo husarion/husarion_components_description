@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
+  A generic camera with no 3D model: a dark box in place of the housing.
+
+    - type: camera_box
+      name: camera              # optional; default camera
+      parent_link: cover_link
+      xyz: 0.20 0.0 0.05        # the lens centre, metres from parent_link
+      rpy: 0.0 0.0 0.0          # 0 0 0 = level, looking forward
+      size: 0.03 0.08 0.03      # depth, width, height in metres; optional
+
+  <name>_link is the body frame at the centre of the lens (x out of the lens, y left,
+  z up). The box extends back from it, so its front face is at the origin.
+  <name>_optical_frame is at the same point, turned as the library's other cameras
+  turn theirs (z out of the lens, x right, y down). With the default name the frames
+  are camera_link and camera_optical_frame, the frame a camera node stamps by default.
+-->
+
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="camera_box"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       robot_namespace:=''
+                       component_name:=''
+                       use_tf_prefix:=True
+                       size:='0.03 0.08 0.03'">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="camera" />
+    </xacro:if>
+
+    <xacro:property name="size_list" value="${[float(v) for v in str(size).split()]}" />
+    <xacro:property name="depth" value="${size_list[0]}" />
+    <xacro:property name="width" value="${size_list[1]}" />
+    <xacro:property name="height" value="${size_list[2]}" />
+    <xacro:property name="mass" value="0.05" />
+
+    <joint name="${parent_link}_to_${component_name}_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${component_name}_link" />
+    </joint>
+
+    <link name="${component_name}_link">
+      <visual>
+        <origin xyz="${-depth/2.0} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${depth} ${width} ${height}" />
+        </geometry>
+        <material name="${component_name}_camera_box_material">
+          <color rgba="0.15 0.15 0.15 1.0" />
+        </material>
+      </visual>
+
+      <collision>
+        <origin xyz="${-depth/2.0} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${depth} ${width} ${height}" />
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="${-depth/2.0} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="${mass}" />
+        <inertia ixx="${mass/12.0*(width*width+height*height)}" ixy="0.0" ixz="0.0"
+                 iyy="${mass/12.0*(depth*depth+height*height)}" iyz="0.0"
+                 izz="${mass/12.0*(depth*depth+width*width)}" />
+      </inertial>
+    </link>
+
+    <joint name="${component_name}_to_${component_name}_optical_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+      <parent link="${component_name}_link" />
+      <child link="${component_name}_optical_frame" />
+    </joint>
+
+    <link name="${component_name}_optical_frame" />
+
+  </xacro:macro>
+</robot>
