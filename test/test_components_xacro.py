@@ -67,6 +67,10 @@ components_types_with_names = {
         "intel_realsense_d555_color",
         "camera",
     ],
+    "CAM08": ["oak_d_cm4_poe", "link", "link", "color", "oak"],
+    "CAM09": ["oak_1_poe", "link", "link", "color", "oak"],
+    "CAM10": ["oak_d_s2_poe", "link", "link", "color", "oak"],
+    "CAM11": ["oak_d_pro", "link", "link", "color", "oak"],
     "MAN01": ["ur3e", "base_link", "", "", "ur"],
     "MAN02": ["ur5e", "base_link", "", "", "ur"],
     # "MAN03": ["kinova_lite",               "base_link",    "",         "",""], use_isaac error
@@ -432,6 +436,62 @@ def test_zed_frames_match_zed_description(tmpdir_factory):
             tmpdir_factory, f"ref_{model}", ZED_REFERENCE_XACRO.format(model=model)
         )
         _assert_same_frames(type_name, ours, reference, root="zed_camera_link")
+        _assert_gz_frames_exist(type_name, ours)
+
+
+OAK_REFERENCE_XACRO = """<robot name="reference" xmlns:xacro="http://wiki.ros.org/xacro">
+  <link name="cover_link" />
+  <xacro:include filename="$(find husarion_components_description)/urdf/luxonis_depthai.urdf.xacro"
+    ns="camera" />
+  <xacro:camera.luxonis_depthai parent_link="cover_link" model="{model}" />
+</robot>"""
+
+OAK_STEREO_FRAMES = (
+    "oak_left_camera_frame",
+    "oak_left_camera_optical_frame",
+    "oak_right_camera_frame",
+    "oak_right_camera_optical_frame",
+)
+
+
+def test_oak_frames_match_depthai_descriptions(tmpdir_factory):
+    """Own OAK descriptions (Husarion meshes) keep the frames of depthai_descriptions, so the
+    depthai-ros data lands in the right place. Fails when Luxonis changes them.
+    The collision box is ours (sized from our meshes), so it isn't compared."""
+    cases = {
+        # type: (depthai_descriptions model, ignored frames, overridden translations)
+        "oak_d_pro": ("OAK-D-PRO", (), {}),
+        "oak_d_s2_poe": ("OAK-D-S2-POE", (), {}),
+        # depthai_descriptions 2.13 places every stereo pair at +-37.5 mm, but on the
+        # CM4 PoE the stereo cameras are 90 mm apart with the RGB camera 13 mm from the
+        # right one (luxonis/depthai-boards OAK-D-CM4-POE.json).
+        "oak_d_cm4_poe": (
+            "OAK-D-CM4-POE",
+            (),
+            {
+                "oak_left_camera_frame": [0.0, 0.077, 0.0],
+                "oak_left_camera_optical_frame": [0.0, 0.077, 0.0],
+                "oak_right_camera_frame": [0.0, -0.013, 0.0],
+                "oak_right_camera_optical_frame": [0.0, -0.013, 0.0],
+            },
+        ),
+        # Not in depthai_descriptions 2.13 - compared with OAK-1 (same single RGB camera).
+        # OAK-1 PoE has no stereo pair, so the left/right frames OAK-1 gets are skipped.
+        "oak_1_poe": ("OAK-1", OAK_STEREO_FRAMES, {}),
+    }
+    for type_name, (model, ignored, overrides) in cases.items():
+        ours = _render_single(tmpdir_factory, type_name, component_name="")
+        reference = _render_xacro(
+            tmpdir_factory, f"ref_{type_name}", OAK_REFERENCE_XACRO.format(model=model)
+        )
+        _assert_same_frames(
+            type_name,
+            ours,
+            reference,
+            root="oak_link",
+            ignored=("oak_model_collision",) + ignored,
+            overrides=overrides,
+        )
         _assert_gz_frames_exist(type_name, ours)
 
 

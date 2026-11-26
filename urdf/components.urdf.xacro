@@ -71,6 +71,9 @@ limitations under the License.
         ('astra', 'orbbec_astra'),
         ('CAM02', 'realsense_d435'),
         ('realsense', 'realsense_d435'),
+        ('CAM08', 'oak_d_cm4_poe'),
+        ('CAM09', 'oak_1_poe'),
+        ('CAM10', 'oak_d_s2_poe'),
         ('CAM07', 'realsense_d555'),
         ('CAM03', 'zed_2'),
         ('CAM04', 'zed_2i'),
@@ -266,11 +269,36 @@ limitations under the License.
           />
         </xacro:if>
 
-        <!-- OAK-1-LITE has no dedicated mesh in the luxonis repo - it shares the
+        <!-- OAK models with Husarion meshes; frames follow depthai_descriptions -->
+        <xacro:property name="luxonis_oak_models_dict"
+          value="${dict ([
+          ('oak_d_pro', 'OAK-D-PRO'),
+          ('oak_d_cm4_poe', 'OAK-D-CM4-POE'),
+          ('oak_d_s2_poe', 'OAK-D-S2-POE'),
+          ('oak_1_poe', 'OAK-1-POE'),
+          ])}" />
+
+        <xacro:if value="${type in luxonis_oak_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/luxonis_oak.urdf.xacro"
+            ns="camera" />
+
+          <xacro:camera.luxonis_oak
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            model="${luxonis_oak_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
+
+        <!-- OAK models without a Husarion mesh use the depthai_descriptions macro.
+             OAK-1-LITE has no dedicated mesh in the luxonis repo - it shares the
              OAK-1 enclosure (same mesh), the two only differ by the internal sensor. -->
         <xacro:property name="luxonis_models_dict"
           value="${dict ([
-          ('oak_d_pro', 'OAK-D-PRO'),
           ('oak_d_lite', 'OAK-D-LITE'),
           ('oak_1', 'OAK-1'),
           ('oak_1_lite', 'OAK-1'),

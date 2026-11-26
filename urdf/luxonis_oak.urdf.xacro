@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Luxonis OAK cameras with Husarion meshes.
+  Frame names and offsets follow depthai_descriptions 2.13.0 (depthai_macro.urdf.xacro), so data
+  from depthai-ros matches the TF tree; test_components_xacro.py checks the frames against it.
+  Deliberate differences, based on the Luxonis board configs (depthai-boards):
+    - OAK-D-CM4-POE: stereo cameras at +77 mm / -13 mm from the RGB camera (90 mm baseline)
+      instead of the generic +-37.5 mm,
+    - OAK-1-POE: RGB camera only (no stereo pair, so no left/right frames nor depth sensor).
+  The base frame (<name>_link) is the RGB camera on the front face, as in depthai_descriptions. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="luxonis_oak"
+    params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       robot_namespace:=''
+                       component_name:=''
+                       model:='OAK-D-PRO'
+                       use_tf_prefix:=True">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="oak" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
+    <xacro:property name="component_name_underscore" value="${component_name + '_' if component_name != '' else ''}" />
+    <xacro:property name="component_name_slash" value="${component_name + '/' if component_name != '' else ''}" />
+
+    <xacro:property name="component_name_underscore_nonempty" value="${component_name_underscore if component_name_underscore != '' else 'oak_'}" />
+    <!-- ^ in case no name is provided, generate "..._link" instead of just "link" -->
+
+    <xacro:property name="base_frame" value="${component_name_underscore_nonempty}link" />
+
+    <!-- Visual, collision and inertial are expressed in <name>_model_origin (mesh axes).
+      mass: docs.luxonis.com; inertia: solid box approximation of the collision geometry -->
+    <xacro:if value="${model == 'OAK-D-PRO'}">
+      <xacro:property name="mesh" value="luxonis_oak_d_pro" />
+      <xacro:property name="has_stereo" value="${True}" />
+      <xacro:property name="left_y" value="0.0375" />
+      <xacro:property name="right_y" value="-0.0375" />
+      <xacro:property name="has_imu" value="${True}" />
+      <xacro:property name="visual_xyz" value="-0.0375 -0.0195 -0.0174" />
+      <xacro:property name="collision_xyz" value="0.0 -0.00475 -0.01145" />
+      <xacro:property name="collision_size" value="0.097 0.0295 0.0229" />
+      <xacro:property name="inertial">
+        <mass value="0.091" />
+        <inertia ixx="0.000011" ixy="0.0"      ixz="0.0"
+                                iyy="0.000075" iyz="0.0"
+                                               izz="0.000078" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'OAK-D-CM4-POE'}">
+      <xacro:property name="mesh" value="luxonis_oak_d_cm4_poe" />
+      <xacro:property name="has_stereo" value="${True}" />
+      <xacro:property name="left_y" value="0.077" />
+      <xacro:property name="right_y" value="-0.013" />
+      <xacro:property name="has_imu" value="${False}" />
+      <xacro:property name="visual_xyz" value="0.088 -0.039 -0.0135" />
+      <xacro:property name="collision_xyz" value="0.032 -0.025 -0.015" />
+      <xacro:property name="collision_size" value="0.13 0.1 0.03" />
+      <xacro:property name="inertial">
+        <mass value="0.318" />
+        <inertia ixx="0.000289" ixy="0.0"      ixz="0.0"
+                                iyy="0.000472" iyz="0.0"
+                                               izz="0.000713" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'OAK-D-S2-POE'}">
+      <xacro:property name="mesh" value="luxonis_oak_d_s2_poe" />
+      <xacro:property name="has_stereo" value="${True}" />
+      <xacro:property name="left_y" value="0.0375" />
+      <xacro:property name="right_y" value="-0.0375" />
+      <xacro:property name="has_imu" value="${False}" />
+      <xacro:property name="visual_xyz" value="-0.0375 -0.0295 -0.0258" />
+      <xacro:property name="collision_xyz" value="0.0 -0.0095 -0.01565" />
+      <xacro:property name="collision_size" value="0.111 0.04 0.0313" />
+      <xacro:property name="inertial">
+        <mass value="0.184" />
+        <inertia ixx="0.000040" ixy="0.0"      ixz="0.0"
+                                iyy="0.000204" iyz="0.0"
+                                               izz="0.000213" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'OAK-1-POE'}">
+      <xacro:property name="mesh" value="luxonis_oak_1_poe" />
+      <xacro:property name="has_stereo" value="${False}" />
+      <xacro:property name="has_imu" value="${False}" />
+      <xacro:property name="visual_xyz" value="-0.022 -0.04095 -0.0222" />
+      <xacro:property name="collision_xyz" value="0.0 -0.0175 -0.0155" />
+      <xacro:property name="collision_size" value="0.0819 0.1169 0.031" />
+      <xacro:property name="inertial">
+        <mass value="0.294" />
+        <inertia ixx="0.000358" ixy="0.0"      ixz="0.0"
+                                iyy="0.000188" iyz="0.0"
+                                               izz="0.000499" />
+      </xacro:property>
+    </xacro:if>
+
+    <!-- base frame of the sensor: the RGB camera on the front face -->
+    <link name="${base_frame}" />
+
+    <joint name="${component_name}_center_joint" type="fixed">
+      <parent link="${parent_link}" />
+      <child link="${base_frame}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+
+    <link name="${component_name}_model_origin">
+      <visual>
+        <origin xyz="${visual_xyz}" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/${mesh}.glb" />
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${component_name}_model_origin_joint" type="fixed">
+      <parent link="${base_frame}" />
+      <child link="${component_name}_model_origin" />
+      <origin xyz="0 0 0" rpy="1.5708 0 1.5708" />
+    </joint>
+
+    <link name="${component_name}_model_collision">
+      <collision>
+        <geometry>
+          <box size="${collision_size}" />
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <xacro:insert_block name="inertial" />
+      </inertial>
+    </link>
+
+    <joint name="${component_name}_model_collision_joint" type="fixed">
+      <parent link="${component_name}_model_origin" />
+      <child link="${component_name}_model_collision" />
+      <origin xyz="${collision_xyz}" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <!-- IMU (OAK-D-PRO) -->
+    <xacro:if value="${has_imu}">
+      <link name="${component_name}_imu_frame" />
+
+      <joint name="${component_name}_imu_joint" type="fixed">
+        <parent link="${base_frame}" />
+        <child link="${component_name}_imu_frame" />
+        <origin xyz="-0.008 -0.037945 -0.00079" rpy="${pi} ${pi/2} 0.0" />
+      </joint>
+    </xacro:if>
+
+    <!-- RGB camera -->
+    <link name="${component_name}_rgb_camera_frame" />
+
+    <joint name="${component_name}_rgb_camera_joint" type="fixed">
+      <parent link="${base_frame}" />
+      <child link="${component_name}_rgb_camera_frame" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="${component_name}_rgb_camera_optical_frame" />
+
+    <joint name="${component_name}_rgb_camera_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+      <parent link="${component_name}_rgb_camera_frame" />
+      <child link="${component_name}_rgb_camera_optical_frame" />
+    </joint>
+
+    <xacro:if value="${has_stereo}">
+      <!-- left camera -->
+      <link name="${component_name}_left_camera_frame" />
+
+      <joint name="${component_name}_left_camera_joint" type="fixed">
+        <parent link="${base_frame}" />
+        <child link="${component_name}_left_camera_frame" />
+        <origin xyz="0 ${left_y} 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${component_name}_left_camera_optical_frame" />
+
+      <joint name="${component_name}_left_camera_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+        <parent link="${component_name}_left_camera_frame" />
+        <child link="${component_name}_left_camera_optical_frame" />
+      </joint>
+
+      <!-- right camera -->
+      <link name="${component_name}_right_camera_frame" />
+
+      <joint name="${component_name}_right_camera_joint" type="fixed">
+        <parent link="${base_frame}" />
+        <child link="${component_name}_right_camera_frame" />
+        <origin xyz="0 ${right_y} 0" rpy="0 0 0" />
+      </joint>
+
+      <link name="${component_name}_right_camera_optical_frame" />
+
+      <joint name="${component_name}_right_camera_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+        <parent link="${component_name}_right_camera_frame" />
+        <child link="${component_name}_right_camera_optical_frame" />
+      </joint>
+    </xacro:if>
+
+    <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro"
+      ns="gz_sensor" />
+
+    <xacro:gz_sensor.camera
+      reference="${base_frame}"
+      name="${robot_namespace_slash}${component_name_underscore}color"
+      topic="${robot_namespace_slash}${component_name_slash}rgb/color"
+      frame_id="${tf_prefix}${component_name_underscore}rgb_camera_frame"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${60.0/180.0*pi}" />
+
+    <xacro:if value="${has_stereo}">
+      <xacro:gz_sensor.depth_camera
+        reference="${base_frame}"
+        name="${robot_namespace_slash}${component_name_underscore}depth"
+        topic="${robot_namespace_slash}${component_name_slash}stereo/depth"
+        frame_id="${tf_prefix}${component_name_underscore}rgb_camera_frame"
+        frequency="30"
+        width="1280"
+        height="720"
+        fov="${60.0/180.0*pi}"
+        min_dist="1.0"
+        max_dist="12.0"
+        stddev_error="0.2" />
+    </xacro:if>
+
+  </xacro:macro>
+</robot>
