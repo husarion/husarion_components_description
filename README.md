@@ -98,16 +98,19 @@ A few short aliases also work: `astra`, `realsense`, `oak`, `wibotic`.
 
 ### Cameras
 
-| Name           | Code  | Device               |
-| -------------- | ----- | -------------------- |
-| orbbec_astra   | CAM01 | Orbbec Astra         |
-| realsense_d435 | CAM02 | Intel RealSense D435 |
-| zed_2          | CAM03 | StereoLabs ZED 2     |
-| zed_2i         | CAM04 | StereoLabs ZED 2i    |
-| zed_m          | CAM05 | StereoLabs ZED M     |
-| zed_x          | CAM06 | StereoLabs ZED X     |
-| realsense_d555 | CAM07 | Intel RealSense D555 |
-| oak_d_pro      | CAM11 | Luxonis OAK-D-PRO    |
+| Name           | Code  | Device                |
+| -------------- | ----- | --------------------- |
+| orbbec_astra   | CAM01 | Orbbec Astra          |
+| realsense_d435 | CAM02 | Intel RealSense D435  |
+| zed_2          | CAM03 | StereoLabs ZED 2      |
+| zed_2i         | CAM04 | StereoLabs ZED 2i     |
+| zed_m          | CAM05 | StereoLabs ZED M      |
+| zed_x          | CAM06 | StereoLabs ZED X      |
+| realsense_d555 | CAM07 | Intel RealSense D555  |
+| oak_d_cm4_poe  | CAM08 | Luxonis OAK-D CM4 PoE |
+| oak_1_poe      | CAM09 | Luxonis OAK-1 PoE     |
+| oak_d_s2_poe   | CAM10 | Luxonis OAK-D S2 PoE  |
+| oak_d_pro      | CAM11 | Luxonis OAK-D-PRO     |
 
 ### Lidars
 

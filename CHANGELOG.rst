@@ -9,6 +9,8 @@ Forthcoming
 * Add Livox MID-360 (LDR50)
 * Add Intel RealSense D555 (CAM07)
 * Add tests for mesh paths and gz bridge topics
+* Describe ZED 2/2i/X and OAK-D-PRO with Husarion meshes (frames unchanged, checked against zed_description / depthai_descriptions)
+* Add Luxonis OAK-D CM4 PoE (CAM08), OAK-1 PoE (CAM09) and OAK-D S2 PoE (CAM10)
 
 0.1.1 (2026-06-29)
 ------------------
