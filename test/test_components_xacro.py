@@ -14,6 +14,7 @@
 
 
 import ast
+import math
 import os
 import xml
 import xml.dom
@@ -323,6 +324,115 @@ def test_gz_sensor_topics_are_bridged(tmpdir_factory):
             assert (
                 topic in bridged_topics or topic + "/points" in bridged_topics
             ), f"{type_name}: gz topic {topic} is not bridged in {bridge_config_path}"
+
+
+def _rpy_to_matrix(roll, pitch, yaw):
+    cr, sr = math.cos(roll), math.sin(roll)
+    cp, sp = math.cos(pitch), math.sin(pitch)
+    cy, sy = math.cos(yaw), math.sin(yaw)
+    return [
+        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+        [-sp, cp * sr, cp * cr],
+    ]
+
+
+def _compose(parent, child):
+    """Compose (rotation, translation) transforms: parent * child."""
+    (r_a, t_a), (r_b, t_b) = parent, child
+    rot = [[sum(r_a[i][k] * r_b[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+    trans = [sum(r_a[i][k] * t_b[k] for k in range(3)) + t_a[i] for i in range(3)]
+    return rot, trans
+
+
+def _frames_from(urdf, root):
+    """Transforms of every link below `root`, relative to `root`."""
+    children = {}
+    for joint in urdf.getElementsByTagName("joint"):
+        parent = joint.getElementsByTagName("parent")[0].getAttribute("link")
+        child = joint.getElementsByTagName("child")[0].getAttribute("link")
+        xyz, rpy = [0.0] * 3, [0.0] * 3
+        origins = joint.getElementsByTagName("origin")
+        if origins:
+            if origins[0].getAttribute("xyz"):
+                xyz = [float(v) for v in origins[0].getAttribute("xyz").split()]
+            if origins[0].getAttribute("rpy"):
+                rpy = [float(v) for v in origins[0].getAttribute("rpy").split()]
+        children.setdefault(parent, []).append((child, (_rpy_to_matrix(*rpy), xyz)))
+
+    identity = ([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]], [0.0, 0.0, 0.0])
+    frames, stack = {root: identity}, [root]
+    while stack:
+        link = stack.pop()
+        for child, transform in children.get(link, []):
+            frames[child] = _compose(frames[link], transform)
+            stack.append(child)
+    return frames
+
+
+def _render_xacro(tmpdir_factory, folder, content):
+    path = tmpdir_factory.mktemp(folder).join("reference.urdf.xacro")
+    with open(str(path), mode="w", encoding="utf-8") as file:
+        file.write(content)
+    return xacro.process_file(str(path))
+
+
+def _assert_same_frames(type_name, ours, reference, root, ignored=(), overrides=None):
+    """Our frames must match the manufacturer frames (names and poses relative to `root`).
+    `ignored` - links not compared, `overrides` - {link: expected translation} where we
+    deliberately differ from the manufacturer description."""
+    overrides = overrides or {}
+    our_frames = {k: v for k, v in _frames_from(ours, root).items() if k not in ignored}
+    ref_frames = {k: v for k, v in _frames_from(reference, root).items() if k not in ignored}
+    assert set(our_frames) == set(ref_frames), (
+        f"{type_name}: frame names differ from the manufacturer description - "
+        f"missing: {sorted(set(ref_frames) - set(our_frames))}, "
+        f"extra: {sorted(set(our_frames) - set(ref_frames))}"
+    )
+    for link, (ref_rot, ref_trans) in ref_frames.items():
+        our_rot, our_trans = our_frames[link]
+        expected = overrides.get(link, ref_trans)
+        for i in range(3):
+            assert (
+                abs(our_trans[i] - expected[i]) < 1e-6
+            ), f"{type_name}: {link} position {our_trans} != {expected}"
+            for j in range(3):
+                assert (
+                    abs(our_rot[i][j] - ref_rot[i][j]) < 1e-6
+                ), f"{type_name}: {link} orientation differs from the manufacturer description"
+
+
+def _assert_gz_frames_exist(type_name, urdf):
+    links = {link.getAttribute("name") for link in urdf.getElementsByTagName("link")}
+    for gazebo in urdf.getElementsByTagName("gazebo"):
+        if gazebo.getAttribute("reference"):
+            assert (
+                gazebo.getAttribute("reference") in links
+            ), f"{type_name}: gazebo reference {gazebo.getAttribute('reference')} not in URDF"
+    for frame_id in urdf.getElementsByTagName("gz_frame_id"):
+        assert (
+            frame_id.firstChild.data in links
+        ), f"{type_name}: gz_frame_id {frame_id.firstChild.data} not in URDF"
+
+
+ZED_REFERENCE_XACRO = """<robot name="reference" xmlns:xacro="http://wiki.ros.org/xacro">
+  <link name="cover_link" />
+  <xacro:include filename="$(find husarion_components_description)/urdf/stereolabs_zed.urdf.xacro"
+    ns="camera" />
+  <xacro:camera.zed_camera parent_link="cover_link" model="{model}" />
+</robot>"""
+
+
+def test_zed_frames_match_zed_description(tmpdir_factory):
+    """Own ZED descriptions (Husarion meshes) keep the frames of zed_description, so the
+    zed-ros2-wrapper data lands in the right place. Fails when Stereolabs changes them."""
+    for type_name, model in {"zed_2": "zed2", "zed_2i": "zed2i", "zed_x": "zedx"}.items():
+        ours = _render_single(tmpdir_factory, type_name, component_name="")
+        reference = _render_xacro(
+            tmpdir_factory, f"ref_{model}", ZED_REFERENCE_XACRO.format(model=model)
+        )
+        _assert_same_frames(type_name, ours, reference, root="zed_camera_link")
+        _assert_gz_frames_exist(type_name, ours)
 
 
 EXAMPLE_XACRO = os.path.join(

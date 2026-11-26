@@ -220,12 +220,34 @@ limitations under the License.
           />
         </xacro:if>
 
-        <xacro:property name="zed_models_dict"
+        <!-- ZED models with Husarion meshes; frames follow zed_description -->
+        <xacro:property name="zed_camera_models_dict"
           value="${dict ([
           ('zed_2', 'zed2'),
           ('zed_2i', 'zed2i'),
-          ('zed_m', 'zedm'),
           ('zed_x', 'zedx'),
+          ])}" />
+
+        <xacro:if value="${type in zed_camera_models_dict}">
+          <xacro:include
+            filename="$(find husarion_components_description)/urdf/stereolabs_zed_camera.urdf.xacro"
+            ns="camera" />
+
+          <xacro:camera.stereolabs_zed_camera
+            parent_link="${parent_link}"
+            xyz="${xyz}"
+            rpy="${rpy}"
+            robot_namespace="${robot_namespace}"
+            component_name="${component_name}"
+            model="${zed_camera_models_dict[type]}"
+            use_tf_prefix="${use_tf_prefix}"
+          />
+        </xacro:if>
+
+        <!-- ZED models without a Husarion mesh use the zed_description macro -->
+        <xacro:property name="zed_models_dict"
+          value="${dict ([
+          ('zed_m', 'zedm'),
           ])}" />
 
           <xacro:if value="${type in zed_models_dict}">

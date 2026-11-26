@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+
+<!--
+Copyright 2026 Husarion. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- StereoLabs ZED 2 / 2i / X with Husarion meshes.
+  Frame names and offsets follow zed_description 0.2.0 (zed_macro.urdf.xacro), so data from
+  zed-ros2-wrapper matches the TF tree; test_components_xacro.py checks the frames against it. -->
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="stereolabs_zed_camera"
+               params="parent_link
+                       xyz:='0.0 0.0 0.0'
+                       rpy:='0.0 0.0 0.0'
+                       model:=zed2
+                       robot_namespace:=''
+                       component_name:=''
+                       use_tf_prefix:=True">
+
+    <xacro:if value="${component_name == ''}">
+      <xacro:property name="component_name" value="zed" />
+    </xacro:if>
+
+    <xacro:property name="robot_namespace_slash" value="${robot_namespace + '/' if robot_namespace != '' else ''}" />
+    <xacro:property name="tf_prefix" value="${robot_namespace_slash if use_tf_prefix in ['True', True] else ''}" />
+
+    <!-- baseline, height, bottom_slope, optical_offset_x: zed_description 0.2.0
+      mass: datasheets; inertia: solid box approximation of the collision geometry -->
+    <xacro:if value="${model == 'zed2'}">
+      <!-- Spec: ZED 2 Datasheet Rev1.1 -->
+      <xacro:property name="baseline" value="0.12" />
+      <xacro:property name="height" value="0.03" />
+      <xacro:property name="bottom_slope" value="0.05" />
+      <xacro:property name="optical_offset_x" value="-0.005" />
+      <xacro:property name="has_extra_sensors" value="${True}" />
+      <xacro:property name="collision">
+        <origin xyz="-0.00095 0.0 0.01437" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.0319 0.1749 0.0298" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="-0.00095 0.0 0.01437" rpy="0.0 0.0 0.0" />
+        <mass value="0.164" />
+        <inertia ixx="0.000430" ixy="0.0"      ixz="0.0"
+                                iyy="0.000026" iyz="0.0"
+                                               izz="0.000432" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'zed2i'}">
+      <!-- Spec: ZED 2i Datasheet V1.5 -->
+      <xacro:property name="baseline" value="0.12" />
+      <xacro:property name="height" value="0.03" />
+      <xacro:property name="bottom_slope" value="0.0" />
+      <xacro:property name="optical_offset_x" value="-0.005" />
+      <xacro:property name="has_extra_sensors" value="${False}" />
+      <xacro:property name="collision">
+        <origin xyz="-0.00595 0.0 0.01515" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.0431 0.1753 0.0303" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="-0.00595 0.0 0.01515" rpy="0.0 0.0 0.0" />
+        <mass value="0.229" />
+        <inertia ixx="0.000604" ixy="0.0"      ixz="0.0"
+                                iyy="0.000053" iyz="0.0"
+                                               izz="0.000622" />
+      </xacro:property>
+    </xacro:if>
+
+    <xacro:if value="${model == 'zedx'}">
+      <!-- Spec: ZED X / ZED X Mini Datasheet Rev1.6 -->
+      <xacro:property name="baseline" value="0.12" />
+      <xacro:property name="height" value="0.032" />
+      <xacro:property name="bottom_slope" value="0.0" />
+      <xacro:property name="optical_offset_x" value="-0.005" />
+      <xacro:property name="has_extra_sensors" value="${False}" />
+      <xacro:property name="collision">
+        <origin xyz="-0.0081 0.0 0.0159" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.0472 0.1634 0.0318" />
+        </geometry>
+      </xacro:property>
+      <xacro:property name="inertial">
+        <origin xyz="-0.0081 0.0 0.0159" rpy="0.0 0.0 0.0" />
+        <mass value="0.239" />
+        <inertia ixx="0.000552" ixy="0.0"      ixz="0.0"
+                                iyy="0.000065" iyz="0.0"
+                                               izz="0.000576" />
+      </xacro:property>
+    </xacro:if>
+
+    <joint name="${parent_link}_to_${component_name}_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link}" />
+      <child link="${component_name}_camera_link" />
+    </joint>
+
+    <!-- camera mounting point (the threaded screw hole in the bottom) -->
+    <link name="${component_name}_camera_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 ${pi/2}" />
+        <geometry>
+          <mesh filename="package://husarion_components_description/meshes/${model}.glb" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <xacro:insert_block name="collision" />
+      </collision>
+
+      <inertial>
+        <xacro:insert_block name="inertial" />
+      </inertial>
+    </link>
+
+    <link name="${component_name}_camera_center" />
+
+    <joint name="${component_name}_camera_center_joint" type="fixed">
+      <parent link="${component_name}_camera_link" />
+      <child link="${component_name}_camera_center" />
+      <origin xyz="0.0 0.0 ${height/2}" rpy="0.0 ${bottom_slope} 0.0" />
+    </joint>
+
+    <!-- left camera -->
+    <link name="${component_name}_left_camera_frame" />
+
+    <joint name="${component_name}_left_camera_joint" type="fixed">
+      <parent link="${component_name}_camera_center" />
+      <child link="${component_name}_left_camera_frame" />
+      <origin xyz="${optical_offset_x} ${baseline/2} 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${component_name}_left_camera_frame_optical" />
+
+    <joint name="${component_name}_left_camera_optical_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+      <parent link="${component_name}_left_camera_frame" />
+      <child link="${component_name}_left_camera_frame_optical" />
+    </joint>
+
+    <!-- right camera -->
+    <link name="${component_name}_right_camera_frame" />
+
+    <joint name="${component_name}_right_camera_joint" type="fixed">
+      <parent link="${component_name}_camera_center" />
+      <child link="${component_name}_right_camera_frame" />
+      <origin xyz="${optical_offset_x} ${-baseline/2} 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${component_name}_right_camera_frame_optical" />
+
+    <joint name="${component_name}_right_camera_optical_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="${-pi/2} 0.0 ${-pi/2}" />
+      <parent link="${component_name}_right_camera_frame" />
+      <child link="${component_name}_right_camera_frame_optical" />
+    </joint>
+
+    <!-- ZED 2 sensors -->
+    <xacro:if value="${has_extra_sensors}">
+      <link name="${component_name}_mag_link" />
+
+      <joint name="${component_name}_mag_joint" type="fixed">
+        <parent link="${component_name}_camera_center" />
+        <child link="${component_name}_mag_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      </joint>
+
+      <link name="${component_name}_baro_link" />
+
+      <joint name="${component_name}_baro_joint" type="fixed">
+        <parent link="${component_name}_camera_center" />
+        <child link="${component_name}_baro_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      </joint>
+
+      <link name="${component_name}_temp_left_link" />
+
+      <joint name="${component_name}_temp_left_joint" type="fixed">
+        <parent link="${component_name}_left_camera_frame" />
+        <child link="${component_name}_temp_left_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      </joint>
+
+      <link name="${component_name}_temp_right_link" />
+
+      <joint name="${component_name}_temp_right_joint" type="fixed">
+        <parent link="${component_name}_right_camera_frame" />
+        <child link="${component_name}_temp_right_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      </joint>
+    </xacro:if>
+
+    <!-- GAZEBO -->
+    <xacro:include filename="$(find husarion_components_description)/urdf/gz_sensor.urdf.xacro" ns="gz_sensor" />
+
+    <xacro:gz_sensor.camera
+      reference="${component_name}_camera_center"
+      name="${robot_namespace_slash}${component_name}_camera_color"
+      topic="${robot_namespace_slash}${component_name}/zed_node/rgb/color/rect/image"
+      frame_id="${tf_prefix}${component_name}_camera_center"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${110.0/180.0*pi}" />
+
+    <xacro:gz_sensor.depth_camera
+      reference="${component_name}_camera_center"
+      name="${robot_namespace_slash}${component_name}_camera_depth"
+      topic="${robot_namespace_slash}${component_name}/zed_node/depth/depth_registered"
+      frame_id="${tf_prefix}${component_name}_camera_center"
+      frequency="30"
+      width="1280"
+      height="720"
+      fov="${110.0/180.0*pi}"
+      min_dist="0.3"
+      max_dist="20.0"
+      stddev_error="0.03" />
+
+  </xacro:macro>
+</robot>
